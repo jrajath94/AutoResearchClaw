@@ -1,0 +1,149 @@
+{
+  "seed": 1,
+  "conditions": {
+    "low_correlated": {
+      "h1": {
+        "bic_win_rate": 0.5066666666666667,
+        "bootstrap_cv": {
+          "tau_0.1": 0.0,
+          "tau_0.5": 0.0,
+          "tau_1.0": 0.0
+        }
+      },
+      "h2": {
+        "mean_divergence": 0.261875,
+        "model_A_nonmono_rate": 0.985,
+        "model_B_nonmono_rate": 0.985
+      },
+      "h3": {
+        "circuit_depth": {
+          "mape": 10.530144371089431,
+          "correlation": 0.973782373714238
+        },
+        "gzip_length": {
+          "mape": 57.07737865651475,
+          "correlation": 0.4247545802396361
+        },
+        "description_length": {
+          "mape": 17.006273371399256,
+          "correlation": 0.9275466341690018
+        }
+      },
+      "baseline_mape": 52.54028207317516,
+      "proposed_mape": 81.6982612355687,
+      "proposed_best_temp": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "low_decorrelated": {
+      "h1": {
+        "bic_win_rate": 0.4716666666666667,
+        "bootstrap_cv": {
+          "tau_0.1": 0.0,
+          "tau_0.5": 0.0,
+          "tau_1.0": 0.0
+        }
+      },
+      "h2": {
+        "mean_divergence": 0.2475,
+        "model_A_nonmono_rate": 0.97,
+        "model_B_nonmono_rate": 0.995
+      },
+      "h3": {
+        "circuit_depth": {
+          "mape": 7.280566655855998,
+          "correlation": 0.9661481660294615
+        },
+        "gzip_length": {
+          "mape": 41.74240809142828,
+          "correlation": 0.3468854792027944
+        },
+        "description_length": {
+          "mape": 41.434649992758175,
+          "correlation": 0.011048628851015664
+        }
+      },
+      "baseline_mape": 51.51659891514812,
+      "proposed_mape": 74.64913842903775,
+      "proposed_best_temp": [
+        0.1,
+        0.1,
+        1.0
+      ]
+    },
+    "high_correlated": {
+      "h1": {
+        "bic_win_rate": 0.3466666666666667,
+        "bootstrap_cv": {
+          "tau_0.1": 0.0,
+          "tau_0.5": 0.0,
+          "tau_1.0": 0.0
+        }
+      },
+      "h2": {
+        "mean_divergence": 0.40375,
+        "model_A_nonmono_rate": 0.965,
+        "model_B_nonmono_rate": 0.98
+      },
+      "h3": {
+        "circuit_depth": {
+          "mape": 14.670685363639596,
+          "correlation": 0.9773297486144629
+        },
+        "gzip_length": {
+          "mape": 46.63938579249551,
+          "correlation": 0.7236443537834133
+        },
+        "description_length": {
+          "mape": 18.70218400636571,
+          "correlation": 0.9619359330115778
+        }
+      },
+      "baseline_mape": 92.14643788012918,
+      "proposed_mape": 29.37055582744029,
+      "proposed_best_temp": [
+        0.5,
+        1.0,
+        1.0
+      ]
+    },
+    "high_decorrelated": {
+      "h1": {
+        "bic_win_rate": 0.33166666666666667,
+        "bootstrap_cv": {
+          "tau_0.1": 0.0,
+          "tau_0.5": 0.0,
+          "tau_1.0": 0.0
+        }
+      },
+      "h2": {
+        "mean_divergence": 0.433125,
+        "model_A_nonmono_rate": 0.94,
+        "model_B_nonmono_rate": 0.98
+      },
+      "h3": {
+        "circuit_depth": {
+          "mape": 11.357005546759048,
+          "correlation": 0.9668315684501088
+        },
+        "gzip_length": {
+          "mape": 64.74780492470656,
+          "correlation": 0.4459093680967344
+        },
+        "description_length": {
+          "mape": 68.74409753531748,
+          "correlation": 0.23912826768541112
+        }
+      },
+      "baseline_mape": 92.4319536562898,
+      "proposed_mape": 28.13148258767194,
+      "proposed_best_temp": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

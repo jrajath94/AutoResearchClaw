@@ -1,0 +1,53 @@
+{
+  "metrics_summary": {
+    "primary_metric": {"mean": 47.08, "std": 4.36, "metric_key": "elbow_prediction_mape", "direction": "minimize"},
+    "h1_bic_win_rate": {"mean": 0.408, "std": 0.011},
+    "h2_divergence": {"mean": 0.344, "std": 0.007},
+    "h3_circuit_depth_mape": {"mean": 10.70, "std": 0.40},
+    "baseline_mape": {"mean": 72.09, "std": 0.17},
+    "proposed_mape": {"mean": 47.08, "std": 4.36}
+  },
+  "conditions": {
+    "low_correlated": {"baseline_mape": 50.9, "proposed_mape": 71.2, "n_problems": 200},
+    "low_decorrelated": {"baseline_mape": 51.3, "proposed_mape": 68.5, "n_problems": 200},
+    "high_correlated": {"baseline_mape": 92.4, "proposed_mape": 28.3, "n_problems": 200},
+    "high_decorrelated": {"baseline_mape": 92.8, "proposed_mape": 27.6, "n_problems": 200}
+  },
+  "h1_bic_win_rate_mean": 0.40800000000000003,
+  "h1_bic_win_rate_std": 0.011335784048754637,
+  "h1_bootstrap_cv_mean": 0.0,
+  "h1_bootstrap_cv_std": 0.0,
+  "h2_divergence_mean": 0.34390625,
+  "h2_divergence_std": 0.007338595265359036,
+  "h2_nonmono_A_mean": 0.9715,
+  "h2_nonmono_A_std": 0.004703721930556704,
+  "h2_nonmono_B_mean": 0.985,
+  "h2_nonmono_B_std": 0.003259601202601323,
+  "h3_circuit_depth_mape_mean": 10.697873866939766,
+  "h3_circuit_depth_mape_std": 0.39506589012762294,
+  "h3_gzip_mape_mean": 51.79196752024681,
+  "h3_gzip_mape_std": 2.0106696542141735,
+  "h3_desc_len_mape_mean": 37.63245933596775,
+  "h3_desc_len_mape_std": 2.8472103668449678,
+  "h3_circuit_depth_corr_mean": 0.9641556950761547,
+  "h3_circuit_depth_corr_std": 0.0043950154786892865,
+  "h3_gzip_corr_mean": 0.3836464447496991,
+  "h3_gzip_corr_std": 0.056098543996606576,
+  "baseline_mape_mean": 72.08772355337646,
+  "baseline_mape_std": 0.1708289871400703,
+  "proposed_mape_mean": 47.0828232087792,
+  "proposed_mape_std": 4.356791879997911,
+  "primary_metric": 47.0828232087792,
+  "metric_key": "elbow_prediction_mape",
+  "metric_direction": "minimize",
+  "h1_supported": false,
+  "h2_supported": false,
+  "h3_supported": true,
+  "cost_savings_pct": 34.68676650065484,
+  "gsm8k_text_analysis": {
+    "n_problems": 500,
+    "gzip_step_correlation": 0.2920107355082763,
+    "status": "ok"
+  },
+  "total_time_sec": 354.5603585243225
+}

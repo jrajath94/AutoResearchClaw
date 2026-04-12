@@ -1,0 +1,593 @@
+ablations:
+- description: 'Ablation of staircase_temperature_allocator removing per-bucket temperature
+    optimization. Tests whether temperature-complexity interaction is essential to
+    H1''s predictive advantage.
+
+    '
+  hypothesis_tested: H1 temperature component
+  implementation_spec:
+    class_name: StaircaseNoTemperature
+    expected_effect: 'MAPE increases in high_complexity regime where hard problems
+      need higher tau (exploration) and easy problems need lower tau (precision).
+      Smaller degradation in low_complexity where tau=0.5 is near-optimal. The gap
+      quantifies temperature''s contribution to H1.
+
+      '
+    how_it_differs: 'Fixes temperature to tau=0.5 for all problems. Steps 1-4 (staircase
+      fitting, BIC selection, critical depth extraction) remain identical. Step 7
+      uses d_c_est at fixed tau=0.5 instead of bucket-optimal tau*. Gzip bucketing
+      still computed for analysis but not used for optimization.
+
+      '
+    key_hyperparameters:
+      bic_evidence_threshold: 2.0
+      fixed_temperature: 0.5
+      safety_margin: 1.2
+    key_methods:
+    - __init__
+    - fit_piecewise_constant
+    - fit_logistic_sigmoid
+    - bic_model_select
+    - predict_per_problem
+    - evaluate
+    what_is_removed: 'Per-bucket temperature optimization (steps 5-6 of parent method).
+
+      '
+  name: staircase_no_temperature
+  parent_method: staircase_temperature_allocator
+- description: 'Ablation of circuit_depth_predictor replacing circuit depth with gzip
+    compression length. Tests whether the Kolmogorov complexity proxy suffices or
+    whether circuit depth is specifically required.
+
+    '
+  hypothesis_tested: H3 complexity measure
+  implementation_spec:
+    class_name: KolmogorovGzipPredictor
+    expected_effect: 'Correlated regime: similar MAPE to circuit_depth_predictor because
+      K is proportional to D. Decorrelated regime: significantly worse MAPE because
+      gzip measures description length (a K proxy) which is independent of computation
+      depth in this regime.
+
+      '
+    how_it_differs: 'Only the input feature changes: gzip_length replaces D. Same
+      ridge regression pipeline (steps 2-6), same train/test split, same CV procedure,
+      same hyperparameter grid.
+
+      '
+    key_hyperparameters:
+      alpha_candidates:
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      cv_folds: 5
+      gzip_compression_level: 9
+      regression: ridge
+    key_methods:
+    - __init__
+    - compute_gzip_features
+    - stratified_train_test_split
+    - fit_ridge_regression
+    - predict_per_problem
+    - evaluate
+    what_is_removed: 'Circuit depth feature extraction (step 1 of parent). Replaced
+      with gzip(problem_representation, level=9).length.
+
+      '
+  name: kolmogorov_gzip_predictor
+  parent_method: circuit_depth_predictor
+baselines:
+- description: 'Target paper''s information-theoretic framework. Fits a log-concave
+    parametric function to the population-average scaling curve and extracts a single
+    task-level elbow point. Predicts that scaling is smooth, universal across models,
+    and governed by Kolmogorov complexity.
+
+    '
+  hypothesis_role: Null hypothesis for H1 (smooth), H2 (task-dependent), H3 (K-governed)
+  implementation_spec:
+    algorithm_steps:
+    - '1. Aggregate per-problem accuracy into population average: acc_pop(T) = (1/N)
+      * sum_i mean(acc_i(T, samples))'
+    - 2. Fit log-concave function f(T) = a * log(1 + b*T) / (1 + c*T) via scipy.optimize.minimize
+      with L-BFGS-B and parameter bounds
+    - 3. Compute numerical second derivative f''(T) on the budget grid
+    - 4. Extract elbow T* = argmax |f''(T)| (point of maximum curvature change)
+    - 5. Return T* as predicted elbow for ALL problems (single prediction)
+    class_name: SmoothLogconcaveBound
+    differentiator: 'Population-level smooth bound with identical elbow prediction
+      for every problem. No per-problem adaptation, no model awareness, no temperature
+      sensitivity.
+
+      '
+    key_hyperparameters:
+      a_init: 1.0
+      b_init: 0.1
+      c_init: 0.01
+      optimizer: L-BFGS-B
+      param_bounds_a:
+      - 0.01
+      - 10.0
+      param_bounds_b:
+      - 0.001
+      - 1.0
+      param_bounds_c:
+      - 0.0001
+      - 0.1
+    key_methods:
+    - __init__
+    - fit_population_curve
+    - compute_elbow
+    - predict_per_problem
+    - evaluate
+    loss_function: 'Fitting: L_fit = sum_T (f(T) - acc_pop(T))^2 Evaluation: L_eval
+      = (1/N) * sum_i |T* - d_c_i| / d_c_i
+
+      '
+  name: smooth_logconcave_bound
+  reference: 'Target paper under review. Channel coding foundations: Polyanskiy &
+    Wu, ''Information Theory: From Coding to Learning'' (2024).
+
+    '
+  why_fair: 'This is the primary theoretical claim being tested. All three hypotheses
+    directly challenge specific predictions of this framework.
+
+    '
+- description: 'Strong modern baseline following the compute-optimal scaling approach
+    of Snell et al. (NeurIPS 2024). Fits per-problem power-law curves and identifies
+    elbows via marginal-gain thresholding. Per-problem fitting makes this strictly
+    more flexible than the population-level bound.
+
+    '
+  hypothesis_role: Strong practical baseline for all methods
+  implementation_spec:
+    algorithm_steps:
+    - 1. For each problem i, compute mean accuracy acc_i(T) across samples at each
+      budget T
+    - '2. Transform: y = log(max(1 - acc_i(T), eps)), x = log(T)'
+    - '3. Fit OLS in log-space: y = log(a_i) - b_i * x to get (a_i, b_i)'
+    - '4. Compute marginal gain: dAcc/dT = a_i * b_i * T^(-(b_i+1))'
+    - 5. Elbow T*_i = smallest T where marginal gain < epsilon threshold
+    class_name: EmpiricalPowerLawFit
+    differentiator: 'Per-problem empirical curves with no theoretical shape constraint.
+      Power-law family (vs. log-concave). Marginal-gain thresholding (vs. curvature-based
+      elbow).
+
+      '
+    key_hyperparameters:
+      accuracy_clip: 0.999
+      marginal_gain_epsilon: 0.01
+      min_budget_for_fit: 4
+    key_methods:
+    - __init__
+    - fit_per_problem_curve
+    - compute_marginal_gain
+    - predict_per_problem
+    - evaluate
+    loss_function: 'Fitting: L_fit = sum_T (log(1-acc_i(T)) - log(a_i) + b_i*log(T))^2
+      Evaluation: L_eval = (1/N) * sum_i |T*_i - d_c_i| / d_c_i
+
+      '
+  name: empirical_power_law_fit
+  reference: 'Snell et al., ''Scaling LLM Test-Time Compute Optimally Can be More
+    Effective than Scaling Model Parameters'', NeurIPS 2024.
+
+    '
+  why_fair: 'Best published practical approach for test-time compute allocation. Per-problem
+    fitting sets a high bar: proposed methods must outperform not just the theoretical
+    bound but also the best empirical practice.
+
+    '
+compute_budget:
+  estimated_seconds_per_run: 12
+  estimated_total_seconds: 420
+  gpu_usage: Minimal — experiment is CPU-bound (numpy, scipy, sklearn)
+  hard_cap_check: 7 conditions * 5 seeds * 12s = 420 < 480 (600 * 0.8) ✓
+  hardware: 1x NVIDIA RTX 6000 Ada (49140 MB VRAM)
+  one_time_costs:
+    final_aggregation: ~15s (cross-seed statistics, hypothesis testing, tables)
+    gsm8k_text_analysis: ~30s (gzip + step-count extraction for 500 problems)
+  overhead_margin: 180s (30%) for GSM8K loading, final aggregation, I/O
+  per_run_breakdown:
+    data_generation: ~2s (800 problems, simulate channel at all budgets/temps)
+    method_analysis: ~6s (curve fitting, BIC, regression, MI tracking)
+    metrics_and_bootstrap: ~4s (MAPE, correlations, 10K bootstrap resamples)
+  scaling_fallback:
+    if_approaching_budget:
+      step_1: Reduce n_problems_per_cell from 200 to 100
+      step_2: Reduce bootstrap resamples from 10000 to 5000
+      step_3: Reduce seeds from 5 to 3 (last resort)
+  seeds_per_condition: 5
+  total_conditions: 7
+  total_runs: 35
+  total_time_seconds: 600
+datasets:
+- description: 'Simulated noisy reasoning channel with known ground-truth parameters.
+    Each problem has Kolmogorov complexity K, circuit depth D, critical reasoning
+    depth d_c, and transition sharpness gamma. Two model configurations with different
+    noise profiles enable H2 testing. A controlled fraction of problems have planted
+    MI non-monotonicity.
+
+    '
+  domain_justification: 'Theoretical analysis of information-theoretic bounds. Synthetic
+    channels are standard for validating coding theorems. No image/NLP dataset is
+    relevant to this domain.
+
+    '
+  factorial_design: Full 2x2 grid; results reported per-cell AND aggregated
+  generation: main.py (numpy); no download required
+  ground_truth: d_c, K, D, gamma, curve_type (staircase/smooth) all known
+  n_problems_per_cell: 200
+  name: synthetic_noisy_reasoning_channel
+  regime_factors:
+    complexity_level:
+      high: d_c ~ Uniform(64, 512); represents hard multi-step reasoning
+      low: d_c ~ Uniform(8, 64); represents easy reasoning tasks
+    k_depth_correlation:
+      correlated: K = 0.8*D + N(0, 0.1*D); mimics standard benchmarks where description
+        length scales with computation depth
+      decorrelated: K ~ Uniform(5, 100) independent of D; stress test where lookup
+        tasks (high K, low D) and iterative tasks (low K, high D) coexist
+  simulation_parameters:
+    model_configs:
+      model_A:
+        depth_sensitivity: 1.0
+        mi_nonmonotone_probability: 0.3
+        noise_scale: 0.15
+      model_B:
+        depth_sensitivity: 0.7
+        mi_nonmonotone_probability: 0.45
+        noise_scale: 0.25
+    planted_staircase_fraction: 0.6
+    reasoning_budgets:
+    - 4
+    - 8
+    - 16
+    - 32
+    - 64
+    - 128
+    - 256
+    - 512
+    samples_per_cell: 32
+    temperatures:
+    - 0.1
+    - 0.5
+    - 1.0
+    transition_sharpness:
+      sharp_range:
+      - 1
+      - 4
+      smooth_range:
+      - 8
+      - 20
+  total_problems: 800
+  type: synthetic
+- description: '500 problems from GSM8K with text-level features extracted (no model
+    inference). Validates that gzip length and solution step count have limited correlation
+    on real math reasoning tasks, grounding H3.
+
+    '
+  download_in: setup.py
+  extracted_features:
+  - gzip_length_bytes: gzip(problem_text, level=9).length
+  - solution_step_count: count of arithmetic operators in reference solution
+  - solution_text_length: len(reference_solution) in characters
+  n_problems: 500
+  name: gsm8k_text_features
+  path: /workspace/data/gsm8k
+  purpose: Ecological validation only; no model inference
+  regime_factors:
+    gzip_tercile:
+    - short
+    - medium
+    - long
+    step_complexity:
+    - few_steps
+    - many_steps
+  source: HuggingFace openai/gsm8k
+  type: real
+metrics:
+  discovery_endpoint:
+    description: 'Number of hypothesis-specific quantitative predictions (from H1-H3)
+      that FAIL to meet their stated thresholds. Lower means more predictions confirmed,
+      i.e., stronger discrimination between competing theories. 12 predictions total
+      across H1 (4), H2 (4), H3 (5), minus 1 shared.
+
+      '
+    direction: minimize
+    name: hypothesis_discrimination_score
+    units: count of unconfirmed predictions (0 = all confirmed, 11 = none confirmed)
+  hypothesis_specific_metrics:
+    H1_population_elbow_bootstrap_cv:
+      description: CV of population elbow point under 50x bootstrap resampling
+      prediction: '> 0.20 at >= 3 of 3 temperatures'
+      units: dimensionless
+    H1_staircase_bic_win_rate:
+      description: Fraction of problems where piecewise-constant BIC < logistic BIC
+      prediction: '> 0.55'
+      units: fraction
+    H1_temperature_complexity_spearman:
+      description: Spearman rho between gzip tercile and optimal temperature
+      prediction: '> 0.60'
+      units: correlation
+    H2_cross_model_elbow_divergence:
+      description: Mean |elbow_A - elbow_B| / max(elbow_A, elbow_B)
+      prediction: '> 0.35'
+      units: fraction
+    H2_mi_nonmonotonicity_rate:
+      description: Fraction of (problem, model) pairs with MI-decreasing steps
+      prediction: '> 0.25 on at least one model'
+      units: fraction
+    H3_depth_elbow_correlation:
+      description: Pearson r(circuit_depth, true_elbow) in decorrelated regime
+      prediction: '> 0.65'
+      units: correlation
+    H3_depth_vs_gzip_mape_gap:
+      description: MAPE(gzip_predictor) - MAPE(depth_predictor) in decorrelated regime
+      prediction: '> 10pp'
+      units: percentage points
+    H3_gzip_elbow_correlation:
+      description: Pearson r(gzip_length, true_elbow) in decorrelated regime
+      prediction: < 0.35
+      units: correlation
+  primary_metric:
+    computation: (1/N) * sum_i |T_pred_i - d_c_true_i| / d_c_true_i * 100
+    description: 'Mean Absolute Percentage Error of per-problem elbow point predictions
+      vs ground-truth critical reasoning depths. Universal across all conditions.
+      Lower = better per-problem compute budget prediction.
+
+      '
+    direction: minimize
+    name: elbow_prediction_mape
+    units: percent
+  stability_metrics:
+    cross_seed_cv:
+      description: CV of elbow_prediction_mape across 5 seeds per condition
+      target: < 0.15
+      units: dimensionless
+    success_rate:
+      description: Fraction of seeds completing without NaN, crash, or timeout
+      target: '>= 0.95'
+      units: fraction
+  statistical_analysis:
+    bootstrap: 10,000 resamples over problems for 95% CI of MAPE differences
+    effect_size: Rank-biserial correlation for each pairwise comparison
+    paired_test: Wilcoxon signed-rank (n=5 seeds, paired by seed index)
+    reporting:
+    - mean +/- std across 5 seeds
+    - 95% bootstrap CI
+    - per-seed raw values
+    - per-regime breakdown (2x2 factorial)
+    - Cohen's d or rank-biserial for each baseline vs proposed comparison
+objectives:
+- 'H1: Test whether per-problem scaling curves are discrete (staircase) rather than
+  smooth (logistic), and whether the population-level elbow is an aggregation artifact
+  whose location is controllable by decoding temperature'
+- 'H2: Test whether mutual information trajectories exhibit non-monotonicity (violating
+  the data processing inequality assumed by channel coding models) and whether elbow
+  points diverge >35% across model architectures on identical tasks'
+- 'H3: Test whether circuit depth (sequential step count) predicts scaling elbows
+  better than Kolmogorov complexity (gzip proxy), particularly on tasks where description
+  length and computation depth are decorrelated'
+- 'General: Determine whether any proposed analysis method outperforms the target
+  paper''s smooth log-concave bound and modern empirical power-law fitting on per-problem
+  compute budget prediction'
+proposed_methods:
+- description: 'H1 method. Decomposes population scaling into per-problem discrete
+    transitions using BIC model selection (staircase vs sigmoid), then optimizes temperature
+    per complexity bucket via gzip-stratification. Predicts population elbow is an
+    averaging artifact.
+
+    '
+  hypothesis_tested: 'H1: staircase_temperature_allocator beats smooth_logconcave_bound
+    on elbow_prediction_mape, especially in high_complexity regime. Temperature- complexity
+    interaction is significant.
+
+    '
+  implementation_spec:
+    algorithm_steps:
+    - 1. For each problem, fit piecewise-constant model (1 or 2 steps) to acc_i(T)
+      via least-squares with brute-force step placement
+    - '2. For each problem, fit logistic sigmoid: acc(T) = L/(1+exp(-k*(T-T0))) via
+      scipy.optimize.curve_fit'
+    - '3. Compute BIC for both: BIC = n*ln(RSS/n) + p*ln(n) where p is parameter count
+      (2 for 1-step, 4 for 2-step, 3 for sigmoid)'
+    - 4. Select winner per problem; extract critical depth d_c_est (step location
+      for staircase, midpoint T0 for sigmoid)
+    - 5. Compute gzip(problem_representation) and partition into 3 terciles
+    - '6. For each tercile, grid-search over temperatures: find tau* that minimizes
+      MAPE on 20% held-out problems within the tercile'
+    - '7. Final prediction: d_c_est evaluated at bucket-optimal tau*, multiplied by
+      1.2x safety margin'
+    class_name: StaircaseTemperatureAllocator
+    differentiator: 'Per-problem BIC-based discrete/smooth classification; temperature
+      interaction with complexity via gzip-stratified buckets; safety-margined per-problem
+      budget allocation.
+
+      '
+    key_hyperparameters:
+      bic_evidence_threshold: 2.0
+      holdout_fraction: 0.2
+      n_complexity_buckets: 3
+      safety_margin: 1.2
+      temperature_grid:
+      - 0.05
+      - 0.1
+      - 0.2
+      - 0.3
+      - 0.5
+      - 0.7
+      - 1.0
+      - 1.5
+    key_methods:
+    - __init__
+    - fit_piecewise_constant
+    - fit_logistic_sigmoid
+    - bic_model_select
+    - bucket_by_gzip_tercile
+    - optimize_temperature_per_bucket
+    - predict_per_problem
+    - evaluate
+    loss_function: 'L = (1/N) * sum_i |d_c_pred_i - d_c_true_i| / d_c_true_i + 0.1
+      * mean(max(0, T_alloc_i - d_c_true_i) / d_c_true_i)
+
+      '
+  name: staircase_temperature_allocator
+- description: 'H2 method. Tracks per-step MI trajectory, detects non-monotonic segments
+    where MI decreases (violating the data processing inequality assumed by channel
+    coding models), classifies reasoning steps as constructive vs corrective, and
+    produces model-specific elbow predictions.
+
+    '
+  hypothesis_tested: 'H2: MI non-monotonicity present in >25% of problems on at least
+    one model; elbow predictions diverge >35% between model_A and model_B on same
+    tasks.
+
+    '
+  implementation_spec:
+    algorithm_steps:
+    - '1. For each (problem, model), compute empirical MI trajectory: I_t = -H(correct
+      | prefix_length=t) approximated from accuracy samples'
+    - 2. Apply window-3 moving average to reduce sampling noise
+    - '3. Compute step deltas: delta_t = I_t - I_{t-1}'
+    - '4. Classify: constructive (delta > +0.01), corrective (delta < -0.005), neutral
+      otherwise'
+    - 5. Effective MI curve = cumulative sum of constructive deltas only (corrective
+      steps excluded from accumulation)
+    - 6. Elbow = step where effective MI gain per step < saturation_threshold
+    - 7. Calibrate saturation_threshold per model on 20% held-out set
+    class_name: MINonmonotoneDetector
+    differentiator: 'Per-step MI dynamics with non-monotonicity detection; constructive
+      vs corrective step classification; model-specific calibration producing different
+      elbows per architecture.
+
+      '
+    key_hyperparameters:
+      constructive_threshold: 0.01
+      corrective_threshold: -0.005
+      holdout_fraction: 0.2
+      saturation_threshold: 0.005
+      smoothing_window: 3
+    key_methods:
+    - __init__
+    - compute_mi_trajectory
+    - smooth_trajectory
+    - detect_nonmonotonic_steps
+    - classify_constructive_corrective
+    - compute_effective_mi_curve
+    - calibrate_per_model
+    - predict_per_problem
+    - evaluate
+    loss_function: 'L = (1/N) * sum_i |T*_mi_pred_i - d_c_true_i| / d_c_true_i
+
+      '
+  name: mi_nonmonotone_detector
+- description: 'H3 method. Uses circuit depth (number of sequential computation steps)
+    as the complexity measure for predicting scaling elbows via cross- validated ridge
+    regression. Predicts that step-count outperforms gzip specifically when K and
+    D are decorrelated.
+
+    '
+  hypothesis_tested: 'H3: In decorrelated regime, r(depth, elbow) > 0.65 while r(gzip,
+    elbow) < 0.35. In correlated regime, both perform similarly.
+
+    '
+  implementation_spec:
+    algorithm_steps:
+    - 1. For each problem, obtain circuit depth D_i (ground truth from simulator)
+    - 2. Stratified 80/20 train/test split (stratified by regime cell)
+    - 3. On training set, 5-fold CV to select ridge alpha from [0.01, 0.1, 1.0, 10.0]
+    - '4. Fit final ridge regression: elbow_pred = alpha*D + beta with best alpha'
+    - 5. Predict per-problem elbows on test set
+    - '6. Compute diagnostic correlations: r(D, true_elbow) and r(gzip, true_elbow)'
+    class_name: CircuitDepthPredictor
+    differentiator: 'Circuit depth (sequential step count) as the sole complexity
+      feature, replacing Kolmogorov complexity. Designed to exploit the K-D decorrelation
+      that breaks gzip-based prediction.
+
+      '
+    key_hyperparameters:
+      alpha_candidates:
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      cv_folds: 5
+      regression: ridge
+      train_fraction: 0.8
+    key_methods:
+    - __init__
+    - extract_depth_features
+    - stratified_train_test_split
+    - fit_ridge_regression
+    - cross_validate_alpha
+    - predict_per_problem
+    - compute_correlation_diagnostics
+    - evaluate
+    loss_function: 'L_train = sum_i (alpha*D_i + beta - d_c_i)^2 + lambda * alpha^2
+      L_eval = (1/N_test) * sum_i |pred_i - d_c_true_i| / d_c_true_i
+
+      '
+  name: circuit_depth_predictor
+risks:
+- mitigation: 'Calibrate simulator parameters (noise scales, transition sharpness,
+    MI non-monotonicity rates) against published empirical curves from Snell et al.
+    (2024) and DeepSeek-R1 (2025). Include GSM8K text-feature analysis as ecological
+    grounding. Scope theoretical claims explicitly to the mathematical framework,
+    noting that real-model validation is future work.
+
+    '
+  risk: Synthetic channel model may not capture real LLM reasoning dynamics
+  severity: medium
+- mitigation: 'Clip accuracy to [0.001, 0.999] before log transforms. Add eps=1e-8
+    to all denominators. Use bounded L-BFGS-B for log-concave fitting. Detect NaN/Inf
+    after each optimization; fall back to linear fit on failure. Monitor success_rate
+    across seeds.
+
+    '
+  risk: Numerical instability in curve fitting (log(0), division by zero, optimizer
+    divergence)
+  severity: low
+- mitigation: '32 samples is adequate for BIC with 2-4 parameters (n/p > 8). Report
+    BIC confidence margin (fraction of problems where |BIC_staircase - BIC_sigmoid|
+    > 2.0). Run sensitivity analysis on BIC threshold at [1.0, 2.0, 4.0].
+
+    '
+  risk: BIC model selection sensitive to 32 samples per cell
+  severity: medium
+- mitigation: 'Paired design: same seed produces identical problem population for
+    all methods, reducing between-condition variance. Use non-parametric Wilcoxon
+    test (valid for n=5). Report all per-seed values. If cross_seed_cv > 0.25, automatically
+    fall back to 10 seeds with n_problems_per_cell halved to 100.
+
+    '
+  risk: 5 seeds insufficient for robust statistical conclusions
+  severity: medium
+- mitigation: 'The decorrelated regime is an intentional stress test, clearly labeled
+    as such. GSM8K text analysis measures actual K-D correlation in real tasks. Claims
+    from decorrelated regime are explicitly conditioned on the regime. The correlated
+    regime serves as the realism check.
+
+    '
+  risk: Decorrelated K-D regime may be unrealistic
+  severity: low
+- mitigation: 'Methods predict d_c from noisy observed accuracy curves, not from simulator
+    internals. The measurement challenge is genuine: recovering the critical depth
+    from 32 stochastic samples at 8 budget levels. Vary d_c distribution across seeds
+    (different Uniform bounds per seed) to test generalization beyond a single generation
+    process.
+
+    '
+  risk: 'Circular validation: ground truth d_c is a simulator parameter'
+  severity: medium
+topic: 'Information-Theoretic Bounds on Test-Time Compute Scaling Laws: When Does
+  Thinking More Help? We derive information-theoretic bounds on the marginal utility
+  of test-time compute by modeling chain-of-thought generation as an iterative channel
+  coding problem. We prove that for tasks with bounded Kolmogorov complexity, the
+  mutual information between extended reasoning traces and correct solutions follows
+  a log-concave scaling curve, yielding the first provable diminishing-returns characterization.
+  We validate our bounds empirically across arithmetic, logic, and coding tasks, showing
+  they predict the elbow point where additional test-time compute stops helping within
+  15% accuracy. This bridges information theory and practical inference scaling for
+  LLM reasoning.
+
+  '

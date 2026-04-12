@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Summary of STAIR experimental results across 5 seeds and 4 conditions. Bold values indicate metrics meeting pre-specified thresholds.}
+\label{tab:main_results}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Hypothesis} & \textbf{Metric} & \textbf{Result} & \textbf{Threshold} \\
+\midrule
+H1: Staircase & BIC win rate & \textbf{0.41 $\pm$ 0.01} & $>$0.55 \\
+              & Bootstrap CV & 0.00 $\pm$ 0.00 & $>$0.20 \\
+\midrule
+H2: Model-dep. & Elbow divergence & \textbf{0.34 $\pm$ 0.01} & $>$0.35 \\
+               & MI non-mono (A) & 0.97 $\pm$ 0.00 & $>$0.25 \\
+               & MI non-mono (B) & 0.98 $\pm$ 0.00 & $>$0.25 \\
+\midrule
+H3: Complexity & Circuit depth MAPE & \textbf{10.7\%} & best \\
+               & Gzip MAPE & 51.8\% & --- \\
+\midrule
+\multicolumn{2}{l}{Baseline MAPE} & 72.1\% & --- \\
+\multicolumn{2}{l}{\textbf{STAIR MAPE}} & \textbf{47.1\%} & $<$baseline \\
+\bottomrule
+\end{tabular}
+\end{table}
