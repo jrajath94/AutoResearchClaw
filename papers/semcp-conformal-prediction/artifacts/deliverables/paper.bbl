@@ -1,0 +1,187 @@
+\begin{thebibliography}{27}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Angelopoulos and Bates(2021)]{angelopoulos2021gentle}
+Anastasios~N. Angelopoulos and Stephen Bates.
+\newblock A gentle introduction to conformal prediction and distribution-free uncertainty quantification.
+\newblock \emph{arXiv preprint arXiv:2107.07511}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2107.07511}.
+
+\bibitem[Angelopoulos et~al.(2022)Angelopoulos, Bates, Fisch, Lei, and Schuster]{angelopoulos2022conformal}
+Anastasios~N. Angelopoulos, Stephen Bates, Adam Fisch, Lihua Lei, and Tal Schuster.
+\newblock Conformal risk control.
+\newblock \emph{arXiv preprint arXiv:2208.02814}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2208.02814}.
+
+\bibitem[Angelopoulos et~al.(2024)Angelopoulos, Barber, and Bates]{angelopoulos2024theoretical}
+Anastasios~N. Angelopoulos, Rina~Foygel Barber, and Stephen Bates.
+\newblock Theoretical foundations of conformal prediction.
+\newblock \emph{arXiv preprint arXiv:2411.11824}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2411.11824}.
+
+\bibitem[Bang et~al.(2025)Bang, Ji, Schelten, Hartshorn, Fowler, Zhang, Cancedda, and Fung]{bang2025hallulens}
+Yejin Bang, Ziwei Ji, Alan Schelten, Anthony~S. Hartshorn, T.K. Fowler, Cheng Zhang, Nicola Cancedda, and Pascale Fung.
+\newblock Hallulens: Llm hallucination benchmark.
+\newblock 2025.
+\newblock \doi{10.18653/v1/2025.acl-long.1176}.
+\newblock URL \url{https://doi.org/10.18653/v1/2025.acl-long.1176}.
+
+\bibitem[Cresswell et~al.(2024)Cresswell, Sui, Kumar, and Vouitsis]{cresswell2024conformal}
+Jesse~C. Cresswell, Yi~Sui, Bhargava Kumar, and Noël Vouitsis.
+\newblock Conformal prediction sets improve human decision making.
+\newblock \emph{arXiv preprint arXiv:2401.13744}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2401.13744}.
+
+\bibitem[Dahl et~al.(2024)Dahl, Magesh, Suzgun, and Ho]{dahl2024large}
+Matthew Dahl, Varun Magesh, Mirac Suzgun, and Daniel~E. Ho.
+\newblock Large legal fictions: Profiling legal hallucinations in large language models.
+\newblock \emph{arXiv (Cornell University)}, 2024.
+\newblock \doi{10.48550/arxiv.2401.01301}.
+\newblock URL \url{https://doi.org/10.48550/arxiv.2401.01301}.
+
+\bibitem[Feng et~al.(2024)Feng, Shi, Wang, Ding, Balachandran, and Tsvetkov]{feng2024dont}
+Shangbin Feng, Weijia Shi, Yike Wang, Wenxuan Ding, Vidhisha Balachandran, and Yulia Tsvetkov.
+\newblock Don’t hallucinate, abstain: Identifying llm knowledge gaps via multi-llm collaboration.
+\newblock 2024.
+\newblock \doi{10.18653/v1/2024.acl-long.786}.
+\newblock URL \url{https://doi.org/10.18653/v1/2024.acl-long.786}.
+
+\bibitem[Fisch et~al.(2020)Fisch, Schuster, Jaakkola, and Barzilay]{fisch2020efficient}
+Adam Fisch, Tal Schuster, Tommi Jaakkola, and Regina Barzilay.
+\newblock Efficient conformal prediction via cascaded inference with expanded admission.
+\newblock \emph{arXiv preprint arXiv:2007.03114}, 2020.
+\newblock URL \url{https://arxiv.org/abs/2007.03114}.
+
+\bibitem[Geng et~al.(2024)Geng, Cai, Wang, Koeppl, Nakov, and Gurevych]{geng2024survey}
+Jiahui Geng, Fengyu Cai, Yuxia Wang, Heinz Koeppl, Preslav Nakov, and Iryna Gurevych.
+\newblock A survey of confidence estimation and calibration in large language models.
+\newblock 2024.
+\newblock \doi{10.18653/v1/2024.naacl-long.366}.
+\newblock URL \url{https://doi.org/10.18653/v1/2024.naacl-long.366}.
+
+\bibitem[Giovannotti(2023)]{giovannotti2023evaluating}
+Patrizio Giovannotti.
+\newblock Evaluating machine translation quality with conformal predictive distributions.
+\newblock \emph{arXiv preprint arXiv:2306.01549}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.01549}.
+
+\bibitem[Hüllermeier and Waegeman(2021)]{hullermeier2021aleatoric}
+Eyke Hüllermeier and Willem Waegeman.
+\newblock Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods.
+\newblock \emph{Machine Learning}, 2021.
+\newblock \doi{10.1007/s10994-021-05946-3}.
+\newblock URL \url{https://doi.org/10.1007/s10994-021-05946-3}.
+
+\bibitem[Kazlaris et~al.(2025)Kazlaris, Antoniou, Diamantaras, and Bratsas]{kazlaris2025illusion}
+Ioannis Kazlaris, Efstathios Antoniou, Konstantinos Diamantaras, and Charalampos Bratsas.
+\newblock From illusion to insight: A taxonomic survey of hallucination mitigation techniques in llms.
+\newblock \emph{Preprints.org}, 2025.
+\newblock \doi{10.20944/preprints202508.1942.v1}.
+\newblock URL \url{https://doi.org/10.20944/preprints202508.1942.v1}.
+
+\bibitem[Kompa et~al.(2021)Kompa, Snoek, and Beam]{kompa2021second}
+Benjamin Kompa, Jasper Snoek, and Andrew~L. Beam.
+\newblock Second opinion needed: communicating uncertainty in medical machine learning.
+\newblock \emph{npj Digital Medicine}, 2021.
+\newblock \doi{10.1038/s41746-020-00367-3}.
+\newblock URL \url{https://doi.org/10.1038/s41746-020-00367-3}.
+
+\bibitem[Kuwahara et~al.(2025)Kuwahara, Lin, Huang, Leung, Yapeter, Stanevich, Perez, and Cresswell]{kuwahara2025document}
+Bruce Kuwahara, Chen-Yuan Lin, Xiao~Shi Huang, Kin~Kwan Leung, Jullian~Arta Yapeter, Ilya Stanevich, Felipe Perez, and Jesse~C. Cresswell.
+\newblock Document summarization with conformal importance guarantees.
+\newblock \emph{arXiv preprint arXiv:2509.20461}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2509.20461}.
+
+\bibitem[Li et~al.(2025)Li, Zhao, Zhang, Li, Xie, Ng, Chua, and Deng]{li2025knowledge}
+Moxin Li, Yong Zhao, Wenxuan Zhang, Shuaiyi Li, Wenya Xie, See-Kiong Ng, Tat‐Seng Chua, and Yang Deng.
+\newblock Knowledge boundary of large language models: A survey.
+\newblock 2025.
+\newblock \doi{10.18653/v1/2025.acl-long.256}.
+\newblock URL \url{https://doi.org/10.18653/v1/2025.acl-long.256}.
+
+\bibitem[Lu et~al.(2022)Lu, Lemay, Chang, Höbel, and Kalpathy–Cramer]{lu2022fair}
+Charles Lu, Andréanne Lemay, Ken Chang, Katharina Höbel, and Jayashree Kalpathy–Cramer.
+\newblock Fair conformal predictors for applications in medical imaging.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial Intelligence}, 2022.
+\newblock \doi{10.1609/aaai.v36i11.21459}.
+\newblock URL \url{https://doi.org/10.1609/aaai.v36i11.21459}.
+
+\bibitem[Manduchi et~al.(2024)Manduchi, Meister, Pandey, Bamler, Cotterell, Däubener, Fellenz, Fischer, Gärtner, Kirchler, Kloft, Li, Lippert, de~Melo, Nalisnick, Ommer, Ranganath, Rudolph, Ullrich, den Broeck, Vogt, Wang, Wenzel, Wood, Mandt, and Fortuin]{manduchi2024challenges}
+Laura Manduchi, Clara Meister, Kushagra Pandey, Robert Bamler, Ryan Cotterell, Sina Däubener, Sophie Fellenz, Asja Fischer, Thomas Gärtner, Matthias Kirchler, Marius Kloft, Yingzhen Li, Christoph Lippert, Gerard de~Melo, Eric Nalisnick, Björn Ommer, Rajesh Ranganath, Maja Rudolph, Karen Ullrich, Guy~Van den Broeck, Julia~E. Vogt, Zhaoran Wang, Florian Wenzel, Frank Wood, Stephan Mandt, and Vincent Fortuin.
+\newblock On the challenges and opportunities in generative ai.
+\newblock \emph{arXiv (Cornell University)}, 2024.
+\newblock \doi{10.48550/arxiv.2403.00025}.
+\newblock URL \url{https://doi.org/10.48550/arxiv.2403.00025}.
+
+\bibitem[Nakkiran et~al.(2025)Nakkiran, Bradley, Goliński, Ndiaye, Kirchhof, and Williamson]{nakkiran2025trained}
+Preetum Nakkiran, Arwen Bradley, Adam Goliński, Eugene Ndiaye, Michael Kirchhof, and Sinead Williamson.
+\newblock Trained on tokens, calibrated on concepts: The emergence of semantic calibration in llms.
+\newblock \emph{arXiv preprint arXiv:2511.04869}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2511.04869}.
+
+\bibitem[Quach et~al.(2023)Quach, Fisch, Schuster, Yala, Sohn, Jaakkola, and Barzilay]{quach2023conformal}
+Victor Quach, Adam Fisch, Tal Schuster, Adam Yala, Jae~Ho Sohn, Tommi Jaakkola, and Regina Barzilay.
+\newblock Conformal language modeling.
+\newblock \emph{arXiv (Cornell University)}, 2023.
+\newblock \doi{10.48550/arxiv.2306.10193}.
+\newblock URL \url{https://doi.org/10.48550/arxiv.2306.10193}.
+
+\bibitem[Ravichander et~al.(2025)Ravichander, Ghela, Wadden, and Choi]{ravichander2025halogen}
+Abhilasha Ravichander, Shrusti Ghela, David Wadden, and Yejin Choi.
+\newblock Halogen: Fantastic llm hallucinations and where to find them.
+\newblock 2025.
+\newblock \doi{10.18653/v1/2025.acl-long.71}.
+\newblock URL \url{https://doi.org/10.18653/v1/2025.acl-long.71}.
+
+\bibitem[Shorinwa et~al.(2024)Shorinwa, Mei, Lidard, Ren, and Majumdar]{shorinwa2024survey}
+Ola Shorinwa, Zhiting Mei, Justin Lidard, Allen~Z. Ren, and Anirudha Majumdar.
+\newblock A survey on uncertainty quantification of large language models: Taxonomy, open research challenges, and future directions.
+\newblock \emph{arXiv (Cornell University)}, 2024.
+\newblock \doi{10.48550/arxiv.2412.05563}.
+\newblock URL \url{https://doi.org/10.48550/arxiv.2412.05563}.
+
+\bibitem[van~der Laan and Alaa(2024)]{laan2024selfcalibrating}
+Lars van~der Laan and Ahmed~M. Alaa.
+\newblock Self-calibrating conformal prediction.
+\newblock \emph{arXiv preprint arXiv:2402.07307}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.07307}.
+
+\bibitem[Wang et~al.(2024)Wang, Duan, Cheng, Zhang, Wang, Shi, Xu, Shen, and Zhu]{wang2024conu}
+Zhiyuan Wang, Jinhao Duan, Lu~Cheng, Yue Zhang, Qingni Wang, Xiaoshuang Shi, Kaidi Xu, Heng~Tao Shen, and Xiaofeng Zhu.
+\newblock Conu: Conformal uncertainty in large language models with correctness coverage guarantees.
+\newblock 2024.
+\newblock \doi{10.18653/v1/2024.findings-emnlp.404}.
+\newblock URL \url{https://doi.org/10.18653/v1/2024.findings-emnlp.404}.
+
+\bibitem[Wen et~al.(2025)Wen, Yao, Feng, Xu, Tsvetkov, Howe, and Wang]{wen2025know}
+Bingbing Wen, Jihan Yao, Shangbin Feng, Chenjun Xu, Yulia Tsvetkov, Bill Howe, and Lucy~Lu Wang.
+\newblock Know your limits: A survey of abstention in large language models.
+\newblock \emph{Transactions of the Association for Computational Linguistics}, 2025.
+\newblock \doi{10.1162/tacl_a_00754}.
+\newblock URL \url{https://doi.org/10.1162/tacl_a_00754}.
+
+\bibitem[Xi et~al.(2024)Xi, Huang, Liu, Feng, and Wei]{xi2024confidence}
+Huajun Xi, Jianguo Huang, Kangdao Liu, Lei Feng, and Hongxin Wei.
+\newblock Does confidence calibration improve conformal prediction?
+\newblock \emph{arXiv preprint arXiv:2402.04344}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.04344}.
+
+\bibitem[Yadkori et~al.(2024)Yadkori, Kuzborskij, Stutz, György, Fisch, Douc, Beloshapka, Weng, Yang, Szepesvári, Cemgil, and Tomasev]{yadkori2024mitigating}
+Yasin~Abbasi Yadkori, Ilja Kuzborskij, David Stutz, András György, Adam Fisch, Randal Douc, Iuliya Beloshapka, Wei-Hung Weng, Yao-Yuan Yang, Csaba Szepesvári, Ali~Taylan Cemgil, and Nenad Tomasev.
+\newblock Mitigating llm hallucinations via conformal abstention.
+\newblock \emph{arXiv (Cornell University)}, 2024.
+\newblock \doi{10.48550/arxiv.2405.01563}.
+\newblock URL \url{https://doi.org/10.48550/arxiv.2405.01563}.
+
+\bibitem[Zhou et~al.(2025)Zhou, Wang, Xu, Wang, Brauer, Welton, Cogan, Chung, Tian, Zhan, Hou, Lin, Melton, and Zhang]{zhou2025uncertaintyaware}
+Shuang Zhou, Jiashuo Wang, Zidu Xu, Song Wang, David Brauer, Lindsay Welton, Jacob~C. Cogan, Yuen-Hei Chung, Lei Tian, Zaifu Zhan, Yu~Hou, Mingquan Lin, Genevieve~B. Melton, and Rui Zhang.
+\newblock Uncertainty-aware large language models for explainable disease diagnosis.
+\newblock \emph{npj Digital Medicine}, 2025.
+\newblock \doi{10.1038/s41746-025-02071-6}.
+\newblock URL \url{https://doi.org/10.1038/s41746-025-02071-6}.
+
+\end{thebibliography}
