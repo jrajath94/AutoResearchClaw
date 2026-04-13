@@ -47,7 +47,7 @@
 \maketitle
 
 \begin{abstract}
-Test-time compute scaling---allocating more reasoning tokens to improve LLM accuracy---is widely modeled as a smooth, monotonic, task-determined function. We present evidence challenging all three assumptions. We introduce \method{} (\textbf{S}taircase \textbf{T}est-time \textbf{A}daptive \textbf{I}nference \textbf{R}outing), a framework that decomposes population-level scaling curves into per-problem components via BIC model selection and optimizes compute allocation through complexity-stratified temperature tuning. Through controlled experiments on a synthetic reasoning channel (800 problems, 4 factorial conditions, 5 seeds) and real LLM inference (Qwen2.5-0.5B and Qwen2.5-1.5B on GSM8K, 5 token budgets $\times$ 3 temperatures $\times$ 4 samples/cell), we find: \textbf{(1)} 87.5\% of real per-problem scaling curves are better fit by piecewise-constant (staircase) functions than smooth sigmoids under BIC; \textbf{(2)} accuracy non-monotonicity---where more reasoning tokens \emph{reduce} accuracy---occurs in 17--18\% of real problem-model pairs; and \textbf{(3)} sequential computation depth predicts scaling elbows far more accurately than description-length proxies ($\rho = 0.96$ vs.\ $\rho = 0.38$ on synthetic data; gzip--step-count $\rho = 0.22$ on GSM8K).  On synthetic data, the \method{} allocator reduces elbow prediction MAPE by 35\% relative to five baselines, with gains concentrated on high-complexity problems. We prove that under mild conditions on the per-problem critical depth distribution, the population scaling curve is log-concave even when individual curves are discrete, formalizing the ``smooth population from discrete individuals'' phenomenon.
+Test-time compute scaling---allocating more reasoning tokens to improve LLM accuracy---is widely modeled as a smooth, monotonic, task-determined function. We present evidence challenging all three assumptions. We introduce \method{} (\textbf{S}taircase \textbf{T}est-time \textbf{A}daptive \textbf{I}nference \textbf{R}outing), a framework that decomposes population-level scaling curves into per-problem components via BIC model selection and optimizes compute allocation through complexity-stratified temperature tuning. Through controlled experiments on a synthetic reasoning channel (800 problems, 4 factorial conditions, 5 seeds) and real LLM inference (Qwen2.5-0.5B and Qwen2.5-1.5B on GSM8K, 5 token budgets $\times$ 3 temperatures $\times$ 4 samples/cell), we find: \textbf{(1)} 81--88\% of real per-problem scaling curves are better fit by piecewise-constant (staircase) functions than smooth sigmoids under BIC; \textbf{(2)} accuracy non-monotonicity---where more reasoning tokens \emph{reduce} accuracy---occurs in 5--9\% of real problem-model pairs; and \textbf{(3)} sequential computation depth predicts scaling elbows far more accurately than description-length proxies ($\rho = 0.96$ vs.\ $\rho = 0.38$ on synthetic data; gzip--step-count $\rho = 0.22$ on GSM8K).  On synthetic data, the \method{} allocator reduces elbow prediction MAPE by 35\% relative to five baselines, with gains concentrated on high-complexity problems. We prove that under mild conditions on the per-problem critical depth distribution, the population scaling curve is log-concave even when individual curves are discrete, formalizing the ``smooth population from discrete individuals'' phenomenon.
 \end{abstract}
 
 %=========================================================================
@@ -68,9 +68,9 @@ Three critical assumptions remain untested:
 We introduce \method{}, a framework that addresses all three through a combination of theoretical analysis and empirical validation.  Our contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
-    \item \textbf{Per-problem staircase decomposition} (\S\ref{sec:h1}).  On real LLMs (Qwen2.5-1.5B, GSM8K), 87.5\% of per-problem accuracy curves are better described by piecewise-constant functions than smooth sigmoids under BIC model selection---far exceeding the 41\% rate observed in our synthetic channel.  We prove (Theorem~\ref{thm:population}) that a population of 1-staircase individuals produces a smooth population curve under log-concave critical depth distributions.
+    \item \textbf{Per-problem staircase decomposition} (\S\ref{sec:h1}).  On real LLMs (Qwen2.5-1.5B, GSM8K), 81--88\% of per-problem accuracy curves are better described by piecewise-constant functions than smooth sigmoids under BIC model selection---far exceeding the 41\% rate observed in our synthetic channel.  We prove (Theorem~\ref{thm:population}) that a population of 1-staircase individuals produces a smooth population curve under log-concave critical depth distributions.
 
-    \item \textbf{Model-dependent channel capacity} (\S\ref{sec:h2}).  accuracy non-monotonicity (``reasoning overshoot'') occurs in 17--18\% of real problem-model pairs.  Cross-model elbow divergence is 8.8\% between Qwen-0.5B and Qwen-1.5B.
+    \item \textbf{Model-dependent channel capacity} (\S\ref{sec:h2}).  accuracy non-monotonicity (``reasoning overshoot'') occurs in 5--9\% of real problem-model pairs.  Cross-model elbow divergence is 8.8\% between Qwen-0.5B and Qwen-1.5B.
 
     \item \textbf{Computational vs.\ description complexity} (\S\ref{sec:h3}).  Circuit depth predicts scaling elbows with $\rho = 0.96$ (synthetic), while gzip compression achieves only $\rho = 0.38$.  On real GSM8K, gzip--step-count $\rho = 0.22$, confirming the distinction.
 
@@ -219,7 +219,7 @@ We compare \method{} against 5 baselines:
     \label{fig:staircase}
 \end{figure}
 
-On real LLMs, the BIC staircase win rate is $\bm{0.875}$ (Table~\ref{tab:h1})---far exceeding both the pre-registered 0.55 threshold and the synthetic rate (0.41).  This is our strongest finding: on real GSM8K with real LLMs, 87.5\% of per-problem scaling curves are better described as discrete transitions than smooth sigmoids.
+On real LLMs, the BIC staircase win rate is $\bm{0.875}$ (Table~\ref{tab:h1})---far exceeding both the pre-registered 0.55 threshold and the synthetic rate (0.41).  This is our strongest finding: on real GSM8K with real LLMs, 81--88\% of per-problem scaling curves are better described as discrete transitions than smooth sigmoids.
 
 The synthetic--real gap (0.41 vs.\ 0.875) is itself informative: real LLMs have sharper internal representations than our smooth synthetic channel.  The model either ``gets it'' at a particular budget or doesn't, with less gradual improvement than a noisy channel predicts.
 
@@ -239,7 +239,7 @@ Figure~\ref{fig:staircase} shows representative per-problem curves.  Theorem~\re
 
 Cross-model elbow divergence is $0.34 \pm 0.01$ (synthetic) and $0.088$ (real).  The real value is lower because Qwen-0.5B and Qwen-1.5B share architecture and pretraining data; architecturally distinct models (e.g., Llama vs.\ Mistral) would likely show greater divergence.
 
-accuracy non-monotonicity is present at 17--18\% of real problem-model pairs (vs.\ 97--98\% synthetic with planted non-monotonicity at 30--45\% base rate).  Proposition~\ref{prop:nonmono} predicts this: the real non-monotonicity rate is lower because real models have lower per-step overshoot probability than our synthetic channel's planted rate.
+accuracy non-monotonicity is present at 5--9\% of real problem-model pairs (vs.\ 97--98\% synthetic with planted non-monotonicity at 30--45\% base rate).  Proposition~\ref{prop:nonmono} predicts this: the real non-monotonicity rate is lower because real models have lower per-step overshoot probability than our synthetic channel's planted rate.
 
 \subsection{H3: Complexity Proxy Validation}
 \label{sec:h3}
@@ -288,11 +288,11 @@ Table~\ref{tab:allocator} shows \method{} vs.\ 5 baselines on synthetic data (5 
 \section{Discussion}
 %=========================================================================
 
-\textbf{The key finding: real LLMs are more ``staircase'' than synthetic channels.}  The 87.5\% BIC win rate on real data (vs.\ 41\% synthetic) was unexpected.  We hypothesize that real transformer representations create sharper decision boundaries than continuous noise models---a problem is either within the model's capability at a given budget or it isn't.  This has immediate practical implications: adaptive allocators should model per-problem transitions as discrete, not smooth.
+\textbf{The key finding: real LLMs are more ``staircase'' than synthetic channels.}  The 81--88\% BIC win rate on real data (vs.\ 41\% synthetic) was unexpected.  We hypothesize that real transformer representations create sharper decision boundaries than continuous noise models---a problem is either within the model's capability at a given budget or it isn't.  This has immediate practical implications: adaptive allocators should model per-problem transitions as discrete, not smooth.
 
 \textbf{Computational depth vs.\ description length.}  The $5\times$ MAPE advantage of circuit depth over gzip ($\rho = 0.96$ vs.\ $0.38$) and the weak gzip--step-count correlation on real GSM8K ($\rho = 0.22$) together establish that inference budgeting should target \emph{computational} complexity.  Developing cheap circuit depth estimators (e.g., small classifiers predicting solution step count from problem text) is a promising direction.
 
-\textbf{Reasoning overshoot is real but not universal.}  The 17--18\% accuracy non-monotonicity rate on real LLMs validates the phenomenon while calibrating its prevalence.  Process reward models should account for the possibility that late reasoning steps are actively harmful, but this is a minority-case concern, not a majority one.
+\textbf{Reasoning overshoot is real but not universal.}  The 5--9\% accuracy non-monotonicity rate on real LLMs validates the phenomenon while calibrating its prevalence.  Process reward models should account for the possibility that late reasoning steps are actively harmful, but this is a minority-case concern, not a majority one.
 
 %=========================================================================
 \section{Limitations}
@@ -300,7 +300,7 @@ Table~\ref{tab:allocator} shows \method{} vs.\ 5 baselines on synthetic data (5 
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
     \item \textbf{Small model scale.}  Real experiments use 0.5B--1.5B parameter models with low absolute accuracy on GSM8K ($\leq$5\%).  Scaling behavior at 7B--70B+ may differ qualitatively---larger models may show more gradual transitions as they develop richer internal representations.
-    \item \textbf{Limited real experiment scale.}  40 GSM8K problems with 4 samples/cell limits statistical power.  Larger-scale validation (500+ problems, 3+ model families, multiple benchmarks) is needed.
+    \item \textbf{Limited real experiment scale.}  100 GSM8K problems with 8 samples/cell limits statistical power.  Larger-scale validation (500+ problems, 3+ model families, multiple benchmarks) is needed.
     \item \textbf{Single benchmark domain.}  GSM8K is arithmetic reasoning only.  Generalization to code (HumanEval), logic (FOLIO), and open-ended tasks is untested.
     \item \textbf{Synthetic channel fidelity.}  The synthetic channel's parameters (noise scale, non-monotonicity rate) were chosen for experimental design, not calibrated to match any specific LLM.  The synthetic--real gaps (BIC rate, divergence, non-monotonicity) highlight this limitation.
     \item \textbf{Circuit depth estimation.}  Circuit depth is the strongest proxy but requires ground-truth solution structure.  Practical deployment requires a learned estimator, which is itself a research challenge.
@@ -317,13 +317,13 @@ This work studies the efficiency of LLM inference, which has direct environmenta
 \section{Conclusion}
 %=========================================================================
 
-We introduced \method{}, revealing that per-problem test-time compute scaling is fundamentally discrete on real LLMs (87.5\% staircase by BIC on GSM8K).  This finding---which emerged only from real LLM validation, not from our synthetic channel---motivates a shift from smooth population-level bounds to discrete per-problem models for inference budgeting.  Circuit depth ($\rho = 0.96$) dramatically outperforms description-length proxies ($\rho = 0.38$) for elbow prediction.  accuracy non-monotonicity is confirmed at meaningful rates (17--18\%) on real data, validating ``reasoning overshoot'' as a genuine phenomenon.
+We introduced \method{}, revealing that per-problem test-time compute scaling is fundamentally discrete on real LLMs.  On 100 GSM8K problems with $S{=}8$ and bootstrap CIs, 81--88\% of per-problem curves exhibit staircase structure (Qwen-0.5B: $0.883$ $[0.847, 0.917]$; Qwen-1.5B: $0.813$ $[0.758, 0.877]$).  This finding---which emerged only from real LLM validation, not from our synthetic channel---motivates a shift from smooth population-level bounds to discrete per-problem models for inference budgeting.  Circuit depth ($\rho = 0.96$) dramatically outperforms description-length proxies ($\rho = 0.38$) for elbow prediction.  Accuracy non-monotonicity is confirmed at 5--9\% on real data, validating ``reasoning overshoot'' as a genuine but minority phenomenon.
 
 %=========================================================================
 \section*{Reproducibility Statement}
 %=========================================================================
 
-All code, data generation scripts, and figure generation are available at the anonymous repository.  Synthetic experiments use fixed seeds (base: 42) and are fully deterministic.  Real experiments use publicly available models (Qwen2.5-0.5B/1.5B-Instruct from HuggingFace) on a public benchmark (GSM8K test split).  All hyperparameters are specified in \S\ref{sec:setup}.  Total compute: synthetic $<$\$0.02 (RunPod A4500, 355s), real $\approx$\$0.10 (RunPod A5000, 46 min).
+All code, data generation scripts, and figure generation are available at the anonymous repository.  Synthetic experiments use fixed seeds (base: 42) and are fully deterministic.  Real experiments use publicly available models (Qwen2.5-0.5B/1.5B-Instruct from HuggingFace) on a public benchmark (GSM8K test split).  All hyperparameters are specified in \S\ref{sec:setup}.  Total compute: synthetic $<$\$0.02 (RunPod A4500, 355s), real $\approx$\$0.80 (RunPod A5000, $\sim$3.5h, 24{,}000 inference calls).
 
 %=========================================================================
 \bibliography{references}
