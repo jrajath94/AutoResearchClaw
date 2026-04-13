@@ -1,0 +1,166 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{power2022grokking}
+\citation{kaplan2020scaling,hoffmann2022training}
+\citation{nanda2023progress}
+\citation{liu2023omnigrok}
+\citation{thilak2022slingshot}
+\citation{bahri2024explaining}
+\citation{caballero2023broken}
+\citation{hoffmann2022training}
+\citation{li2024geometry}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{1}{section*.1}\protected@file@percent }
+\citation{power2022grokking}
+\citation{nanda2023progress}
+\citation{liu2023omnigrok}
+\citation{thilak2022slingshot}
+\citation{nanda2023progress}
+\citation{thilak2022slingshot}
+\citation{kaplan2020scaling}
+\citation{hoffmann2022training}
+\citation{caballero2023broken}
+\citation{bahri2024explaining}
+\citation{saxe2014exact}
+\citation{goldt2020modeling}
+\citation{wei2022emergent}
+\citation{schaeffer2024emergent}
+\citation{schaeffer2024emergent}
+\citation{elhage2022toy}
+\citation{li2024geometry}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{2}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Grokking.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Neural scaling laws.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Phase transitions in learning.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Superposition and feature geometry.}{2}{section*.5}\protected@file@percent }
+\citation{li2024geometry}
+\@writefile{toc}{\contentsline {section}{\numberline {3}CRISP: Theoretical Framework}{3}{section.3}\protected@file@percent }
+\newlabel{sec:theory}{{3}{3}{CRISP: Theoretical Framework}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Representation Energy Landscape}{3}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:landscape}{{3.1}{3}{Representation Energy Landscape}{subsection.3.1}{}}
+\newlabel{eq:energy}{{1}{3}{Representation Energy Landscape}{equation.1}{}}
+\newlabel{def:regimes}{{1}{3}{Representation Regimes}{theorem.1}{}}
+\newlabel{eq:superposition_index}{{2}{3}{Representation Energy Landscape}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Phase Transition Existence}{3}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:phase_transition}{{3.2}{3}{Phase Transition Existence}{subsection.3.2}{}}
+\newlabel{thm:phase_transition}{{2}{3}{Phase Transition Existence}{theorem.2}{}}
+\newlabel{eq:gradient_condition}{{3}{4}{Phase Transition Existence}{equation.3}{}}
+\newlabel{eq:tradeoff}{{4}{4}{Phase Transition Existence}{equation.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Connection to grokking.}{4}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Connection to scaling laws.}{4}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Critical Dataset Size}{4}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:critical_size}{{3.3}{4}{Critical Dataset Size}{subsection.3.3}{}}
+\newlabel{thm:critical_size}{{3}{4}{Critical Dataset Size}{theorem.3}{}}
+\newlabel{eq:nc}{{5}{4}{Critical Dataset Size}{equation.5}{}}
+\newlabel{eq:alpha}{{6}{4}{Critical Dataset Size}{equation.6}{}}
+\citation{schaeffer2024emergent}
+\citation{power2022grokking}
+\citation{nanda2023progress}
+\newlabel{eq:transition_width}{{7}{5}{Critical Dataset Size}{equation.7}{}}
+\newlabel{eq:hessian_condition}{{8}{5}{Critical Dataset Size}{equation.8}{}}
+\newlabel{cor:scaling}{{4}{5}{Scaling Exponent}{theorem.4}{}}
+\newlabel{eq:beta}{{11}{5}{Scaling Exponent}{equation.11}{}}
+\@writefile{toc}{\contentsline {paragraph}{Summary of theoretical predictions.}{5}{section*.8}\protected@file@percent }
+\citation{schaeffer2024emergent}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Testable predictions of CRISP. Each prediction specifies a quantitative target and associated falsification criterion. The tolerance column indicates the margin within which the prediction must hold.}}{6}{table.caption.9}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:predictions}{{1}{6}{Testable predictions of CRISP. Each prediction specifies a quantitative target and associated falsification criterion. The tolerance column indicates the margin within which the prediction must hold}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experimental Design}{6}{section.4}\protected@file@percent }
+\newlabel{sec:experiments}{{4}{6}{Experimental Design}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Tasks and Architectures}{6}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Modular arithmetic (mod-47).}{6}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Dataset Size Sweeps}{6}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Evaluation Criteria}{6}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Metrics}{6}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Phase diagram of grokking on $(a+b) \bmod  47$. Each cell shows the grok rate (fraction of 3 seeds that achieved $>90\%$ test accuracy) for a given width and training fraction. Green indicates consistent grokking; red indicates no grokking. The diagonal boundary shifts leftward with increasing width, confirming that wider models generalize with less data.}}{7}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:phase_diagram}{{1}{7}{Phase diagram of grokking on $(a+b) \bmod 47$. Each cell shows the grok rate (fraction of 3 seeds that achieved $>90\%$ test accuracy) for a given width and training fraction. Green indicates consistent grokking; red indicates no grokking. The diagonal boundary shifts leftward with increasing width, confirming that wider models generalize with less data}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Built-in Falsification Tests}{7}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:falsification}{{4.5}{7}{Built-in Falsification Tests}{subsection.4.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{F1: Schaeffer smoothness test.}{7}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F2: Sub-critical extended training test.}{7}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{F3: Decorrelation test.}{7}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{7}{section.5}\protected@file@percent }
+\newlabel{sec:results}{{5}{7}{Results}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Phase Diagram}{7}{subsection.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Grok rate (\% of seeds achieving $>90\%$ test accuracy) for all 40 conditions (5 widths $\times $ 8 fractions). Bold entries mark the critical fraction $f_c$ per width (smallest fraction with $\geq 50\%$ grok rate).}}{8}{table.caption.15}\protected@file@percent }
+\newlabel{tab:full_results}{{2}{8}{Grok rate (\% of seeds achieving $>90\%$ test accuracy) for all 40 conditions (5 widths $\times $ 8 fractions). Bold entries mark the critical fraction $f_c$ per width (smallest fraction with $\geq 50\%$ grok rate)}{table.caption.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Observed critical dataset size $n_c$ per width. $f_c$ is the critical fraction, $n_c= f_c \times 2209$.}}{8}{table.caption.16}\protected@file@percent }
+\newlabel{tab:nc_observed}{{3}{8}{Observed critical dataset size $\nc $ per width. $f_c$ is the critical fraction, $\nc = f_c \times 2209$}{table.caption.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Critical Dataset Size: $n_c$ Decreases with Width}{8}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reconciling theory with data: effective feature count.}{8}{section*.17}\protected@file@percent }
+\newlabel{eq:nc_refined}{{13}{8}{Reconciling theory with data: effective feature count}{equation.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Grokking Delays}{8}{subsection.5.3}\protected@file@percent }
+\citation{wei2022emergent}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Mean grokking delay (steps from 99\% train accuracy to 90\% test accuracy) for conditions where grokking occurred. ``---'' indicates no grokking.}}{9}{table.caption.18}\protected@file@percent }
+\newlabel{tab:delays}{{4}{9}{Mean grokking delay (steps from 99\% train accuracy to 90\% test accuracy) for conditions where grokking occurred. ``---'' indicates no grokking}{table.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Transition sharpening with width. For narrow models ($w = 32$), the transition spans two fraction increments ($f = 0.6$ to $f = 0.7$) and is stochastic (33\% grok rate at $f = 0.6$). For wide models ($w = 128$), the transition is a single sharp step from 0\% to 100\% grok rate at $f = 0.4$.}}{9}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:condition_progression}{{2}{9}{Transition sharpening with width. For narrow models ($w = 32$), the transition spans two fraction increments ($f = 0.6$ to $f = 0.7$) and is stochastic (33\% grok rate at $f = 0.6$). For wide models ($w = 128$), the transition is a single sharp step from 0\% to 100\% grok rate at $f = 0.4$}{figure.caption.19}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Phase Transition Sharpness}{9}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Scaling with Width}{9}{subsection.5.5}\protected@file@percent }
+\citation{li2024geometry}
+\citation{hoffmann2022training}
+\citation{nanda2023progress}
+\citation{milman1986asymptotic}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{10}{section.6}\protected@file@percent }
+\newlabel{sec:discussion}{{6}{10}{Discussion}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}A Unified View of Training Dynamics}{10}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Practical Implications}{10}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Relationship to Existing Theories}{10}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Li$^2$ framework.}{10}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Chinchilla scaling.}{10}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Width dependence: what the theory gets right and wrong.}{10}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Circuit competition.}{10}{section*.24}\protected@file@percent }
+\citation{saxe2014exact}
+\bibstyle{plainnat}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Why $\log F$ and Not $F$?}{11}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Limitations}{11}{section.7}\protected@file@percent }
+\newlabel{sec:limitations}{{7}{11}{Limitations}{section.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{Assumptions on feature structure.}{11}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Estimation of $F$.}{11}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The constant $\alpha $.}{11}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Architecture dependence.}{11}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Scale of experiments.}{11}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Depth.}{11}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{11}{section.8}\protected@file@percent }
+\newlabel{sec:conclusion}{{8}{11}{Conclusion}{section.8}{}}
+\bibcite{bahri2024explaining}{{1}{2024}{{Bahri et~al.}}{{}}}
+\bibcite{barak2022hidden}{{2}{2022}{{Barak et~al.}}{{}}}
+\bibcite{caballero2023broken}{{3}{2023}{{Caballero et~al.}}{{}}}
+\bibcite{caponnetto2007optimal}{{4}{2007}{{Caponnetto and De~Vito}}{{}}}
+\bibcite{elhage2022toy}{{5}{2022}{{Elhage et~al.}}{{}}}
+\bibcite{goldt2020modeling}{{6}{2020}{{Goldt et~al.}}{{}}}
+\bibcite{hoffmann2022training}{{7}{2022}{{Hoffmann et~al.}}{{}}}
+\bibcite{kaplan2020scaling}{{8}{2020}{{Kaplan et~al.}}{{}}}
+\bibcite{karpov2015char}{{9}{2015}{{Karpathy}}{{}}}
+\bibcite{li2024geometry}{{10}{2024}{{Li and Li}}{{}}}
+\bibcite{liu2023omnigrok}{{11}{2023}{{Liu et~al.}}{{}}}
+\bibcite{milman1986asymptotic}{{12}{1986}{{Milman and Schechtman}}{{}}}
+\bibcite{nanda2023progress}{{13}{2023}{{Nanda et~al.}}{{}}}
+\bibcite{power2022grokking}{{14}{2022}{{Power et~al.}}{{}}}
+\bibcite{saxe2014exact}{{15}{2014}{{Saxe et~al.}}{{}}}
+\bibcite{schaeffer2024emergent}{{16}{2024}{{Schaeffer et~al.}}{{}}}
+\bibcite{thilak2022slingshot}{{17}{2022}{{Thilak et~al.}}{{}}}
+\bibcite{wei2022emergent}{{18}{2022}{{Wei et~al.}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Full Proofs}{14}{appendix.A}\protected@file@percent }
+\newlabel{app:proofs}{{A}{14}{Full Proofs}{appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Proof of Theorem~\ref {thm:phase_transition}}{14}{subsection.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Proof of Theorem~\ref {thm:critical_size}}{15}{subsection.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Proof of Corollary~\ref {cor:scaling}}{15}{subsection.A.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Additional Experimental Details}{16}{appendix.B}\protected@file@percent }
+\newlabel{app:experiments}{{B}{16}{Additional Experimental Details}{appendix.B}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Hyperparameter Settings}{16}{subsection.B.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Hyperparameters for the modular arithmetic (mod-47) experiments.}}{16}{table.caption.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Superposition Index Computation}{16}{subsection.B.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Identification of $n_c$ Per Width}{17}{subsection.B.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Supplementary Figures}{17}{subsection.B.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Critical fraction $f_c$ as a function of width. The threshold decreases monotonically with width, from $f_c = 0.7$ at $w = 32$ to $f_c = 0.4$ at $w = 128$, indicating that wider models require less data to cross the phase boundary.}}{18}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:scaling_curves}{{3}{18}{Critical fraction $f_c$ as a function of width. The threshold decreases monotonically with width, from $f_c = 0.7$ at $w = 32$ to $f_c = 0.4$ at $w = 128$, indicating that wider models require less data to cross the phase boundary}{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Distribution of test accuracy across seeds and conditions. Each violin shows the distribution over 3 seeds. The bimodal structure at intermediate dataset fractions (near $f_c$) is consistent with a phase transition: some seeds have crossed the threshold while others remain in the memorization state.}}{19}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:metric_dist}{{4}{19}{Distribution of test accuracy across seeds and conditions. Each violin shows the distribution over 3 seeds. The bimodal structure at intermediate dataset fractions (near $f_c$) is consistent with a phase transition: some seeds have crossed the threshold while others remain in the memorization state}{figure.caption.34}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Tradeoff between training fraction and test accuracy across all conditions. Each point is one (width, fraction) condition averaged over 3 seeds. The sharp elbow at the critical fraction marks the transition from memorization to generalization.}}{20}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:metric_tradeoff}{{5}{20}{Tradeoff between training fraction and test accuracy across all conditions. Each point is one (width, fraction) condition averaged over 3 seeds. The sharp elbow at the critical fraction marks the transition from memorization to generalization}{figure.caption.35}{}}
+\gdef \@abspage@last{20}
