@@ -1,0 +1,31 @@
+\begin{table}[t]
+\centering
+\caption{Real LLM experiment results (Qwen-0.5B and Qwen-1.5B on 40 GSM8K problems, 4 samples/cell). BIC staircase win rate dramatically exceeds the 0.55 threshold on real data. MI non-monotonicity is present but moderate (17--18\%). Gzip-step correlation confirms that description length is a poor proxy for computational complexity.}
+\label{tab:real}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Qwen-0.5B} & \textbf{Qwen-1.5B} \\
+\midrule
+\multicolumn{3}{l}{\textit{H1: Staircase structure}} \\
+\ \ BIC win rate (overall) & $0.85$ & $\bm{0.90}$ \\
+\ \ BIC win rate ($\tau{=}0.1$) & $0.83$ & $0.85$ \\
+\ \ BIC win rate ($\tau{=}0.5$) & $0.88$ & $\bm{0.90}$ \\
+\ \ BIC win rate ($\tau{=}1.0$) & $0.85$ & $0.88$ \\
+\midrule
+\multicolumn{3}{l}{\textit{H2: Model dependence}} \\
+\ \ Cross-model elbow divergence & \multicolumn{2}{c}{$0.088$} \\
+\ \ MI non-monotonicity rate & $17.5\%$ & $18.3\%$ \\
+\midrule
+\multicolumn{3}{l}{\textit{H3: Complexity proxy (GSM8K text features, $n{=}40$)}} \\
+\ \ Gzip--step count correlation & \multicolumn{2}{c}{$\rho = 0.22$} \\
+\midrule
+\multicolumn{3}{l}{\textit{Accuracy by token budget ($\tau{=}0.5$)}} \\
+\ \ $t = 32$ & $2.5\%$ & $1.3\%$ \\
+\ \ $t = 64$ & $2.5\%$ & $3.8\%$ \\
+\ \ $t = 128$ & $4.4\%$ & $2.5\%$ \\
+\ \ $t = 256$ & $5.0\%$ & $3.1\%$ \\
+\ \ $t = 512$ & $2.5\%$ & $4.4\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}

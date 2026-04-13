@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{Hypothesis 3 (complexity proxy) results. Circuit depth dramatically outperforms gzip compression as a predictor of scaling elbows. MAPE = Mean Absolute Percentage Error of elbow prediction via ridge regression. GSM8K row uses 500 real math problems (text features only, no LLM inference).}
+\label{tab:h3}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Synthetic Channel}} & \multicolumn{2}{c}{\textbf{GSM8K (text features)}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Complexity Proxy} & \textbf{MAPE} & $\bm{\rho}$ & \multicolumn{2}{c}{$\bm{\rho}$ \textbf{with step count}} \\
+\midrule
+Circuit depth / step count & $\bm{10.7\%} \pm 0.4$ & $\bm{0.96} \pm 0.004$ & \multicolumn{2}{c}{1.00 (by definition)} \\
+Description length & $37.6\% \pm 2.8$ & --- & \multicolumn{2}{c}{---} \\
+Gzip compression & $51.8\% \pm 2.0$ & $0.38 \pm 0.06$ & \multicolumn{2}{c}{$0.18$} \\
+\bottomrule
+\end{tabular}
+\end{table}

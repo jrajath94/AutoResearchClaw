@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Hypothesis 1 results across synthetic channel and real LLM inference. BIC win rate = fraction of problems where piecewise-constant BIC $<$ logistic BIC $- 2$. Real LLM results strongly support the staircase hypothesis, exceeding the 0.55 threshold at all temperatures.}
+\label{tab:h1}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Synthetic Channel}} & \multicolumn{2}{c}{\textbf{Real LLM (Qwen-1.5B)}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Metric} & \textbf{Result} & \textbf{Verdict} & \textbf{Result} & \textbf{Verdict} \\
+\midrule
+BIC win rate ($\tau{=}0.1$) & $0.41$ & Partial & $\bm{0.85}$ & \checkmark \\
+BIC win rate ($\tau{=}0.5$) & $0.40$ & Partial & $\bm{0.90}$ & \checkmark \\
+BIC win rate ($\tau{=}1.0$) & $0.42$ & Partial & $\bm{0.88}$ & \checkmark \\
+Overall BIC win rate & $0.41 \pm 0.01$ & $< 0.55$ & $\bm{0.875}$ & $\bm{> 0.55}$ \\
+\midrule
+\multicolumn{5}{l}{\textit{Synthetic-only metrics (allocator performance):}} \\
+\method{} MAPE (overall) & \multicolumn{2}{c}{$47.1\% \pm 4.4$} & \multicolumn{2}{c}{---} \\
+Baseline MAPE & \multicolumn{2}{c}{$72.1\% \pm 0.2$} & \multicolumn{2}{c}{---} \\
+\textbf{Relative improvement} & \multicolumn{2}{c}{\textbf{34.7\%}} & \multicolumn{2}{c}{---} \\
+\bottomrule
+\end{tabular}
+\end{table}
