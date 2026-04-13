@@ -1,0 +1,126 @@
+/Users/rj/opt/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/Users/rj/opt/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+METRIC_DEF avg_set_size lower_is_better
+METRIC_DEF empirical_coverage higher_is_better
+METRIC_DEF avg_semantic_size lower_is_better
+REGISTERED_CONDITIONS token_cp,naive_semantic_cp,semcp_proposed,semcp_variant,semcp_no_m2o,semcp_simplified
+  [data] Loaded 50 examples from trivia_qa
+  [gen] Generating responses for question 0/50
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+TIME_ESTIMATE: 150529s (pilot=696.9s, runs=36, budget=10800s)
+SCALING: Reducing max_samples from 100 to 100 to fit time budget
+
+============================================================
+DATASET: trivia_qa
+============================================================
+  [data] Loaded 100 examples from trivia_qa
+  [gen] Generating responses for question 0/100
+  [gen] Generating responses for question 50/100
+DATA_STATS total=100 with_semantic_match=3 avg_matches_per_q=0.0 K=20 D=384 prep_time=1254.7s
+
+--- Condition: token_cp (TokenLevelCP) ---
+RESULT seed=42 dataset=trivia_qa condition=token_cp avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.1s
+RESULT seed=123 dataset=trivia_qa condition=token_cp avg_set_size=4.9697 empirical_coverage=0.0000 avg_semantic_size=4.7879 threshold=1.7524 coverage_valid=False time=0.0s
+RESULT seed=456 dataset=trivia_qa condition=token_cp avg_set_size=6.5152 empirical_coverage=0.0000 avg_semantic_size=6.0303 threshold=1.7524 coverage_valid=False time=0.0s
+/Users/rj/opt/anaconda3/lib/python3.9/site-packages/numpy/core/_methods.py:173: RuntimeWarning: invalid value encountered in subtract
+  x = asanyarray(arr - arrmean)
+AGGREGATE dataset=trivia_qa condition=token_cp avg_set_size=10.4949±6.7506 coverage=0.0101±0.0143 semantic_size=10.0808±6.6262 validity_rate=0.00 n_seeds=3
+
+--- Condition: naive_semantic_cp (NaiveSemanticCP) ---
+RESULT seed=42 dataset=trivia_qa condition=naive_semantic_cp avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.1s
+RESULT seed=123 dataset=trivia_qa condition=naive_semantic_cp avg_set_size=13.3939 empirical_coverage=0.0000 avg_semantic_size=13.0606 threshold=0.3969 coverage_valid=False time=0.1s
+RESULT seed=456 dataset=trivia_qa condition=naive_semantic_cp avg_set_size=14.1515 empirical_coverage=0.0000 avg_semantic_size=13.4848 threshold=0.3969 coverage_valid=False time=0.1s
+AGGREGATE dataset=trivia_qa condition=naive_semantic_cp avg_set_size=15.8485±2.9518 coverage=0.0101±0.0143 semantic_size=15.3232±2.9050 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_proposed (SemCP) ---
+RESULT seed=42 dataset=trivia_qa condition=semcp_proposed avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.7s
+RESULT seed=123 dataset=trivia_qa condition=semcp_proposed avg_set_size=9.5152 empirical_coverage=0.0000 avg_semantic_size=9.1818 threshold=0.0097 coverage_valid=False time=0.3s
+RESULT seed=456 dataset=trivia_qa condition=semcp_proposed avg_set_size=12.1818 empirical_coverage=0.0000 avg_semantic_size=11.5152 threshold=0.0096 coverage_valid=False time=0.3s
+AGGREGATE dataset=trivia_qa condition=semcp_proposed avg_set_size=13.8990±4.4493 coverage=0.0101±0.0143 semantic_size=13.3737±4.3831 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_variant (SemCPVariant) ---
+RESULT seed=42 dataset=trivia_qa condition=semcp_variant avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.4s
+RESULT seed=123 dataset=trivia_qa condition=semcp_variant avg_set_size=15.6667 empirical_coverage=0.0000 avg_semantic_size=15.6364 threshold=0.5364 coverage_valid=False time=0.3s
+RESULT seed=456 dataset=trivia_qa condition=semcp_variant avg_set_size=13.0000 empirical_coverage=0.0000 avg_semantic_size=12.8485 threshold=0.5119 coverage_valid=False time=0.3s
+AGGREGATE dataset=trivia_qa condition=semcp_variant avg_set_size=16.2222±2.8846 coverage=0.0101±0.0143 semantic_size=15.9697±2.6949 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_no_m2o (SemCPNoManyToOne) ---
+RESULT seed=42 dataset=trivia_qa condition=semcp_no_m2o avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.2s
+RESULT seed=123 dataset=trivia_qa condition=semcp_no_m2o avg_set_size=9.5152 empirical_coverage=0.0000 avg_semantic_size=9.1818 threshold=0.0097 coverage_valid=False time=0.1s
+RESULT seed=456 dataset=trivia_qa condition=semcp_no_m2o avg_set_size=12.1818 empirical_coverage=0.0000 avg_semantic_size=11.5152 threshold=0.0096 coverage_valid=False time=0.1s
+AGGREGATE dataset=trivia_qa condition=semcp_no_m2o avg_set_size=13.8990±4.4493 coverage=0.0101±0.0143 semantic_size=13.3737±4.3831 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_simplified (SemCPSimplified) ---
+RESULT seed=42 dataset=trivia_qa condition=semcp_simplified avg_set_size=20.0000 empirical_coverage=0.0303 avg_semantic_size=19.4242 threshold=inf coverage_valid=False time=0.3s
+RESULT seed=123 dataset=trivia_qa condition=semcp_simplified avg_set_size=12.1515 empirical_coverage=0.0000 avg_semantic_size=11.8182 threshold=0.8236 coverage_valid=False time=0.3s
+RESULT seed=456 dataset=trivia_qa condition=semcp_simplified avg_set_size=13.7879 empirical_coverage=0.0000 avg_semantic_size=13.1212 threshold=0.8185 coverage_valid=False time=0.3s
+AGGREGATE dataset=trivia_qa condition=semcp_simplified avg_set_size=15.3131±3.3808 coverage=0.0101±0.0143 semantic_size=14.7879±3.3213 validity_rate=0.00 n_seeds=3
+
+============================================================
+DATASET: squad
+============================================================
+Generating train split:   0%|          | 0/87599 [00:00<?, ? examples/s]Generating train split:  75%|███████▌  | 66000/87599 [00:00<00:00, 627585.19 examples/s]Generating train split: 100%|██████████| 87599/87599 [00:00<00:00, 719067.40 examples/s]
+Generating validation split:   0%|          | 0/10570 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 10570/10570 [00:00<00:00, 907772.50 examples/s]
+  [data] Loaded 100 examples from squad
+  [gen] Generating responses for question 0/100
+  [gen] Generating responses for question 50/100
+DATA_STATS total=100 with_semantic_match=2 avg_matches_per_q=0.0 K=20 D=384 prep_time=1299.2s
+
+--- Condition: token_cp (TokenLevelCP) ---
+RESULT seed=42 dataset=squad condition=token_cp avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.3s
+RESULT seed=123 dataset=squad condition=token_cp avg_set_size=19.8485 empirical_coverage=0.0000 avg_semantic_size=19.0000 threshold=9.6699 coverage_valid=False time=0.2s
+RESULT seed=456 dataset=squad condition=token_cp avg_set_size=19.8182 empirical_coverage=0.0000 avg_semantic_size=19.3939 threshold=9.6699 coverage_valid=False time=0.1s
+AGGREGATE dataset=squad condition=token_cp avg_set_size=19.8889±0.0795 coverage=0.0202±0.0286 semantic_size=19.2424±0.1732 validity_rate=0.00 n_seeds=3
+
+--- Condition: naive_semantic_cp (NaiveSemanticCP) ---
+RESULT seed=42 dataset=squad condition=naive_semantic_cp avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.1s
+RESULT seed=123 dataset=squad condition=naive_semantic_cp avg_set_size=18.2121 empirical_coverage=0.0000 avg_semantic_size=17.3636 threshold=0.4942 coverage_valid=False time=0.1s
+RESULT seed=456 dataset=squad condition=naive_semantic_cp avg_set_size=18.2727 empirical_coverage=0.0000 avg_semantic_size=17.8485 threshold=0.4942 coverage_valid=False time=0.1s
+AGGREGATE dataset=squad condition=naive_semantic_cp avg_set_size=18.8283±0.8289 coverage=0.0202±0.0286 semantic_size=18.1818±0.8380 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_proposed (SemCP) ---
+RESULT seed=42 dataset=squad condition=semcp_proposed avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.4s
+RESULT seed=123 dataset=squad condition=semcp_proposed avg_set_size=10.8788 empirical_coverage=0.0000 avg_semantic_size=10.1515 threshold=0.0305 coverage_valid=False time=0.4s
+RESULT seed=456 dataset=squad condition=semcp_proposed avg_set_size=9.1818 empirical_coverage=0.0000 avg_semantic_size=8.8182 threshold=0.0296 coverage_valid=False time=0.4s
+AGGREGATE dataset=squad condition=semcp_proposed avg_set_size=13.3535±4.7505 coverage=0.0202±0.0286 semantic_size=12.7677±4.6744 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_variant (SemCPVariant) ---
+RESULT seed=42 dataset=squad condition=semcp_variant avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.5s
+RESULT seed=123 dataset=squad condition=semcp_variant avg_set_size=11.6364 empirical_coverage=0.0000 avg_semantic_size=10.9394 threshold=0.6430 coverage_valid=False time=0.5s
+RESULT seed=456 dataset=squad condition=semcp_variant avg_set_size=10.9394 empirical_coverage=0.0000 avg_semantic_size=10.8182 threshold=0.6475 coverage_valid=False time=0.3s
+AGGREGATE dataset=squad condition=semcp_variant avg_set_size=14.1919±4.1168 coverage=0.0202±0.0286 semantic_size=13.6970±3.9858 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_no_m2o (SemCPNoManyToOne) ---
+RESULT seed=42 dataset=squad condition=semcp_no_m2o avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.1s
+RESULT seed=123 dataset=squad condition=semcp_no_m2o avg_set_size=10.8485 empirical_coverage=0.0000 avg_semantic_size=10.1515 threshold=0.0305 coverage_valid=False time=0.1s
+RESULT seed=456 dataset=squad condition=semcp_no_m2o avg_set_size=9.1515 empirical_coverage=0.0000 avg_semantic_size=8.7879 threshold=0.0296 coverage_valid=False time=0.1s
+AGGREGATE dataset=squad condition=semcp_no_m2o avg_set_size=13.3333±4.7647 coverage=0.0202±0.0286 semantic_size=12.7576±4.6830 validity_rate=0.00 n_seeds=3
+
+--- Condition: semcp_simplified (SemCPSimplified) ---
+RESULT seed=42 dataset=squad condition=semcp_simplified avg_set_size=20.0000 empirical_coverage=0.0606 avg_semantic_size=19.3333 threshold=inf coverage_valid=False time=0.3s
+RESULT seed=123 dataset=squad condition=semcp_simplified avg_set_size=17.7879 empirical_coverage=0.0000 avg_semantic_size=16.9394 threshold=0.9700 coverage_valid=False time=0.4s
+RESULT seed=456 dataset=squad condition=semcp_simplified avg_set_size=17.9091 empirical_coverage=0.0000 avg_semantic_size=17.4848 threshold=0.9798 coverage_valid=False time=0.3s
+AGGREGATE dataset=squad condition=semcp_simplified avg_set_size=18.5657±1.0154 coverage=0.0202±0.0286 semantic_size=17.9192±1.0244 validity_rate=0.00 n_seeds=3
+
+============================================================
+SUMMARY
+============================================================
+Condition                 Dataset                Set Size        Coverage        Sem Size  Valid
+------------------------------------------------------------------------------------------------
+naive_semantic_cp         squad            18.8283±0.8289   0.0202±0.0286  18.1818±0.8380     0%
+semcp_no_m2o              squad            13.3333±4.7647   0.0202±0.0286  12.7576±4.6830     0%
+semcp_proposed            squad            13.3535±4.7505   0.0202±0.0286  12.7677±4.6744     0%
+semcp_simplified          squad            18.5657±1.0154   0.0202±0.0286  17.9192±1.0244     0%
+semcp_variant             squad            14.1919±4.1168   0.0202±0.0286  13.6970±3.9858     0%
+token_cp                  squad            19.8889±0.0795   0.0202±0.0286  19.2424±0.1732     0%
+naive_semantic_cp         trivia_qa        15.8485±2.9518   0.0101±0.0143  15.3232±2.9050     0%
+semcp_no_m2o              trivia_qa        13.8990±4.4493   0.0101±0.0143  13.3737±4.3831     0%
+semcp_proposed            trivia_qa        13.8990±4.4493   0.0101±0.0143  13.3737±4.3831     0%
+semcp_simplified          trivia_qa        15.3131±3.3808   0.0101±0.0143  14.7879±3.3213     0%
+semcp_variant             trivia_qa        16.2222±2.8846   0.0101±0.0143  15.9697±2.6949     0%
+token_cp                  trivia_qa        10.4949±6.7506   0.0101±0.0143  10.0808±6.6262     0%
+
+Total runtime: 3259.8s (0.91h)
+Completed 12 condition-dataset combinations

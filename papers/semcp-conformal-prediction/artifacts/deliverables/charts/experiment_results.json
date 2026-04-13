@@ -1,0 +1,90 @@
+{
+  "trivia_qa": {
+    "token_cp": {
+      "avg_set_size": 10.4949,
+      "coverage": 0.0101,
+      "semantic_size": 10.0808,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "naive_semantic_cp": {
+      "avg_set_size": 15.8485,
+      "coverage": 0.0101,
+      "semantic_size": 15.3232,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_proposed": {
+      "avg_set_size": 13.899,
+      "coverage": 0.0101,
+      "semantic_size": 13.3737,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_variant": {
+      "avg_set_size": 16.2222,
+      "coverage": 0.0101,
+      "semantic_size": 15.9697,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_no_m2o": {
+      "avg_set_size": 13.899,
+      "coverage": 0.0101,
+      "semantic_size": 13.3737,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_simplified": {
+      "avg_set_size": 15.3131,
+      "coverage": 0.0101,
+      "semantic_size": 14.7879,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    }
+  },
+  "squad": {
+    "token_cp": {
+      "avg_set_size": 19.8889,
+      "coverage": 0.0202,
+      "semantic_size": 19.2424,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "naive_semantic_cp": {
+      "avg_set_size": 18.8283,
+      "coverage": 0.0202,
+      "semantic_size": 18.1818,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_proposed": {
+      "avg_set_size": 13.3535,
+      "coverage": 0.0202,
+      "semantic_size": 12.7677,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_variant": {
+      "avg_set_size": 14.1919,
+      "coverage": 0.0202,
+      "semantic_size": 13.697,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_no_m2o": {
+      "avg_set_size": 13.3333,
+      "coverage": 0.0202,
+      "semantic_size": 12.7576,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    },
+    "semcp_simplified": {
+      "avg_set_size": 18.5657,
+      "coverage": 0.0202,
+      "semantic_size": 17.9192,
+      "validity_rate": 0.0,
+      "n_seeds": 3.0
+    }
+  }
+}
