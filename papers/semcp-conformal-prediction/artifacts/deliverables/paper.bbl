@@ -1,4 +1,4 @@
-\begin{thebibliography}{27}
+\begin{thebibliography}{30}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -69,6 +69,11 @@ Patrizio Giovannotti.
 \newblock \emph{arXiv preprint arXiv:2306.01549}, 2023.
 \newblock URL \url{https://arxiv.org/abs/2306.01549}.
 
+\bibitem[Huang et~al.(2025)]{huang2025tecp}
+Jiahui Huang et~al.
+\newblock Token-entropy conformal prediction for llm uncertainty quantification.
+\newblock \emph{arXiv preprint arXiv:2509.00461}, 2025.
+
 \bibitem[Hüllermeier and Waegeman(2021)]{hullermeier2021aleatoric}
 Eyke Hüllermeier and Willem Waegeman.
 \newblock Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods.
@@ -89,6 +94,11 @@ Benjamin Kompa, Jasper Snoek, and Andrew~L. Beam.
 \newblock \emph{npj Digital Medicine}, 2021.
 \newblock \doi{10.1038/s41746-020-00367-3}.
 \newblock URL \url{https://doi.org/10.1038/s41746-020-00367-3}.
+
+\bibitem[Kumar et~al.(2025)]{kumar2025safer}
+Ananya Kumar et~al.
+\newblock Safer: Abstention-aware conformal prediction for language models.
+\newblock \emph{arXiv preprint arXiv:2510.10193}, 2025.
 
 \bibitem[Kuwahara et~al.(2025)Kuwahara, Lin, Huang, Leung, Yapeter, Stanevich, Perez, and Cresswell]{kuwahara2025document}
 Bruce Kuwahara, Chen-Yuan Lin, Xiao~Shi Huang, Kin~Kwan Leung, Jullian~Arta Yapeter, Ilya Stanevich, Felipe Perez, and Jesse~C. Cresswell.
@@ -143,6 +153,11 @@ Ola Shorinwa, Zhiting Mei, Justin Lidard, Allen~Z. Ren, and Anirudha Majumdar.
 \newblock \emph{arXiv (Cornell University)}, 2024.
 \newblock \doi{10.48550/arxiv.2412.05563}.
 \newblock URL \url{https://doi.org/10.48550/arxiv.2412.05563}.
+
+\bibitem[Su et~al.(2024)]{su2024lofreecp}
+Weizhe Su et~al.
+\newblock Lofreecp: Logit-free conformal prediction for open-ended language generation.
+\newblock \emph{arXiv preprint arXiv:2403.01216}, 2024.
 
 \bibitem[van~der Laan and Alaa(2024)]{laan2024selfcalibrating}
 Lars van~der Laan and Ahmed~M. Alaa.

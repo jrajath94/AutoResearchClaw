@@ -25,15 +25,17 @@
 \citation{giovannotti2023evaluating}
 \citation{kuwahara2025document}
 \citation{lu2022fair}
-\citation{hullermeier2021aleatoric}
-\citation{geng2024survey}
-\citation{shorinwa2024survey}
+\citation{wang2024conu}
+\citation{kumar2025safer}
+\citation{su2024lofreecp}
+\citation{huang2025tecp}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.2}\protected@file@percent }
 \newlabel{sec:related_work}{{2}{3}{Related Work}{section.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Conformal Prediction for Language Models}{3}{subsection.2.1}\protected@file@percent }
 \newlabel{sec:conformal_prediction_for_language_models}{{2.1}{3}{Conformal Prediction for Language Models}{subsection.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Uncertainty Quantification in Large Language Models}{3}{subsection.2.2}\protected@file@percent }
-\newlabel{sec:uncertainty_quantification_in_large_lang}{{2.2}{3}{Uncertainty Quantification in Large Language Models}{subsection.2.2}{}}
+\citation{hullermeier2021aleatoric}
+\citation{geng2024survey}
+\citation{shorinwa2024survey}
 \citation{bang2025hallulens}
 \citation{ravichander2025halogen}
 \citation{dahl2024large}
@@ -49,12 +51,14 @@
 \citation{manduchi2024challenges}
 \citation{angelopoulos2021gentle}
 \citation{angelopoulos2024theoretical}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Uncertainty Quantification in Large Language Models}{4}{subsection.2.2}\protected@file@percent }
+\newlabel{sec:uncertainty_quantification_in_large_lang}{{2.2}{4}{Uncertainty Quantification in Large Language Models}{subsection.2.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Semantic Representations and Calibration}{4}{subsection.2.3}\protected@file@percent }
 \newlabel{sec:semantic_representations_and_calibration}{{2.3}{4}{Semantic Representations and Calibration}{subsection.2.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Preliminaries}{4}{section.3}\protected@file@percent }
-\newlabel{sec:preliminaries}{{3}{4}{Preliminaries}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Conformal Prediction}{4}{subsection.3.1}\protected@file@percent }
-\newlabel{sec:conformal_prediction}{{3.1}{4}{Conformal Prediction}{subsection.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Preliminaries}{5}{section.3}\protected@file@percent }
+\newlabel{sec:preliminaries}{{3}{5}{Preliminaries}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Conformal Prediction}{5}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:conformal_prediction}{{3.1}{5}{Conformal Prediction}{subsection.3.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Problem Setup}{5}{subsection.3.2}\protected@file@percent }
 \newlabel{sec:problem_setup}{{3.2}{5}{Problem Setup}{subsection.3.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Notation Summary}{5}{subsection.3.3}\protected@file@percent }
@@ -63,70 +67,79 @@
 \newlabel{sec:method_semantic_conformal_prediction}{{4}{5}{Method: Semantic Conformal Prediction}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Semantic Equivalence Partitioning}{5}{subsection.4.1}\protected@file@percent }
 \newlabel{sec:semantic_equivalence_partitioning}{{4.1}{5}{Semantic Equivalence Partitioning}{subsection.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Kernel-Based Nonconformity Scores}{5}{subsection.4.2}\protected@file@percent }
-\newlabel{sec:kernel_based_nonconformity_scores}{{4.2}{5}{Kernel-Based Nonconformity Scores}{subsection.4.2}{}}
-\citation{angelopoulos2024theoretical}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Kernel-Based Nonconformity Scores}{6}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:kernel_based_nonconformity_scores}{{4.2}{6}{Kernel-Based Nonconformity Scores}{subsection.4.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Calibration Under the Many-to-One Mapping}{6}{subsection.4.3}\protected@file@percent }
 \newlabel{sec:calibration_under_the_many_to_one_mappin}{{4.3}{6}{Calibration Under the Many-to-One Mapping}{subsection.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Theoretical Guarantees}{6}{subsection.4.4}\protected@file@percent }
-\newlabel{sec:theoretical_guarantees}{{4.4}{6}{Theoretical Guarantees}{subsection.4.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{7}{section.5}\protected@file@percent }
-\newlabel{sec:experiments}{{5}{7}{Experiments}{section.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experimental Setup}{7}{subsection.5.1}\protected@file@percent }
-\newlabel{sec:experimental_setup}{{5.1}{7}{Experimental Setup}{subsection.5.1}{}}
-\citation{quach2023conformal}
+\citation{angelopoulos2024theoretical}
+\citation{wang2024conu}
+\citation{kumar2025safer}
+\citation{su2024lofreecp}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Theoretical Guarantees}{7}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:theoretical_guarantees}{{4.4}{7}{Theoretical Guarantees}{subsection.4.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The SemCP pipeline. Given a prompt, an LLM generates $K$ candidate responses, which are partitioned into semantic equivalence classes, scored using learned RBF kernels, and calibrated to produce prediction sets with coverage guarantees over meanings.}}{8}{figure.1}\protected@file@percent }
 \newlabel{fig:framework}{{1}{8}{The SemCP pipeline. Given a prompt, an LLM generates $K$ candidate responses, which are partitioned into semantic equivalence classes, scored using learned RBF kernels, and calibrated to produce prediction sets with coverage guarantees over meanings}{figure.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Hyperparameter settings.}}{8}{table.1}\protected@file@percent }
-\newlabel{tab:hyperparams}{{1}{8}{Hyperparameter settings}{table.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Baselines}{8}{subsection.5.2}\protected@file@percent }
-\newlabel{sec:baselines}{{5.2}{8}{Baselines}{subsection.5.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Method comparison across datasets. Left: average prediction set size (lower is better). Right: empirical coverage. SemCP methods produce consistently smaller prediction sets. Coverage is near-zero for all methods due to GPT-2's limited QA capability.}}{9}{figure.2}\protected@file@percent }
-\newlabel{fig:method_comparison}{{2}{9}{Method comparison across datasets. Left: average prediction set size (lower is better). Right: empirical coverage. SemCP methods produce consistently smaller prediction sets. Coverage is near-zero for all methods due to GPT-2's limited QA capability}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experiments}{8}{section.5}\protected@file@percent }
+\newlabel{sec:experiments}{{5}{8}{Experiments}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Experimental Setup}{8}{subsection.5.1}\protected@file@percent }
+\newlabel{sec:experimental_setup}{{5.1}{8}{Experimental Setup}{subsection.5.1}{}}
+\citation{quach2023conformal}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Hyperparameter settings.}}{9}{table.1}\protected@file@percent }
+\newlabel{tab:hyperparams}{{1}{9}{Hyperparameter settings}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Baselines}{9}{subsection.5.2}\protected@file@percent }
+\newlabel{sec:baselines}{{5.2}{9}{Baselines}{subsection.5.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Main Results}{9}{subsection.5.3}\protected@file@percent }
 \newlabel{sec:main_results}{{5.3}{9}{Main Results}{subsection.5.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Main results: prediction set size and empirical coverage on TriviaQA and SQuAD at $\alpha = 0.10$. Mean $\pm $ std over 3 seeds. Bold indicates best set size.}}{9}{table.2}\protected@file@percent }
-\newlabel{tab:main_results}{{2}{9}{Main results: prediction set size and empirical coverage on TriviaQA and SQuAD at $\alpha = 0.10$. Mean $\pm $ std over 3 seeds. Bold indicates best set size}{table.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Analysis}{9}{subsection.5.4}\protected@file@percent }
-\newlabel{sec:analysis}{{5.4}{9}{Analysis}{subsection.5.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Ablation: effect of kernel learning and many-to-one calibration. The learned RBF kernel (SemCP, SemCP-Adaptive) produces substantially smaller sets than Euclidean distance, particularly on SQuAD.}}{10}{figure.3}\protected@file@percent }
-\newlabel{fig:ablation}{{3}{10}{Ablation: effect of kernel learning and many-to-one calibration. The learned RBF kernel (SemCP, SemCP-Adaptive) produces substantially smaller sets than Euclidean distance, particularly on SQuAD}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Ablation Studies}{10}{section.6}\protected@file@percent }
-\newlabel{sec:ablation_studies}{{6}{10}{Ablation Studies}{section.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{11}{section.7}\protected@file@percent }
-\newlabel{sec:discussion}{{7}{11}{Discussion}{section.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations}{11}{section.8}\protected@file@percent }
-\newlabel{sec:limitations}{{8}{11}{Limitations}{section.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Main results: prediction set size and empirical coverage on TriviaQA and SQuAD at $\alpha = 0.10$. Mean $\pm $ std over 3 seeds. Bold indicates best set size.}}{10}{table.2}\protected@file@percent }
+\newlabel{tab:main_results}{{2}{10}{Main results: prediction set size and empirical coverage on TriviaQA and SQuAD at $\alpha = 0.10$. Mean $\pm $ std over 3 seeds. Bold indicates best set size}{table.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Method comparison across datasets. Left: average prediction set size (lower is better). Right: empirical coverage. SemCP methods produce consistently smaller prediction sets. Coverage is near-zero for all methods due to GPT-2's limited QA capability.}}{10}{figure.2}\protected@file@percent }
+\newlabel{fig:method_comparison}{{2}{10}{Method comparison across datasets. Left: average prediction set size (lower is better). Right: empirical coverage. SemCP methods produce consistently smaller prediction sets. Coverage is near-zero for all methods due to GPT-2's limited QA capability}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Analysis}{10}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:analysis}{{5.4}{10}{Analysis}{subsection.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Ablation: effect of kernel learning and many-to-one calibration. The learned RBF kernel (SemCP, SemCP-Adaptive) produces substantially smaller sets than Euclidean distance, particularly on SQuAD.}}{11}{figure.3}\protected@file@percent }
+\newlabel{fig:ablation}{{3}{11}{Ablation: effect of kernel learning and many-to-one calibration. The learned RBF kernel (SemCP, SemCP-Adaptive) produces substantially smaller sets than Euclidean distance, particularly on SQuAD}{figure.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Ablation Studies}{11}{section.6}\protected@file@percent }
+\newlabel{sec:ablation_studies}{{6}{11}{Ablation Studies}{section.6}{}}
+\citation{wang2024conu}
+\citation{kumar2025safer}
+\citation{su2024lofreecp}
+\citation{huang2025tecp}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{12}{section.7}\protected@file@percent }
+\newlabel{sec:discussion}{{7}{12}{Discussion}{section.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations}{12}{section.8}\protected@file@percent }
+\newlabel{sec:limitations}{{8}{12}{Limitations}{section.8}{}}
 \bibstyle{plainnat}
 \bibdata{references}
 \bibcite{angelopoulos2021gentle}{{1}{2021}{{Angelopoulos and Bates}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{13}{section.9}\protected@file@percent }
+\newlabel{sec:conclusion}{{9}{13}{Conclusion}{section.9}{}}
 \bibcite{angelopoulos2022conformal}{{2}{2022}{{Angelopoulos et~al.}}{{Angelopoulos, Bates, Fisch, Lei, and Schuster}}}
 \bibcite{angelopoulos2024theoretical}{{3}{2024}{{Angelopoulos et~al.}}{{Angelopoulos, Barber, and Bates}}}
 \bibcite{bang2025hallulens}{{4}{2025}{{Bang et~al.}}{{Bang, Ji, Schelten, Hartshorn, Fowler, Zhang, Cancedda, and Fung}}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{12}{section.9}\protected@file@percent }
-\newlabel{sec:conclusion}{{9}{12}{Conclusion}{section.9}{}}
 \bibcite{cresswell2024conformal}{{5}{2024}{{Cresswell et~al.}}{{Cresswell, Sui, Kumar, and Vouitsis}}}
 \bibcite{dahl2024large}{{6}{2024}{{Dahl et~al.}}{{Dahl, Magesh, Suzgun, and Ho}}}
 \bibcite{feng2024dont}{{7}{2024}{{Feng et~al.}}{{Feng, Shi, Wang, Ding, Balachandran, and Tsvetkov}}}
 \bibcite{fisch2020efficient}{{8}{2020}{{Fisch et~al.}}{{Fisch, Schuster, Jaakkola, and Barzilay}}}
 \bibcite{geng2024survey}{{9}{2024}{{Geng et~al.}}{{Geng, Cai, Wang, Koeppl, Nakov, and Gurevych}}}
 \bibcite{giovannotti2023evaluating}{{10}{2023}{{Giovannotti}}{{}}}
-\bibcite{hullermeier2021aleatoric}{{11}{2021}{{Hüllermeier and Waegeman}}{{}}}
-\bibcite{kazlaris2025illusion}{{12}{2025}{{Kazlaris et~al.}}{{Kazlaris, Antoniou, Diamantaras, and Bratsas}}}
-\bibcite{kompa2021second}{{13}{2021}{{Kompa et~al.}}{{Kompa, Snoek, and Beam}}}
-\bibcite{kuwahara2025document}{{14}{2025}{{Kuwahara et~al.}}{{Kuwahara, Lin, Huang, Leung, Yapeter, Stanevich, Perez, and Cresswell}}}
-\bibcite{li2025knowledge}{{15}{2025}{{Li et~al.}}{{Li, Zhao, Zhang, Li, Xie, Ng, Chua, and Deng}}}
-\bibcite{lu2022fair}{{16}{2022}{{Lu et~al.}}{{Lu, Lemay, Chang, Höbel, and Kalpathy–Cramer}}}
-\bibcite{manduchi2024challenges}{{17}{2024}{{Manduchi et~al.}}{{Manduchi, Meister, Pandey, Bamler, Cotterell, Däubener, Fellenz, Fischer, Gärtner, Kirchler, Kloft, Li, Lippert, de~Melo, Nalisnick, Ommer, Ranganath, Rudolph, Ullrich, den Broeck, Vogt, Wang, Wenzel, Wood, Mandt, and Fortuin}}}
-\bibcite{nakkiran2025trained}{{18}{2025}{{Nakkiran et~al.}}{{Nakkiran, Bradley, Goliński, Ndiaye, Kirchhof, and Williamson}}}
-\bibcite{quach2023conformal}{{19}{2023}{{Quach et~al.}}{{Quach, Fisch, Schuster, Yala, Sohn, Jaakkola, and Barzilay}}}
-\bibcite{ravichander2025halogen}{{20}{2025}{{Ravichander et~al.}}{{Ravichander, Ghela, Wadden, and Choi}}}
-\bibcite{shorinwa2024survey}{{21}{2024}{{Shorinwa et~al.}}{{Shorinwa, Mei, Lidard, Ren, and Majumdar}}}
-\bibcite{laan2024selfcalibrating}{{22}{2024}{{van~der Laan and Alaa}}{{}}}
-\bibcite{wang2024conu}{{23}{2024}{{Wang et~al.}}{{Wang, Duan, Cheng, Zhang, Wang, Shi, Xu, Shen, and Zhu}}}
-\bibcite{wen2025know}{{24}{2025}{{Wen et~al.}}{{Wen, Yao, Feng, Xu, Tsvetkov, Howe, and Wang}}}
-\bibcite{xi2024confidence}{{25}{2024}{{Xi et~al.}}{{Xi, Huang, Liu, Feng, and Wei}}}
-\bibcite{yadkori2024mitigating}{{26}{2024}{{Yadkori et~al.}}{{Yadkori, Kuzborskij, Stutz, György, Fisch, Douc, Beloshapka, Weng, Yang, Szepesvári, Cemgil, and Tomasev}}}
-\bibcite{zhou2025uncertaintyaware}{{27}{2025}{{Zhou et~al.}}{{Zhou, Wang, Xu, Wang, Brauer, Welton, Cogan, Chung, Tian, Zhan, Hou, Lin, Melton, and Zhang}}}
-\citation{angelopoulos2024theoretical}
-\gdef \@abspage@last{16}
+\bibcite{huang2025tecp}{{11}{2025}{{Huang et~al.}}{{}}}
+\bibcite{hullermeier2021aleatoric}{{12}{2021}{{Hüllermeier and Waegeman}}{{}}}
+\bibcite{kazlaris2025illusion}{{13}{2025}{{Kazlaris et~al.}}{{Kazlaris, Antoniou, Diamantaras, and Bratsas}}}
+\bibcite{kompa2021second}{{14}{2021}{{Kompa et~al.}}{{Kompa, Snoek, and Beam}}}
+\bibcite{kumar2025safer}{{15}{2025}{{Kumar et~al.}}{{}}}
+\bibcite{kuwahara2025document}{{16}{2025}{{Kuwahara et~al.}}{{Kuwahara, Lin, Huang, Leung, Yapeter, Stanevich, Perez, and Cresswell}}}
+\bibcite{li2025knowledge}{{17}{2025}{{Li et~al.}}{{Li, Zhao, Zhang, Li, Xie, Ng, Chua, and Deng}}}
+\bibcite{lu2022fair}{{18}{2022}{{Lu et~al.}}{{Lu, Lemay, Chang, Höbel, and Kalpathy–Cramer}}}
+\bibcite{manduchi2024challenges}{{19}{2024}{{Manduchi et~al.}}{{Manduchi, Meister, Pandey, Bamler, Cotterell, Däubener, Fellenz, Fischer, Gärtner, Kirchler, Kloft, Li, Lippert, de~Melo, Nalisnick, Ommer, Ranganath, Rudolph, Ullrich, den Broeck, Vogt, Wang, Wenzel, Wood, Mandt, and Fortuin}}}
+\bibcite{nakkiran2025trained}{{20}{2025}{{Nakkiran et~al.}}{{Nakkiran, Bradley, Goliński, Ndiaye, Kirchhof, and Williamson}}}
+\bibcite{quach2023conformal}{{21}{2023}{{Quach et~al.}}{{Quach, Fisch, Schuster, Yala, Sohn, Jaakkola, and Barzilay}}}
+\bibcite{ravichander2025halogen}{{22}{2025}{{Ravichander et~al.}}{{Ravichander, Ghela, Wadden, and Choi}}}
+\bibcite{shorinwa2024survey}{{23}{2024}{{Shorinwa et~al.}}{{Shorinwa, Mei, Lidard, Ren, and Majumdar}}}
+\bibcite{su2024lofreecp}{{24}{2024}{{Su et~al.}}{{}}}
+\bibcite{laan2024selfcalibrating}{{25}{2024}{{van~der Laan and Alaa}}{{}}}
+\bibcite{wang2024conu}{{26}{2024}{{Wang et~al.}}{{Wang, Duan, Cheng, Zhang, Wang, Shi, Xu, Shen, and Zhu}}}
+\bibcite{wen2025know}{{27}{2025}{{Wen et~al.}}{{Wen, Yao, Feng, Xu, Tsvetkov, Howe, and Wang}}}
+\bibcite{xi2024confidence}{{28}{2024}{{Xi et~al.}}{{Xi, Huang, Liu, Feng, and Wei}}}
+\bibcite{yadkori2024mitigating}{{29}{2024}{{Yadkori et~al.}}{{Yadkori, Kuzborskij, Stutz, György, Fisch, Douc, Beloshapka, Weng, Yang, Szepesvári, Cemgil, and Tomasev}}}
+\bibcite{zhou2025uncertaintyaware}{{30}{2025}{{Zhou et~al.}}{{Zhou, Wang, Xu, Wang, Brauer, Welton, Cogan, Chung, Tian, Zhan, Hou, Lin, Melton, and Zhang}}}
+\gdef \@abspage@last{17}
