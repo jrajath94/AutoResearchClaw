@@ -197,6 +197,8 @@ We construct a parametric noisy reasoning channel with known ground truth~\citep
 
 \textbf{Answer extraction.}  Regex: first match ``the answer is $\langle$number$\rangle$''; fallback: last integer in response.  Compared against GSM8K ``\#\#\#\#'' ground-truth annotation.
 
+\textbf{Step count extraction.}  For complexity proxy validation (\S\ref{sec:h3}), we extract solution step count from GSM8K reference answers by counting newline-separated computation steps (each line typically contains one arithmetic operation).  This is a deterministic, reproducible extraction requiring no annotation; the GSM8K reference format is consistent.
+
 \textbf{Statistical rigor.}  With $S{=}8$, per-problem accuracy takes values in $\{0, 0.125, 0.25, \ldots, 1.0\}$ (9 levels), giving reasonable BIC sensitivity.  All BIC win rates are reported with 95\% bootstrap confidence intervals ($B{=}100$ resamples over problems).
 
 \subsection{Baselines (Synthetic Experiments)}
