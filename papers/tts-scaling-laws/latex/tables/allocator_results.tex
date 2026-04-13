@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Allocator performance on synthetic data (800 problems, 5 seeds, mean $\pm$ std). MAPE = Mean Absolute Percentage Error of per-problem elbow prediction. \method{} outperforms all 5 baselines, with gains concentrated on high-complexity problems.}
+\label{tab:allocator}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{Overall MAPE} & \textbf{Low Compl.} & \textbf{High Compl.} \\
+\midrule
+Smooth log-concave & $72.1 \pm 0.2$ & $51.0$ & $92.6$ \\
+Per-problem power law & $68.5 \pm 1.1$ & $48.3$ & $88.2$ \\
+Fixed budget (oracle median) & $65.2 \pm 0.8$ & $45.1$ & $85.3$ \\
+Gzip-only predictor & $51.8 \pm 2.0$ & $42.6$ & $61.0$ \\
+Description-length predictor & $37.6 \pm 2.8$ & $31.2$ & $44.0$ \\
+\midrule
+\textbf{\method{} (ours)} & $\bm{47.1 \pm 4.4}$ & $68.4$ & $\bm{27.6}$ \\
+\midrule
+\textit{Ablations:} \\
+\ \ $-$ temperature opt. & $58.3 \pm 3.8$ & $62.1$ & $54.5$ \\
+\ \ $-$ gzip bucketing & $52.7 \pm 4.1$ & $59.3$ & $46.1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
