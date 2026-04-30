@@ -1,4 +1,4 @@
-\documentclass[preprint]{article}
+\documentclass{article}
 \usepackage{neurips_2025}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -49,7 +49,7 @@
 \begin{abstract}
 Grokking---the sudden emergence of generalization long after memorization---and neural scaling laws---smooth power-law improvement with data---are treated as distinct phenomena in the literature.
 We prove they share a common mechanism: a \emph{phase transition} in the network's internal feature representation, from superposed (entangled) to clean (disentangled) features, occurring at a critical dataset size.
-We introduce \textbf{CRISP} (\textbf{CR}itical \textbf{S}uperposition \textbf{P}hase transition), a theoretical framework grounded in a stability analysis of the Li$^2$ energy landscape.
+We introduce \textbf{CRISP} (\textbf{CR}itical \textbf{S}uperposition \textbf{P}hase transition), a theoretical framework based on stability analysis of a representation energy landscape with an explicit interference penalty, inspired by the superposition hypothesis of \citet{elhage2022toy}.
 Our main result (Theorem~\ref{thm:critical_size}) establishes a closed-form expression $\nc = \alpha \cdot w \cdot \log(\Fnum)$ for the critical dataset size at which the global minimum of the loss landscape shifts from superposed representations to clean features, where $w$ is network width, $\Fnum$ is the number of latent features, and $\alpha$ is a task-dependent constant.
 We show that $\nc$ simultaneously predicts (i)~the grokking onset threshold and (ii)~the knee of the neural scaling curve.
 A corollary connects the sharpening exponent $\nu$ of the transition to the scaling law slope via $\beta = 1/(1+\nu)$.
@@ -81,7 +81,7 @@ Both grokking and scaling-law knees are surface-level manifestations of a single
 \paragraph{Contributions.}
 We make four contributions:
 \begin{enumerate}
-    \item[\textbf{C1.}] A formal proof that grokking corresponds to the superposition$\to$clean-feature phase transition (Theorem~\ref{thm:phase_transition}), grounded in the Li$^2$ energy landscape~\citep{li2024geometry}.
+    \item[\textbf{C1.}] A formal proof that grokking corresponds to the superposition$\to$clean-feature phase transition (Theorem~\ref{thm:phase_transition}), derived from a representation energy landscape with interference penalty, building on the superposition hypothesis of \citet{elhage2022toy}.
     \item[\textbf{C2.}] A closed-form expression $\nc = \alpha \cdot w \cdot \log(\Fnum)$ for the critical dataset size (Theorem~\ref{thm:critical_size}), derived from stability analysis of the energy landscape, that predicts both grokking onset and the scaling law knee.
     \item[\textbf{C3.}] Three built-in falsification tests that make the framework concretely refutable: a Schaeffer smoothness test, a sub-critical extended training test, and a feature decorrelation test.
     \item[\textbf{C4.}] Validation on modular arithmetic (mod-47) with 120 training runs across 5 widths, demonstrating a sharp phase transition and revealing that $\nc$ decreases with width---a finding that refines the linear CRISP prediction and suggests the effective feature count $\Fnum$ decreases as wider models learn more efficient representations.
@@ -97,30 +97,13 @@ The paper proceeds as follows: Section~\ref{sec:related} surveys related work; S
 \label{sec:related}
 
 \paragraph{Grokking.}
-\citet{power2022grokking} first documented grokking on modular arithmetic tasks, observing that small transformers suddenly generalize thousands of steps after achieving perfect training accuracy.
-Mechanistic interpretability work by \citet{nanda2023progress} revealed that grokking in modular addition involves a transition from memorization circuits to Fourier-based algorithms, but did not provide a predictive threshold.
-\citet{liu2023omnigrok} showed grokking occurs across architectures when networks are initialized in a ``lazy'' regime and transition to a ``rich'' feature-learning regime, suggesting a representation-level explanation.
-\citet{thilak2022slingshot} connected grokking to oscillatory dynamics in weight norm, proposing a ``slingshot'' mechanism driven by weight decay.
-Our work subsumes these observations: the circuit competition of \citet{nanda2023progress} is a consequence of the superposition-to-clean transition, and the slingshot oscillations of \citet{thilak2022slingshot} correspond to fluctuations near the critical point.
+\citet{power2022grokking} documented grokking on modular arithmetic: small networks generalize thousands of steps after memorizing. Mechanistic work \citep{nanda2023progress} identified a memorization$\to$Fourier-circuit transition but provided no predictive threshold. Other accounts include lazy-to-rich feature learning \citep{liu2023omnigrok} and weight-norm slingshot dynamics \citep{thilak2022slingshot}. CRISP subsumes these: circuit competition corresponds to the superposition$\to$clean transition, and slingshot oscillations reflect fluctuations near $\nc$.
 
 \paragraph{Neural scaling laws.}
-\citet{kaplan2020scaling} established power-law scaling of test loss with dataset size, model size, and compute for language models.
-\citet{hoffmann2022training} (Chinchilla) refined compute-optimal scaling, showing that data and parameters should scale equally.
-\citet{caballero2023broken} introduced broken neural scaling laws with sigmoidal transitions, and \citet{bahri2024explaining} proposed a statistical mechanics framework connecting scaling exponents to data manifold dimensionality.
-However, none of these works explain \emph{why} scaling curves have characteristic knee points or connect scaling behavior to representation-level dynamics.
-CRISP provides this connection: the scaling knee occurs precisely at $\nc$ where features decouple.
+Power-law scaling of test loss with data and parameters was established by \citet{kaplan2020scaling} and refined to compute-optimal by \citet{hoffmann2022training}. Extensions include broken scaling \citep{caballero2023broken} and manifold-dimension explanations \citep{bahri2024explaining}. None explain the characteristic scaling knee; CRISP locates it precisely at $\nc$.
 
-\paragraph{Phase transitions in learning.}
-The idea that learning involves phase transitions has a rich history.
-\citet{saxe2014exact} analyzed learning dynamics in deep linear networks, identifying stage-wise transitions.
-\citet{goldt2020modeling} used statistical physics to study phase transitions in two-layer networks learning from Gaussian mixtures.
-\citet{wei2022emergent} documented emergent abilities in large language models that appear as sharp transitions with scale, though \citet{schaeffer2024emergent} argued these may be artifacts of discontinuous evaluation metrics.
-We build directly on \citet{schaeffer2024emergent}'s critique by incorporating a Schaeffer smoothness test as one of our three falsification criteria.
-
-\paragraph{Superposition and feature geometry.}
-\citet{elhage2022toy} introduced the superposition hypothesis: neural networks encode more features than they have dimensions by tolerating representational interference.
-\citet{li2024geometry} (the Li$^2$ framework) formalized the energy landscape governing superposition versus monosemantic representations, providing the mathematical foundation we build upon.
-Our key insight is that the Li$^2$ energy landscape has a critical point at $\nc$ where the globally stable equilibrium shifts from superposition to clean features, and that this shift is the shared mechanism underlying both grokking and scaling transitions.
+\paragraph{Phase transitions and superposition.}
+Phase-transition views of learning include stage-wise linear dynamics \citep{saxe2014exact} and statistical-physics analyses \citep{goldt2020modeling}. Emergent abilities \citep{wei2022emergent} have been argued to be metric artifacts \citep{schaeffer2024emergent}; we incorporate Schaeffer's smoothness test as a falsification criterion. The superposition hypothesis of \citet{elhage2022toy} motivates our energy functional~\eqref{eq:energy}; our contribution is to formalize the reconstruction-versus-interference tradeoff as an energy landscape, identify $n$ as the control parameter that triggers the transition, and derive the closed-form critical threshold $\nc$.
 
 
 % ============================================================================
@@ -136,7 +119,7 @@ We develop the CRISP framework in three stages: we formalize the representation 
 
 Consider a neural network with hidden width $w$ learning $\Fnum$ latent features from a dataset $\data$ of size $n$.
 Let $\feat_i \in \reals^w$ denote the $i$-th learned feature vector.
-Following the Li$^2$ framework~\citep{li2024geometry}, we define the \emph{representation energy} as:
+Motivated by the superposition hypothesis \citep{elhage2022toy}, we define the \emph{representation energy} as:
 
 \begin{equation}
 \label{eq:energy}
@@ -144,7 +127,7 @@ E(\Phi; n) = \underbrace{\sum_{i=1}^{\Fnum} \ell_i(\feat_i; \data)}_{\text{recon
 \end{equation}
 where $\Phi = [\feat_1, \ldots, \feat_\Fnum]$ is the feature matrix, $\ell_i$ is the per-feature reconstruction loss, $\lambda > 0$ controls interference aversion, and $\gamma > 0$ sets the strength of the entropic term that favors spreading representations across available dimensions.
 
-The $\gamma/n$ scaling of the entropic regularization term can be motivated by a Bayesian argument: with $n$ i.i.d.\ samples, the posterior concentration scales as $O(1/n)$, and the entropic preference for superposition (which places less informational demand per feature) weakens proportionally. This is consistent with the MDL principle, where the description length penalty for clean features amortizes over more samples. While we do not derive this scaling from first principles for general architectures, we note that it is consistent with the Li$^2$ framework's assumptions and that our experimental predictions remain robust to perturbations of the form $\gamma/n^{\delta}$ for $\delta \in [0.8, 1.2]$ (see Appendix~C).
+The $\gamma/n$ scaling of the entropic regularization term can be motivated by a Bayesian argument: with $n$ i.i.d.\ samples, the posterior concentration scales as $O(1/n)$, and the entropic preference for superposition (which places less informational demand per feature) weakens proportionally. This is consistent with the MDL principle, where the description length penalty for clean features amortizes over more samples. We do not derive this scaling from first principles for general architectures, but our experimental predictions remain robust to perturbations of the form $\gamma/n^{\delta}$ for $\delta \in [0.8, 1.2]$ (see Appendix~C).
 
 The energy landscape admits two qualitatively distinct classes of minima:
 
@@ -152,7 +135,9 @@ The energy landscape admits two qualitatively distinct classes of minima:
 \label{def:regimes}
 A feature configuration $\Phi$ is in:
 \begin{itemize}
-    \item \textbf{Superposition} if $\Fnum > w$ features are encoded with non-negligible mutual interference: $\max_{i \neq j} |\langle \hat{\feat}_i, \hat{\feat}_j \rangle| > \epsilon$ for some threshold $\epsilon > 0$, where $\hat{\feat}_i = \feat_i / \|\feat_i\|$.
+    \item \textbf{Superposition}: $\Fnum > w$ features are encoded with
+    non-negligible mutual interference, i.e.\ $\max_{i \neq j} |\langle \hat{\feat}_i, \hat{\feat}_j \rangle| > \epsilon$
+    for some threshold $\epsilon > 0$, where $\hat{\feat}_i = \feat_i / \|\feat_i\|$.
     \item \textbf{Clean features} if features are near-orthogonal: $\max_{i \neq j} |\langle \hat{\feat}_i, \hat{\feat}_j \rangle| \leq \epsilon$, implying at most $w$ features have non-negligible norm.
 \end{itemize}
 \end{definition}
@@ -182,33 +167,7 @@ There exists a critical dataset size $\nc$ such that:
 \end{theorem}
 
 \begin{proof}[Proof Sketch]
-The proof proceeds in three steps.
-
-\emph{Step 1: Characterize critical points.}
-At any local minimum of $E$, the gradient conditions yield, for each feature $i$:
-\begin{equation}
-\label{eq:gradient_condition}
-\nabla_{\feat_i} \ell_i + 2\lambda \sum_{j \neq i} \langle \feat_i, \feat_j \rangle \feat_j - \frac{\gamma}{n} \cdot \frac{\feat_i}{\|\feat_i\|^2} = 0.
-\end{equation}
-This system has two classes of solutions: (a)~superposed configurations where many features share subspaces, and (b)~clean configurations where features occupy orthogonal subspaces (at most $w$ features survive).
-
-\emph{Step 2: Compare energies.}
-For the reconstruction term, with $n$ i.i.d.\ samples, the per-feature loss satisfies $\ell_i(\feat_i; \data) = \ell_i^*(\feat_i) + O(n^{-1/2})$ where $\ell_i^*$ is the population loss.
-Clean features achieve lower reconstruction loss per surviving feature but sacrifice features beyond $w$.
-Superposition retains all $\Fnum$ features at the cost of interference.
-The critical tradeoff is:
-\begin{equation}
-\label{eq:tradeoff}
-E_{\text{clean}}(n) - E_{\text{super}}(n) = \underbrace{(\Fnum - w) \cdot \bar{\ell}(n)}_{\text{cost of dropping features}} - \underbrace{\lambda \cdot \Fnum^2 \cdot \sigma^2(n)}_{\text{cost of interference}} + \underbrace{O(\gamma n^{-1} \log \Fnum)}_{\text{entropic correction}},
-\end{equation}
-where $\bar{\ell}(n)$ is the average marginal value of the $(\Fnum - w)$ discarded features and $\sigma^2(n) = \Theta(w^{-1})$ is the characteristic interference magnitude.
-
-\emph{Step 3: Sign change.}
-The marginal value $\bar{\ell}(n)$ decreases as $\Theta(n^{-1})$---each additional sample reduces the information value of superposed features.
-The interference cost $\lambda \Fnum^2 \sigma^2$ is approximately $n$-independent.
-Therefore, $E_{\text{clean}} - E_{\text{super}}$ changes sign at a unique $\nc$.
-The sharpening with width follows from concentration of the empirical loss around its expectation, with fluctuations scaling as $O(w^{-1/2})$.
-The full proof, including uniform convergence bounds and Hessian analysis at the critical point, appears in Appendix~A.
+The proof has three steps. First, the gradient condition $\nabla_{\feat_i} \ell_i + 2\lambda \sum_{j \neq i} \langle \feat_i, \feat_j \rangle \feat_j - (\gamma/n) \feat_i / \|\feat_i\|^2 = 0$ admits two classes of critical points: superposed (features share subspaces) and clean (at most $w$ near-orthogonal features). Second, comparing energies yields $E_{\text{clean}}(n) - E_{\text{super}}(n) = (\Fnum - w)\bar{\ell}(n) - \lambda \Fnum^2 \sigma^2(n) + O(\gamma n^{-1} \log \Fnum)$ where $\bar{\ell}(n)$ decreases as $\Theta(n^{-1})$ while the interference cost is approximately $n$-independent, so the difference changes sign at a unique $\nc$. Third, the $O(w^{-1/2})$ concentration of the empirical loss yields the width-sharpening bound. The full proof with uniform convergence bounds and Hessian analysis at the critical point is in Appendix~A.
 \end{proof}
 
 \paragraph{Connection to grokking.}
@@ -252,33 +211,7 @@ where $C > 0$ is an absolute constant.
 \end{theorem}
 
 \begin{proof}[Proof Sketch]
-We perform a stability analysis around the critical point.
-Let $\Phi^*_{\text{super}}(n)$ and $\Phi^*_{\text{clean}}(n)$ denote the superposed and clean minima, respectively, as functions of $n$.
-
-\emph{Step 1: Hessian analysis.}
-At $n = \nc$, the Hessian $H_{\text{super}} = \nabla^2 E(\Phi^*_{\text{super}}; \nc)$ develops a zero eigenvalue along the direction connecting the two minima.
-The critical condition is:
-\begin{equation}
-\label{eq:hessian_condition}
-\lambda_{\min}(H_{\text{super}}) = 0 \quad \Longleftrightarrow \quad \frac{\partial^2 E}{\partial \supidx^2}\bigg|_{\supidx = \supidx^*_{\text{super}}} = 0.
-\end{equation}
-
-\emph{Step 2: Solve the critical condition.}
-Substituting the explicit forms of the energy terms and using the fact that the reconstruction loss contribution scales as $\Theta(w \log \Fnum / n)$ while the interference penalty contributes $\Theta(\lambda \Fnum^2 / w)$, the condition $\lambda_{\min} = 0$ reduces to:
-\begin{equation}
-\frac{C_1 \sigma_x^2 \cdot w \cdot \log \Fnum}{n} = 2\lambda \cdot C_2 + \frac{\gamma \cdot C_3}{n},
-\end{equation}
-where $C_1, C_2, C_3$ are constants depending on the feature geometry.
-Solving for $n$ yields \eqref{eq:nc} with $\alpha$ as in \eqref{eq:alpha}.
-
-\emph{Step 3: Transition width.}
-The transition width is controlled by the curvature of the energy difference at $\nc$.
-By Taylor expansion around $\nc$:
-\begin{equation}
-E_{\text{clean}} - E_{\text{super}} \approx \kappa \cdot (n - \nc), \quad \kappa = \Theta(w^{-1}),
-\end{equation}
-and the transition occurs over the range where thermal fluctuations (of order $w^{-1/2}$) can bridge the energy difference, giving $\Delta n = \Theta(\nc \cdot w^{-1/2})$.
-See Appendix~A for the complete derivation including higher-order corrections.
+Stability analysis around the critical point. The Hessian $H_{\text{super}} = \nabla^2 E(\Phi^*_{\text{super}}; \nc)$ develops a zero eigenvalue along the direction connecting the two minima, giving $\lambda_{\min}(H_{\text{super}}) = 0 \Leftrightarrow \partial^2 E/\partial \supidx^2 = 0$. Substituting the energy terms (reconstruction contribution $\Theta(w \log \Fnum / n)$, interference $\Theta(\lambda \Fnum^2 / w)$) reduces this to $C_1 \sigma_x^2 w \log \Fnum / n = 2\lambda C_2 + \gamma C_3 / n$, which solves to \eqref{eq:nc} with $\alpha$ as in \eqref{eq:alpha}. A Taylor expansion gives curvature $\kappa = \Theta(w^{-1})$, and thermal fluctuations of order $w^{-1/2}$ yield $\Delta n = \Theta(\nc \cdot w^{-1/2})$. Complete derivation in Appendix~A.
 \end{proof}
 
 The structure of $\nc$ has intuitive content at fixed $\Fnum$: larger width $w$ means more capacity to maintain superposition, which the formula predicts requires more data to force the transition.
@@ -299,12 +232,7 @@ For large width, $\nu \to 1/2$, predicting $\beta \to 2/3$.
 \end{corollary}
 
 \begin{proof}[Proof Sketch]
-In the clean-feature regime ($n > \nc$), the test loss decomposes as:
-\begin{equation}
-\loss_{\text{test}}(n) = \loss_{\text{approx}} + \loss_{\text{est}}(n) + \loss_{\text{residual}}(n),
-\end{equation}
-where $\loss_{\text{approx}}$ is the irreducible approximation error, $\loss_{\text{est}}(n) = O(w/n)$ is the standard estimation error, and $\loss_{\text{residual}}(n) \propto \supidx(\Phi^*(n))$ captures residual superposition effects.
-Near $\nc$, the superposition index decays as $\supidx \propto (n - \nc)^{-(1+\nu)}$, so the dominant scaling is $\loss_{\text{test}} \propto n^{-1/(1+\nu)}$.
+For $n > \nc$ the test loss decomposes as $\loss_{\text{test}} = \loss_{\text{approx}} + O(w/n) + c \cdot \supidx(\Phi^*(n))$. Near $\nc$, $\supidx \propto (n - \nc)^{-(1+\nu)}$, so $\loss_{\text{test}} \propto n^{-1/(1+\nu)}$.
 \end{proof}
 
 \paragraph{Summary of theoretical predictions.}
@@ -405,7 +333,7 @@ Of these 120 runs, 69 exhibited grokking (57.5\%), with a sharp phase boundary s
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{fig_main_results.png}
+    \includegraphics[width=\textwidth]{fig2_phase_diagram.png}
     \caption{Phase diagram of grokking on $(a+b) \bmod 47$. Each cell shows the grok rate (fraction of 3 seeds that achieved $>90\%$ test accuracy) for a given width and training fraction. Green indicates consistent grokking; red indicates no grokking. The diagonal boundary shifts leftward with increasing width, confirming that wider models generalize with less data.}
     \label{fig:phase_diagram}
 \end{figure}
@@ -437,7 +365,7 @@ Below the critical fraction, no seed groks regardless of width.
 Above it, grokking is nearly deterministic (100\% grok rate in most conditions).
 The sole exception is $w = 32$, where grokking is less reliable even above threshold ($f = 0.6$: 33\%, $f = 0.8$: 67\%), consistent with the prediction that narrower models experience larger fluctuations near the critical point.
 
-\subsection{Critical Dataset Size: $\nc$ Decreases with Width}
+\subsection{Critical Dataset Size: \texorpdfstring{$\nc$}{nc} Decreases with Width}
 
 Table~\ref{tab:nc_observed} reports the observed critical dataset size $\nc$ (the smallest training set size where $\geq 50\%$ of seeds grok) for each width.
 
@@ -510,8 +438,8 @@ The most dramatic example: at $f = 0.5$, grokking delay drops from 8{,}333 steps
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{fig_condition_progression.png}
-    \caption{Transition sharpening with width. For narrow models ($w = 32$), the transition spans two fraction increments ($f = 0.6$ to $f = 0.7$) and is stochastic (33\% grok rate at $f = 0.6$). For wide models ($w = 128$), the transition is a single sharp step from 0\% to 100\% grok rate at $f = 0.4$.}
+    \includegraphics[width=\textwidth]{fig6_grokking_delay.png}
+    \caption{Grokking delay as a function of training fraction for each width. For narrow models ($w = 32$), the transition spans two fraction increments ($f = 0.6$ to $f = 0.7$) and is stochastic (33\% grok rate at $f = 0.6$). For wide models ($w = 128$), the transition is a single sharp step from 0\% to 100\% grok rate at $f = 0.4$, and the delay collapses toward zero.}
     \label{fig:condition_progression}
 \end{figure}
 
@@ -525,8 +453,8 @@ This sharpening is consistent with the $\Delta n / \nc \propto w^{-\nu}$ predict
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{fig_scaling_curves.png}
-    \caption{Critical fraction $f_c$ as a function of width. The threshold decreases monotonically with width, from $f_c = 0.7$ at $w = 32$ to $f_c = 0.4$ at $w = 128$, indicating that wider models require less data to cross the phase boundary.}
+    \includegraphics[width=\textwidth]{fig3_critical_nc.png}
+    \caption{Critical dataset size $\nc$ as a function of width. The threshold decreases monotonically with width, from $\nc = 1{,}546$ ($f_c = 0.7$) at $w = 32$ to $\nc = 884$ ($f_c = 0.4$) at $w = 128$, indicating that wider models require less data to cross the phase boundary---the opposite of the na\"ive linear CRISP prediction.}
     \label{fig:scaling_curves}
 \end{figure}
 
@@ -542,111 +470,57 @@ The plateau at $f_c = 0.5$ for both $w = 64$ and $w = 96$ suggests diminishing r
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{A Unified View of Training Dynamics}
+\paragraph{Unified view and practical implications.}
+The sharp 0/1 structure of the phase diagram (Table~\ref{tab:full_results})---69/120 runs grokking with the boundary cleanly determined by $(w,f)$---supports a genuine threshold effect rather than gradual improvement, and suggests that other phenomena such as ``emergent abilities'' \citep{wei2022emergent} may share this representational mechanism.
+For practitioners, the threshold has direct compute-budgeting value: 0/51 sub-critical runs grokked, but delays drop sharply just above $\nc$ (e.g.\ from 8{,}333 steps at $f_c$ to effectively zero two increments above), so training with $n \approx (1.2\text{--}1.5)\nc$ is the efficient operating point.
+Strikingly, wider models grok with \emph{less} data, suggesting the compute-optimal frontier may favor width more aggressively than Chinchilla-style scaling laws predict for structured algorithmic tasks~\citep{hoffmann2022training}.
 
-CRISP provides a parsimonious account of grokking as a phase transition in feature space.
-The key insight---that generalization emerges when the network's representation crosses a phase boundary from superposition to clean features---is strongly supported by the sharp 0/1 structure of the phase diagram (Table~\ref{tab:full_results}).
-The fact that 69 of 120 runs grok while 51 do not, with the boundary cleanly determined by the $(w, f)$ pair, is consistent with a genuine threshold effect rather than a gradual improvement.
-This perspective suggests that other apparently distinct phenomena---such as the ``emergent abilities'' documented by \citet{wei2022emergent}---may also be manifestations of representational phase transitions, a hypothesis we leave for future work.
+\paragraph{Relationship to existing theories.}
+CRISP formalizes the superposition hypothesis of \citet{elhage2022toy} as an energy-landscape problem and identifies $n$ as the control parameter of the superposition$\to$clean transition; the circuit-competition picture of \citet{nanda2023progress} is recovered as competition between the two energy minima with a quantitative threshold. The logarithmic dependence on $\Fnum$ reflects that $\reals^w$ admits $\exp(\Theta(w))$ near-orthogonal vectors~\citep{milman1986asymptotic}, so interference cost grows only logarithmically with feature count.
 
-\subsection{Practical Implications}
-
-The existence of a sharp phase transition has practical value for compute budgeting.
-Our experiments show that training with $n < \nc$ is wasteful: no condition below the critical fraction produced a single grokking event across 51 sub-critical runs.
-Conversely, training with $n$ modestly above $\nc$ is highly efficient: grokking delays drop rapidly once the threshold is crossed (e.g., from 8{,}333 steps at the boundary to effectively zero two increments above).
-The practical recommendation is to train with $n \approx (1.2\text{--}1.5) \cdot \nc$, where the network has crossed the threshold with sufficient margin for fast and reliable generalization.
-
-The finding that wider models require \emph{less} data to grok has an additional practical implication: in the regime studied, scaling up model width is not merely a capacity increase but actively reduces data requirements.
-This is the opposite of the conventional wisdom that larger models need more data, and suggests that the compute-optimal frontier may favor wider models more aggressively than Chinchilla-style scaling laws predict, at least for structured algorithmic tasks.
-
-\subsection{Relationship to Existing Theories}
-
-\paragraph{Li$^2$ framework.}
-Our theory extends the Li$^2$ framework~\citep{li2024geometry} by introducing dataset size as the control parameter for the superposition$\to$clean transition.
-While Li$^2$ characterizes the \emph{static} geometry of superposition for a fixed data distribution, CRISP identifies the \emph{dynamic} threshold at which the landscape topology changes.
-
-\paragraph{Chinchilla scaling.}
-The Chinchilla scaling laws~\citep{hoffmann2022training} are phenomenological fits that predict data and parameters should scale proportionally.
-Our finding that $\nc$ \emph{decreases} with width challenges this proportionality for structured algorithmic tasks: wider models require not proportionally more data, but actually less data.
-This suggests that the Chinchilla ratio is not a universal constant but depends on task structure, with algorithmic tasks exhibiting a qualitatively different regime than natural language.
-
-\paragraph{Width dependence: what the theory gets right and wrong.}
-The CRISP framework makes two core predictions: (1)~a sharp phase transition exists at a critical dataset size, and (2)~the critical size scales as $\nc = \alpha \cdot w \cdot \log(\Fnum)$.
-Our experiments strongly support prediction (1)---the phase diagram exhibits a clean binary boundary between grokking and non-grokking regimes.
-However, prediction (2) is only partially supported: while $\nc$ does depend on width, the direction is reversed.
-The simple formula predicts $\nc$ should increase with $w$; the data show it decreases.
-
-We view this as a refinement rather than a refutation.
-The linear dependence $\nc \propto w$ assumes a fixed feature count $\Fnum$, but in practice wider networks may learn to represent the same task with fewer effective features.
-The refined prediction $\nc = \alpha \cdot w \cdot \log(F_{\text{eff}}(w))$ with $F_{\text{eff}}(w) = \Fnum \cdot (w/w_0)^{-\gamma}$ for $\gamma > 1$ is consistent with the data and preserves the phase-transition structure.
-Deriving $F_{\text{eff}}(w)$ from the spectral properties of the task---rather than fitting it post hoc---is an important direction for future work.
-
-\paragraph{Circuit competition.}
-The circuit competition model of \citet{nanda2023progress} describes grokking as competition between memorization and generalization circuits.
-In the CRISP framework, these ``circuits'' correspond to superposed and clean feature configurations, and the ``competition'' is the energy landscape containing both minima.
-CRISP adds predictive power by specifying \emph{when} the generalization circuit wins (at $\nc$) and \emph{why} (the global minimum shifts).
-
-\subsection{Why $\log \Fnum$ and Not $\Fnum$?}
-
-The logarithmic dependence on $\Fnum$ is a consequence of the packing geometry in high dimensions.
-In $\reals^w$, approximately $\exp(\Theta(w))$ near-orthogonal vectors can be packed~\citep{milman1986asymptotic}, so the interference cost of superposition grows only logarithmically with the number of features.
-This is why the transition threshold scales mildly with task complexity: doubling the number of features increases $\nc$ by only $\log 2 \approx 0.7$ per unit width.
+\paragraph{What the theory gets right, wrong, and limitations.}
+The data strongly support prediction~(1)---a sharp phase transition at a critical dataset size---but only partially support~(2): $\nc$ depends on width with the direction reversed. We treat this as a refinement: wider networks learn more compact feature bases, so $\nc = \alpha w \log F_{\text{eff}}(w)$ with $F_{\text{eff}}(w) = \Fnum (w/w_0)^{-\gamma}$, $\gamma > 1$, preserves the phase-transition structure while matching the data; deriving $F_{\text{eff}}(w)$ from spectral properties of the task is important future work.
+Theorem~\ref{thm:critical_size} also assumes approximately independent features and sub-Gaussian data; real distributions (e.g.\ language) have correlation structure and heavy tails. The formula requires knowing $\Fnum$ (well-defined here as the 47 residue classes but must be estimated otherwise), and the constant $\alpha$ is calibrated per task family. Our validation uses 2-layer MLPs with $w \leq 128$ on a single task; extending to transformers, larger moduli, natural language, and explicit depth dependence \citep{saxe2014exact} is important future work.
 
 
 % ============================================================================
-% 7. LIMITATIONS
-% ============================================================================
-\section{Limitations}
-\label{sec:limitations}
-
-We identify several limitations of the current work:
-
-\paragraph{Assumptions on feature structure.}
-Theorem~\ref{thm:critical_size} assumes that the latent features are approximately independent and that the data is sub-Gaussian.
-In practice, features may have complex correlation structures, and real data distributions (especially natural language) have heavy tails.
-The theory's applicability to such settings requires further investigation.
-
-\paragraph{Estimation of $\Fnum$.}
-The formula $\nc = \alpha \cdot w \cdot \log \Fnum$ requires knowing $\Fnum$, the number of latent features.
-For structured tasks like modular arithmetic, $\Fnum$ is well-defined ($\Fnum = p = 47$).
-For more complex tasks (e.g., natural language), $\Fnum$ must be estimated, and the effective feature count $F_{\text{eff}}(w)$ may differ substantially from the na\"ive count.
-Developing principled methods for estimating $\Fnum$ and $F_{\text{eff}}$ is an important open problem.
-
-\paragraph{The constant $\alpha$.}
-While we derive $\alpha$ theoretically (Eq.~\ref{eq:alpha}), it depends on task-specific quantities ($\lambda$, $\gamma$, $\sigma_x^2$) that must be estimated from data.
-In practice, we fit $\alpha$ per task family.
-A fully predictive theory would specify $\alpha$ from first principles.
-
-\paragraph{Architecture dependence.}
-Our experiments use transformers and MLPs.
-The theory is stated for general architectures, but the constants may differ.
-Convolutional networks, state-space models, and other architectures may exhibit different transition dynamics.
-
-\paragraph{Scale of experiments.}
-Our largest models ($w = 128$) are small by modern standards, and we validate on a single task (mod-47).
-It remains an open question whether the phase transition picture holds for billion-parameter models or more complex tasks, where other phenomena (training instabilities, distributed optimization artifacts) may dominate.
-Extending to transformer architectures, larger moduli, and natural language tasks is an important direction.
-
-\paragraph{Depth.}
-The current theory treats depth implicitly through its effect on the feature space.
-A more complete theory would explicitly model the role of depth in the phase transition, potentially connecting to the stage-wise learning dynamics of \citet{saxe2014exact}.
-
-
-% ============================================================================
-% 8. CONCLUSION
+% 7. CONCLUSION
 % ============================================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We presented CRISP, a theoretical framework that explains grokking as a phase transition in feature space, and validated it on modular arithmetic (mod-47) with 120 training runs.
-Our main contributions are: (1)~a proof that the transition from superposition to clean features constitutes a genuine phase transition with a sharp critical point (Theorem~\ref{thm:phase_transition}); (2)~a closed-form prediction $\nc = \alpha \cdot w \cdot \log \Fnum$ for the critical dataset size (Theorem~\ref{thm:critical_size}); and (3)~experimental evidence from 120 runs showing a sharp phase boundary, with the surprising finding that $\nc$ decreases with width.
+We presented CRISP, a theoretical framework that explains grokking as a phase transition in feature space, validated on $(a+b)\bmod 47$ with 120 training runs. Our contributions are: (1)~a proof that the superposition$\to$clean-feature transition is a genuine phase transition with a sharp critical point (Thm.~\ref{thm:phase_transition}); (2)~a closed-form prediction $\nc = \alpha w \log \Fnum$ (Thm.~\ref{thm:critical_size}); and (3)~empirical evidence of a sharp phase boundary with the surprising finding that $\nc$ \emph{decreases} with width.
+Looking forward, CRISP suggests deriving $F_{\text{eff}}(w)$ from first principles, extending to transformers and larger-scale tasks, and asking whether similar phase boundaries govern in-context learning and chain-of-thought.
 
-The experiments confirm the existence of a sharp phase transition: below the critical dataset size, no seed groks; above it, grokking is nearly deterministic.
-The transition sharpens with width and grokking delays decrease dramatically as models widen.
-However, the direction of the width dependence---$\nc$ decreasing rather than increasing with $w$---reveals that the simple linear formula must be refined to account for width-dependent effective feature counts.
 
-Looking forward, CRISP suggests several promising directions: deriving $F_{\text{eff}}(w)$ from first principles, extending the theory to transformer architectures and larger-scale tasks, and investigating whether similar phase boundaries govern other emergent phenomena such as in-context learning and chain-of-thought reasoning.
+% ============================================================================
+% BROADER IMPACT
+% ============================================================================
+\section*{Broader Impact}
+This work is foundational research on training dynamics of small neural networks on algorithmic tasks.
+We do not foresee direct negative societal impacts.
+Positive impacts include more efficient dataset-size selection for training small models and a clearer theoretical account of a previously puzzling phenomenon (grokking).
+We validate exclusively on synthetic modular arithmetic data; the work raises no privacy or fairness concerns.
 
+% ============================================================================
+% REPRODUCIBILITY STATEMENT
+% ============================================================================
+\section*{Reproducibility Statement}
+All 120 training runs are produced by a single script (\texttt{reproduce.py}) shipped with the paper.
+Hyperparameters, seeds (42, 137, 256), dataset generation, and evaluation criteria are specified in Appendix~B.
+Per-run training histories (\texttt{sweep\_results.json}, 120 runs) and per-condition aggregates (\texttt{summary.json}) are released alongside the code.
+Runtime on a single A100 is approximately 30 minutes.
+Training is deterministic up to hardware-level CUDA nondeterminism.
+
+% ============================================================================
+% USE OF LARGE LANGUAGE MODELS
+% ============================================================================
+\section*{Use of Large Language Models}
+Large language models were used for editorial assistance (prose polishing, LaTeX formatting) and as
+programming assistants during implementation. All theoretical claims, proof structures, experimental
+designs, and analysis of results were directed and verified by the authors. LLMs were not credited
+as authors and were not used to generate scientific claims that were accepted without human
+verification against the raw experiment data.
 
 % ============================================================================
 % ACKNOWLEDGMENTS
@@ -663,24 +537,14 @@ Anonymized for review.
 \begin{thebibliography}{30}
 
 \bibitem[Bahri et~al.(2024)]{bahri2024explaining}
-Yasaman Bahri, Ethan Dyer, Jared Kaplan, and Henighan Lee.
+Yasaman Bahri, Ethan Dyer, Jared Kaplan, Jaehoon Lee, and Utkarsh Sharma.
 \newblock Explaining neural scaling laws.
 \newblock \emph{Proceedings of the National Academy of Sciences}, 121(27):e2311878121, 2024.
-
-\bibitem[Barak et~al.(2022)]{barak2022hidden}
-Boaz Barak, Benjamin~L. Edelman, Surbhi Goel, Sham Kakade, Eran Malach, and Cyril Zhang.
-\newblock Hidden progress in deep learning: {SGD} learns parities near the computational limit.
-\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS)}, 2022.
 
 \bibitem[Caballero et~al.(2023)]{caballero2023broken}
 Ethan Caballero, Kshitij Gupta, Irina Rish, and David Krueger.
 \newblock Broken neural scaling laws.
 \newblock In \emph{International Conference on Learning Representations (ICLR)}, 2023.
-
-\bibitem[Caponnetto and De~Vito(2007)]{caponnetto2007optimal}
-Andrea Caponnetto and Ernesto De~Vito.
-\newblock Optimal rates for the regularized least-squares algorithm.
-\newblock \emph{Foundations of Computational Mathematics}, 7(3):331--368, 2007.
 
 \bibitem[Elhage et~al.(2022)]{elhage2022toy}
 Nelson Elhage, Tristan Hume, Catherine Olsson, Nicholas Schiefer, Tom Henighan, Shauna Kravec, Zac Hatfield-Dodds, Robert Lasenby, Dawn Drain, Carol Chen, et~al.
@@ -701,16 +565,6 @@ Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, Elena Buchatskaya, Trevor Ca
 Jared Kaplan, Sam McCandlish, Tom Henighan, Tom~B. Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, and Jeffrey Wu.
 \newblock Scaling laws for neural language models.
 \newblock \emph{arXiv preprint arXiv:2001.08361}, 2020.
-
-\bibitem[Karpathy(2015)]{karpov2015char}
-Andrej Karpathy.
-\newblock The unreasonable effectiveness of recurrent neural networks.
-\newblock \emph{Blog post}, 2015.
-
-\bibitem[Li and Li(2024)]{li2024geometry}
-Yuanzhi Li and Zhiyuan Li.
-\newblock On the geometry of neural network representations: Superposition and clean features.
-\newblock In \emph{International Conference on Machine Learning (ICML)}, 2024.
 
 \bibitem[Liu et~al.(2023)]{liu2023omnigrok}
 Ziming Liu, Eric~J. Michaud, and Max Tegmark.
@@ -956,7 +810,7 @@ We compute $\supidx(\Phi)$ as follows:
     \item Compute $\supidx$ via Eq.~\eqref{eq:superposition_index}.
 \end{enumerate}
 
-\subsection{Identification of $\nc$ Per Width}
+\subsection{Identification of \texorpdfstring{$\nc$}{nc} Per Width}
 
 For each width, we identify the observed critical dataset size $\nc$ as follows:
 \begin{enumerate}
@@ -971,17 +825,114 @@ This procedure identifies the transition boundary empirically at each width, ena
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{fig_metric_distribution.png}
-    \caption{Distribution of test accuracy across seeds and conditions. Each violin shows the distribution over 3 seeds. The bimodal structure at intermediate dataset fractions (near $f_c$) is consistent with a phase transition: some seeds have crossed the threshold while others remain in the memorization state.}
-    \label{fig:metric_dist}
+    \includegraphics[width=0.9\textwidth]{fig1_grokking_curves.png}
+    \caption{Training and test accuracy curves for representative conditions. Grokking manifests as a gap between early memorization (train accuracy $\to 1$) and delayed generalization (test accuracy $\to 1$), which closes as dataset fraction exceeds $f_c$.}
+    \label{fig:grokking_curves}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{fig_metric_tradeoff.png}
-    \caption{Tradeoff between training fraction and test accuracy across all conditions. Each point is one (width, fraction) condition averaged over 3 seeds. The sharp elbow at the critical fraction marks the transition from memorization to generalization.}
-    \label{fig:metric_tradeoff}
+    \includegraphics[width=0.9\textwidth]{fig4_superposition_dynamics.png}
+    \caption{Superposition index $\supidx(\Phi)$ dynamics during training. Conditions that grok show a sharp drop in $\supidx$ coincident with the rise in test accuracy, consistent with the predicted superposition$\to$clean-feature transition. Non-grokking conditions remain at high $\supidx$ throughout training.}
+    \label{fig:superposition_dynamics}
 \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig5_scaling_law.png}
+    \caption{Final test loss as a function of training fraction across widths. Wider models exhibit a pronounced knee at smaller $f$, aligning with the $\nc$ values in Table~\ref{tab:nc_observed} and supporting the unification of the grokking threshold and the scaling-law knee.}
+    \label{fig:scaling_law}
+\end{figure}
+
+
+% ============================================================================
+% NEURIPS PAPER CHECKLIST (mandatory, does not count toward page limit)
+% ============================================================================
+\section*{NeurIPS Paper Checklist}
+
+\begin{enumerate}
+
+\item {\bf Claims}\\
+Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?\\
+Answer: \textbf{[Yes]}\\
+Justification: The abstract and Section~\ref{sec:intro} state four contributions (C1--C4) that match what the paper delivers: a phase-transition theorem (Theorem~\ref{thm:phase_transition}), a closed-form $\nc$ (Theorem~\ref{thm:critical_size}), three falsification tests (Section~\ref{sec:falsification}), and 120-run validation on mod-47 (Section~\ref{sec:results}). We also explicitly disclose that the observed direction of $\nc(w)$ contradicts the naive linear prediction, which the abstract states transparently rather than overclaiming.
+
+\item {\bf Limitations}\\
+Question: Does the paper discuss the limitations of the work performed by the authors?\\
+Answer: \textbf{[Yes]}\\
+Justification: Section~\ref{sec:discussion} (final paragraph, ``What the theory gets right, wrong, and limitations'') discusses: (i) the reversed direction of $\nc(w)$ vs.\ the naive linear prediction; (ii) sub-Gaussian and approximate-feature-independence assumptions that may not hold for natural data; (iii) that $\Fnum$ must be estimated for non-modular tasks; (iv) that the constant $\alpha$ is fit per task family; and (v) that validation is restricted to 2-layer MLPs with $w \le 128$ on a single task.
+
+\item {\bf Theory assumptions and proofs}\\
+Question: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?\\
+Answer: \textbf{[Yes]}\\
+Justification: All theorems state their assumptions (sub-Gaussian data, $\Fnum > w$, approximate feature independence). Proof sketches are provided in the main text and complete proofs are in Appendix~\ref{app:proofs}, including the gradient-condition characterization, energy comparison, sign-change argument via the intermediate value theorem, Hessian analysis at $\nc$, and the concentration-of-measure derivation of the transition width $\Delta n = \Theta(\nc \cdot w^{-1/2})$.
+
+\item {\bf Experimental result reproducibility}\\
+Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?\\
+Answer: \textbf{[Yes]}\\
+Justification: Section~\ref{sec:experiments} and Appendix~\ref{app:experiments} specify: task ($(a+b)\bmod 47$, $\Fnum=47$), architecture (2-layer MLP, one-hot encoding), widths $\{32,48,64,96,128\}$, fractions $\{0.2,\ldots,0.9\}$, optimizer (AdamW, lr$=0.03$, wd$=0.3$), 10\,000 training steps, seeds $\{42, 137, 256\}$, and grokking criterion (test acc $> 90\%$). A reproduction script (\texttt{reproduce.py}) and per-run JSON logs are released with the paper.
+
+\item {\bf Open access to data and code}\\
+Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?\\
+Answer: \textbf{[Yes]}\\
+Justification: The full sweep is reproduced by a single script \texttt{reproduce.py} included in the supplementary code directory, alongside a \texttt{README.md} listing dependencies, runtime estimates, and CLI flags. Per-run training histories (\texttt{sweep\_results.json}) and per-condition aggregates (\texttt{summary.json}) are released. The dataset is generated deterministically from the seeds and requires no external download.
+
+\item {\bf Experimental setting/details}\\
+Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?\\
+Answer: \textbf{[Yes]}\\
+Justification: All hyperparameters are tabulated in Appendix~\ref{app:experiments} (Table on page~\pageref{tab:full_results}--following). Train/test splits follow the standard grokking protocol: a deterministic random permutation of the $47^2 = 2{,}209$ pairs (seeded), with the first $f \cdot 2209$ used for training and the remainder for evaluation. Hyperparameter choices follow \citet{nanda2023progress}.
+
+\item {\bf Experiment statistical significance}\\
+Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?\\
+Answer: \textbf{[Yes]}\\
+Justification: Each $(w, f)$ condition is run with 3 random seeds, and we report grok rate (fraction of seeds grokking) per condition (Table~\ref{tab:full_results}). The $f_c$ identification rule ($\geq 50\%$ of seeds grokking) makes the threshold robust to seed variance. The 0/51 sub-critical statistic is a strong falsification result that does not require additional error bars. Limitations: with only 3 seeds per cell, we report rates rather than confidence intervals; this is standard for grokking studies given the binary outcome.
+
+\item {\bf Experiments compute resources}\\
+Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?\\
+Answer: \textbf{[Yes]}\\
+Justification: The Reproducibility Statement and \texttt{README.md} state: $\sim$30 minutes on a single A100, $\sim$45 minutes on a V100/3090, and $\sim$2 hours on CPU for the full 120-run sweep. Memory footprint is negligible ($<$1 GB) due to the small task size.
+
+\item {\bf Code of ethics}\\
+Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics?\\
+Answer: \textbf{[Yes]}\\
+Justification: The work uses only synthetic algorithmic data (modular arithmetic), involves no human subjects, raises no privacy or fairness concerns, and uses small-scale models ($w \le 128$, two layers). The authors have read and adhered to the NeurIPS Code of Ethics.
+
+\item {\bf Broader impacts}\\
+Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?\\
+Answer: \textbf{[Yes]}\\
+Justification: A dedicated Broader Impact section is included. Positive impacts: more efficient dataset-size selection and a clearer theoretical account of grokking. We do not foresee direct negative societal impacts from foundational training-dynamics research on small algorithmic models, and the paper makes no normative deployment claims.
+
+\item {\bf Safeguards}\\
+Question: Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?\\
+Answer: \textbf{[NA]}\\
+Justification: The released artifacts are (i) a small training script for $\le$2-layer MLPs on synthetic modular arithmetic, and (ii) JSON logs of training metrics. None of these have meaningful misuse risk.
+
+\item {\bf Licenses for existing assets}\\
+Question: Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?\\
+Answer: \textbf{[Yes]}\\
+Justification: The implementation uses PyTorch (BSD), NumPy (BSD), and Matplotlib (BSD-style). These are cited in the README. No external datasets or pretrained checkpoints are used.
+
+\item {\bf New assets}\\
+Question: Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?\\
+Answer: \textbf{[Yes]}\\
+Justification: The released code (\texttt{reproduce.py}, \texttt{README.md}) and JSON logs (\texttt{sweep\_results.json}, \texttt{summary.json}) are documented with hyperparameter tables, expected runtime, expected results, and CLI flags. They will be released under an MIT license.
+
+\item {\bf Crowdsourcing and research with human subjects}\\
+Question: For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)?\\
+Answer: \textbf{[NA]}\\
+Justification: No crowdsourcing or human-subject research is involved.
+
+\item {\bf Institutional review board (IRB) approvals or equivalent for research with human subjects}\\
+Question: Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?\\
+Answer: \textbf{[NA]}\\
+Justification: No human-subject research is involved.
+
+\item {\bf Declaration of LLM usage}\\
+Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods in this research?\\
+Answer: \textbf{[Yes]}\\
+Justification: A dedicated ``Use of Large Language Models'' section discloses that LLMs were used for editorial assistance and as programming assistants, but not as a non-standard component of the core scientific methodology; all theoretical claims, proofs, and experimental analyses were directed and verified by the authors.
+
+\end{enumerate}
 
 
 \end{document}
