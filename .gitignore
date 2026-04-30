@@ -95,3 +95,19 @@ scripts/md2pdf.py
 docs/tasks/
 docs/feature_expansion_analysis.*
 docs/tester_guide_cn.*
+
+# tts-scaling-laws paper directory
+papers/tts-scaling-laws-public/
+papers/tts-scaling-laws/REVIEW_TOKEN.txt
+papers/tts-scaling-laws/paperreview*
+papers/tts-scaling-laws/latex/*.aux
+papers/tts-scaling-laws/latex/*.bbl
+papers/tts-scaling-laws/latex/*.blg
+papers/tts-scaling-laws/latex/*.log
+papers/tts-scaling-laws/latex/*.out
+papers/tts-scaling-laws/latex/*.pdf
+papers/tts-scaling-laws/latex/texput.log
+papers/tts-scaling-laws/__pycache__/
+papers/tts-scaling-laws/artifacts/
+papers/tts-scaling-laws/real_results/
+papers/tts-scaling-laws/real_results_v2/
