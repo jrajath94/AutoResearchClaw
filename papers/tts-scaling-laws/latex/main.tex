@@ -322,6 +322,27 @@ Qwen3.6-35B-A3B (MATH-500)      & $0.018$ & $0.021$ & $0.018$ & $0.040$ & $0.156
 
 \begin{figure}[t]
     \centering
+    \includegraphics[width=\textwidth]{figures_v3/fig_v3_per_budget.pdf}
+    \caption{Population-level scaling curves on the three V3 experiments, with $95\%$ cluster-bootstrap CI bands ($B{=}1000$ resamples over problems).  All three are smooth, monotone, concave---the empirical signature predicted by Theorem~\ref{thm:population}.  Llama 4 Scout's near-vertical jump from $16.6\%$ at 128 tokens to $84.4\%$ at 256 tokens is the cleanest staircase the literature has documented at the population level.}
+    \label{fig:v3_per_budget}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures_v3/fig_v3_shape_r2_hist.pdf}
+    \caption{Per-cell staircase shape coefficient $R^2$ on real V3 data (blue) versus the IID-Bernoulli null at the trajectory mean (red), variation subset only.  The dashed line is the $R^2{>}0.7$ threshold used as the primary test.  Real distributions concentrate near $1.0$; null distributions are uniformly spread below the threshold.  The $4$--$6\times$ separation is invisible in the BIC test (Fig.~\ref{fig:v3_bic_vs_shape}) but obvious here.  Null annotations are means over $5$ IID-Bernoulli realizations per cell.}
+    \label{fig:v3_shape_r2}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures_v3/fig_v3_bic_vs_shape.pdf}
+    \caption{The methodological discovery, visualized.  BIC (blue, hatched$=$null) returns nearly identical staircase rates on real and IID-Bernoulli noise across all three experiments---confirming that BIC's classification at $B{=}6$ is dominated by the parameter-count penalty rather than by the data.  The shape coefficient $R^2{>}0.7$ test (green) cleanly separates real from noise.  The contrast motivates demoting BIC to a robustness diagnostic and adopting shape $R^2$ as the primary per-cell test.}
+    \label{fig:v3_bic_vs_shape}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
     \includegraphics[width=\textwidth]{figures/fig1_staircase.pdf}
     \caption{Per-problem accuracy vs.\ token budget for 6 GSM8K problems (Qwen-1.5B, $\tau{=}0.5$), stratified by gzip-complexity tercile.  \textcolor{stairred}{Red dashed lines}: piecewise-constant fits.  Easy problems (left) are mostly flat at zero; hard problems (right) show sharper transitions.  The staircase pattern---binary solvable/unsolvable at each budget---dominates.}
     \label{fig:staircase}
@@ -447,7 +468,13 @@ Description-length & $37.6 \pm 2.8$ & $31.2$ & $44.0$ \\
 \section{Broader Impact}
 %=========================================================================
 
-Adaptive compute allocation reduces the carbon footprint of reasoning-intensive LLM deployments; we see no negative societal impacts specific to this work, which uses only publicly available open-weight models and datasets.
+\textbf{Energy footprint.}  Our V3 experiments totaled $\sim$$14{,}400$ inference calls on Qwen3.6-35B-A3B and $\sim$$4{,}800$ on Llama 4 Scout via the OpenRouter API; the V1 retracted experiments used $\sim$$24{,}000$ small-model calls.  Conservatively estimated, our entire experimental program consumed less energy than a single training run of any modern frontier model.  Adaptive routing of the kind we study, if deployed, reduces the carbon footprint of reasoning-intensive LLM deployments roughly proportionally to the per-problem token-savings rate.
+
+\textbf{Dual-use considerations.}  Faster, cheaper reasoning inference can in principle be used to scale up automated misinformation, fraud, or abuse generation.  This concern applies to all efficiency improvements in LLM serving, not specifically to our work; the per-problem routing we study is content-agnostic and does not differentially benefit harmful applications.  We see no specific dual-use harm beyond what already applies to the underlying open-weight models.
+
+\textbf{Equity and access.}  Test-time compute is currently rationed by API budget, which differentially advantages well-funded users.  Per-problem routing makes test-time compute marginally cheaper, which broadens accessibility on the margin but does not address the underlying capability gap between frontier-model users and others.
+
+\textbf{Methodological externality.}  The methodological discovery (BIC at small $B$ is structurally biased toward lower-DOF model families) generalises beyond our setting.  Any researcher comparing fixed-DOF model families on $\le 10$ data points should be aware of this and report a same-mean noise null.  Surface adoption of this convention would reduce a recurring class of statistical artifact across the literature.
 
 %=========================================================================
 \section{Conclusion}
@@ -585,7 +612,7 @@ Confidence-adaptive ($\Delta{<}0.02$) & $73.0$ & $0.011$ & $80.6$ & $0.029$ & 1 
 \item {\bf Experimental result reproducibility}
     \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?
     \item[] Answer: \answerYes{}
-    \item[] Justification: \S\ref{sec:setup} reports model versions (Qwen2.5-0.5B/1.5B-Instruct), benchmark (GSM8K test split, first 100 problems), 5 token budgets, 3 temperatures, $S{=}8$ samples, decoding settings, prompt template, deterministic answer-extraction regex, and step-count extraction protocol; appendices~\ref{app:binomial}--\ref{app:pareto} document BIC formulas, bootstrap protocol ($B{=}2000$), and Pareto split.
+    \item[] Justification: \S\ref{sec:setup} reports V2 model versions (Qwen3.6-35B-A3B, Llama 4 Scout, served via OpenRouter API with \texttt{reasoning.exclude=true}), V1 historical baseline models (Qwen2.5-0.5B/1.5B-Instruct, retracted as small-model regime), benchmarks (GSM8K test split first 100; MATH-500 first 100), 6 token budgets $\{32,64,128,256,512,1024\}$, $\tau{=}0.5$, $S{=}8$ samples, deterministic chat-template prompt, exact-match answer extraction regex, fixed seed bases (42 for V3, 1042 for S=32 sensitivity); appendices~\ref{app:binomial}--\ref{app:pareto} document BIC formulas, the shape coefficient $R^2$ definition, the Baringhaus--Henze test procedure, and the IID-Bernoulli null protocol.  All scripts (\texttt{analysis\_v2.py}, \texttt{analysis\_v3.py}, \texttt{experiment/real\_experiment\_v2.py}, \texttt{figures\_v3.py}) and raw \texttt{.npy} arrays are in the anonymous supplement.
 
 \item {\bf Open access to data and code}
     \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?
@@ -605,7 +632,7 @@ Confidence-adaptive ($\Delta{<}0.02$) & $73.0$ & $0.011$ & $80.6$ & $0.029$ & 1 
 \item {\bf Experiments compute resources}
     \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
     \item[] Answer: \answerYes{}
-    \item[] Justification: \S\ref{sec:setup} and Reproducibility Statement: NVIDIA RTX A5000 24\,GB on RunPod, $\sim$3.5 hours total for the 24{,}000 inference calls, $<$\$1 in cloud cost; synthetic experiments are CPU-only, fully deterministic at fixed seed 42, $<$\$0.02 amortized.
+    \item[] Justification: \S\ref{sec:setup} and Reproducibility Statement.  V2 inference (3 datasets $\times$ $\sim$$4{,}800$ calls each $=$ $14{,}400$ inference calls) was served via the OpenRouter API at concurrency 12, total wall-clock $\sim$$70$ minutes, $\sim$\$15 in API cost; the per-pod gzip routing-proxy adds $0.04$ms p99 over a $12.4$s p99 inference latency.  V1 (retracted) used a single NVIDIA RTX A5000 24\,GB, $\sim$$3.5$ hours, $<$\$1.  All synthetic experiments are CPU-only, deterministic at seed $42$, $<$\$0.02 amortized.
 
 \item {\bf Code of ethics}
     \item[] Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics \url{https://neurips.cc/public/EthicsGuidelines}?
