@@ -1,0 +1,124 @@
+{
+  "s32": {
+    "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3_s32/results_qwen3.6_35b-a3b_gsm8k.npy",
+    "n_problems": 100,
+    "n_budgets": 6,
+    "n_temps": 1,
+    "samples_per_cell": 32,
+    "budgets": [
+      32.0,
+      64.0,
+      128.0,
+      256.0,
+      512.0,
+      1024.0
+    ],
+    "n_cells": 100,
+    "n_with_variation": 100,
+    "frac_with_variation": 1.0,
+    "headline": {
+      "staircase_rate_overall": 0.61,
+      "staircase_rate_variation": 0.61,
+      "staircase_rate_variation_bh_corrected": 0.61,
+      "bh_q": 0.05
+    },
+    "primary_tests": {
+      "spearman_trend_test": {
+        "frac_significant_overall": 0.92,
+        "frac_significant_variation": 0.92,
+        "frac_bh_significant_variation": 0.91,
+        "interpretation": "Fraction of cells where accuracy increases monotonically with budget at \u03b1=0.05; this is a non-parametric test free of BIC's DOF-penalty bias."
+      },
+      "staircase_shape_coefficient": {
+        "mean_r2_overall": 0.8674064641038395,
+        "mean_r2_variation": 0.8674064641038395,
+        "median_r2_variation": 0.8827351597049622,
+        "frac_high_r2_variation": 0.93,
+        "interpretation": "Mean R\u00b2 for the best single-split staircase model. R\u00b2>0.7 means most variance is captured by ONE discrete jump, supporting the staircase claim. R\u00b2 is dimensionless and not subject to BIC's penalty."
+      }
+    },
+    "negative_control": {
+      "n_seeds": 5,
+      "permutation_shuffle": {
+        "overall_mean": 0.966,
+        "variation_mean": 0.966,
+        "variation_bh_mean": 0.966,
+        "ci_95_variation": [
+          0.951,
+          0.98
+        ],
+        "note": "Budget permutation preserves multiset of success counts (weak control)."
+      },
+      "iid_bernoulli_null": {
+        "overall_mean": 0.9560000000000001,
+        "variation_mean": 0.955919191919192,
+        "ci_95_variation": [
+          0.95,
+          0.96
+        ],
+        "shape_r2_mean_variation": 0.4718277735661765,
+        "shape_frac_high_r2_variation": 0.1823232323232323,
+        "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control). Shape R^2 on null lets us see if real shape R^2 is meaningfully above chance."
+      },
+      "delta_real_vs_iid_variation": -0.34591919191919196,
+      "interpretation": "WEAK: real \u2248 iid-bernoulli (BIC penalty drives classification, not signal)"
+    },
+    "snell_powerlaw_baseline": {
+      "powerlaw_wins_overall": 15,
+      "powerlaw_wins_variation": 15
+    },
+    "log_concavity_test": {
+      "n": 100,
+      "test_statistic": 0.3768498852400497,
+      "null_mean": -0.13840019196276912,
+      "null_std": 0.45143486334975563,
+      "p_value": 0.441,
+      "reject_log_concavity": false,
+      "interpretation": "Fail to reject log-concavity (Theorem 1 grounded)"
+    },
+    "tost_vs_max_budget": {
+      "n": 100,
+      "mean": 0.0625,
+      "se": 1.1909837256858236,
+      "ci_90": [
+        -1.914998845088907,
+        2.039998845088907
+      ],
+      "eps_bounds": [
+        -2.0,
+        2.0
+      ],
+      "p_low": 0.043215404041603844,
+      "p_high": 0.05347855469567759,
+      "equivalent": false,
+      "median_chosen_budget": 1024.0,
+      "mean_chosen_budget": 750.08,
+      "tokens_saved_vs_max_pct": 26.749999999999996
+    },
+    "per_budget_accuracy_curve": [
+      0.0084375,
+      0.0071875,
+      0.05125,
+      0.334375,
+      0.4359375,
+      0.503125
+    ],
+    "latency_meta": {
+      "mean_ms": 4225.319764124411,
+      "median_ms": 2967.903733253479,
+      "p95_ms": 11175.300395488739,
+      "p99_ms": 16513.7536907196,
+      "max_ms": 36156.161069869995,
+      "n": 12610
+    },
+    "gzip_overhead_meta": {
+      "mean_ms": 0.016300678253173828,
+      "median_ms": 0.014781951904296875,
+      "p95_ms": 0.025033950805664062,
+      "p99_ms": 0.044295787811279394,
+      "max_ms": 0.0629425048828125,
+      "n": 100
+    },
+    "produced_at": "2026-05-05 16:38:16"
+  }
+}

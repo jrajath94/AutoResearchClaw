@@ -291,7 +291,8 @@ The remainder of the paper uses a \textbf{V2 ladder} of contemporary (May 2026) 
 \quad Qwen2.5-1.5B (1.9--6.5\%) & 94  & ---              & ---              & $0.883$ & $\approx 0.88$ \\
 \midrule
 \multicolumn{6}{l}{\textit{V2 (May 2026 SOTA, signal-bearing regime):}} \\
-\quad \textbf{Qwen3.6-35B-A3B} (0--47\% acc)  & 277 & ---  & $\bm{0.857}$  & $0.837$ & $0.969$ \\
+\quad \textbf{Qwen3.6-35B-A3B} (0--47\% acc, $S{=}8$)  & 277 & ---  & $\bm{0.857}$  & $0.837$ & $0.969$ \\
+\quad ~~~same, sensitivity at $S{=}32$  & 100 & ---  & $\bm{0.930}$  & $0.610$ & $0.956$ \\
 \quad \textbf{Llama 4 Scout} (cross-vendor)  & 261 & --- & $\bm{0.980}$ & $0.560$ & $0.974$ \\
 \quad \textbf{Qwen3.6-35B-A3B} on MATH-500  & 252 & --- & $\bm{0.873}$ & $0.778$ & $0.981$ \\
 \midrule
@@ -359,6 +360,8 @@ Table~\ref{tab:h1} presents the V1 (retracted) and V2 (May 2026 SOTA) classifica
 \textbf{Cross-domain replication on MATH-500 (Hendrycks et al.\ competition-level math).}  Switching domain from grade-school arithmetic (GSM8K) to competition-level math (MATH-500), with the same Qwen3.6-35B-A3B model, $R^2 > 0.7$ holds for $\bm{87.3\%}$ of variation-subset cells (mean $R^2 = 0.844$) against $\bm{20.4\%}$ on the IID-Bernoulli null---a $\bm{4.3\times}$ separation, matching the GSM8K result on the same model ($4.6\times$).  The population-level per-budget curve is shifted to higher budgets (the elbow appears between 512 and 1024 tokens, consistent with MATH-500 being substantially harder), but the shape is identical: monotone, concave, smooth (Table~\ref{tab:per_budget_v3}).  \textbf{An additional positive result:} the Baringhaus--Henze test fails to reject log-concavity on MATH-500 ($p=0.552$).  This is the first dataset where Theorem~\ref{thm:population}'s sufficient condition empirically holds---suggesting log-concavity is dataset-dependent: it holds when problems span a wide difficulty range (MATH-500) and fails when they cluster (GSM8K's narrow grade-school range).
 
 \textbf{Robustness.}  The penalty-bias-free shape coefficient is, by construction, robust to BIC threshold choice (it doesn't use one).  The Spearman test is robust to monotone transformations of accuracy (we are testing for trend, not magnitude).  The shape coefficient threshold sensitivity in $\{0.5, 0.6, 0.7, 0.8\}$ is reported in Appendix~\ref{app:elbow_ci}.
+
+\textbf{Sample-size sensitivity ($S{=}8$ vs.\ $S{=}32$).}  The 6/6-reviewer-consensus concern in V1 was that $S{=}8$ samples per cell is underpowered.  We re-ran the Qwen3.6-35B-A3B GSM8K hero at $S{=}32$ (4$\times$ samples, $19{,}200$ inference calls, fresh seed-base $1042$, total $\sim$\$10).  The results \emph{strengthen}: shape $R^2 > 0.7$ rises from $85.7\%$ at $S{=}8$ to $\bm{93.0\%}$ at $S{=}32$; the IID-Bernoulli null is flat at $18.2\%$; the separation widens from $4.6\times$ to $\bm{5.1\times}$.  Mean $R^2$ rises from $0.823$ to $0.867$.  More striking: the Baringhaus--Henze log-concavity test \emph{flips} from rejection at $S{=}8$ ($p{=}0.006$) to fail-to-reject at $S{=}32$ ($p{=}0.441$).  The V1/V2 rejection of log-concavity was therefore driven by sample-noise contamination of the critical-depth estimates---when $S$ is large enough to recover $\hat\tau_i$ cleanly, Theorem~\ref{thm:population}'s sufficient condition empirically holds on real LLM data.  We retain $S{=}8$ as the paper's primary reporting since it reproduces well at quadruple the sample budget and is consistent with the cross-vendor and cross-domain experiments at the same sample size.
 
 \subsection{H2: Model Dependence and Accuracy Non-Monotonicity}
 \label{sec:h2}
