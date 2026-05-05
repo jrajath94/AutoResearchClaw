@@ -1,161 +1,270 @@
-# Independent Review — The Adversarial Practitioner
+# ADVERSARIAL PRACTITIONER REVIEW: SemCP v2
 
-**Paper:** SemCP: Coverage Guarantees Over Meanings, Not Strings
-**Date:** 2026-05-01
-**Reviewer Role:** The Adversarial Practitioner — production viability, edge cases, failure mode analysis
-
----
-
-## STRENGTHS
-
-**1. Quotient-Space Formalism Is Principled and Novel**
-The paper's core insight — treating the string-to-meaning mapping as a quotient map and performing conformal calibration on the quotient space Y/~s — is a genuine conceptual contribution. The theoretical derivation of conditional semantic coverage (Theorem 1) is sound: exchangeability argument holds, the fixed-partition rule is correctly identified as non-data-adaptive, and the admissibility conditioning is cleanly separated from the conformal machinery. This is not engineering dressed up as theory. (Theorem 1 proof sketch, Section 4.3, Remark 1.)
-
-**2. Admissibility-Coverage Decomposition Is operationally critical**
-Most CP-for-LLM papers bury the fact that marginal coverage is upper-bounded by p_A. This paper makes it a first-class diagnostic: marginal coverage, conditional coverage, and admissibility rate reported together, so a practitioner immediately sees whether the bottleneck is sampling (low p_A) or calibration (conformal step). This prevents "90% coverage" headlines that hide a 15% admissibility rate. (Section 5.3 analysis; main results table design.)
-
-**3. Learned Kernel vs Frequency Score Distinction Is Real and Quantified**
-Figure 4 ablation shows a clean decomposition: SemCP (learned RBF) = 13.35 vs. SemCP-Euclidean = 18.57 vs. Naive Semantic = 18.83 on SQuAD. The kernel learning accounts for ~5 points of set-size reduction over raw clustering. This validates the added complexity — three distinct contributions (a) semantic partitioning, (b) scoring geometry, (c) kernel learning are isolated and measured. (Section 7, Figure 4.)
-
-**4. Graceful Degradation Contract Is Well-Specified**
-The paper explicitly defines how SemCP fails: when the true meaning class has no sampled representative, the lifted score is +infinity and the class is excluded. This is a clean, auditable failure contract — the operator knows exactly what happens when p_A is low. No silent performance collapse, no confusing output. (Section 4.3, Algorithm 1 lines 5-6.)
-
-**5. NLI-Based Partitioning Is Appropriately Scoped**
-Bidirectional entailment via DeBERTa-v2-xlarge-MNLI with Union-Find is the right choice for defining semantic equivalence classes. The paper correctly notes this is a fixed rule (not data-adaptive), preserving exchangeability. Transitivity closure via Union-Find is the standard approach and is correctly applied. (Section 4.1, line 116, Algorithm 1.)
+**Persona**: Production-readiness auditor, edge-case hunter, failure-mode analyst  
+**Focus**: Deployment brittleness, hyperparameter sensitivity, latency, robustness  
+**Date**: 2026-05-05
 
 ---
 
-## WEAKNESSES
+## EXECUTIVE SUMMARY
 
-**W1. EXPERIMENTS NOT RUN — Paper Is Not Submittable in Current Form**
-Severity: 5/5
-All empirical results in Table 1 are TODO_NUM placeholders. The paper literally cannot be reviewed for correctness — the central quantitative claim (33% set-size reduction on SQuAD) has no supporting evidence. Figure captions describe results that do not exist in the paper. This is a blocker for any review.
-*Location:* Table 1, Section 5.3, Figure 3 caption, abstract ("TODO_NUM\% smaller")
-*Resolution:* Run experiments and populate real numbers before review submission.
+SemCP v2 achieves tight coverage validity (gaps within ±0.021 of bound) and removes the primary hyperparameter via closed-form bandwidth selection. However, critical failure modes and production readiness gaps persist:
 
-**W2. Figure 3 Caption References GPT-2; Experiments Use Qwen2.5-7B-Instruct**
-Severity: 4/5
-Figure 3 caption explicitly states "Coverage is near-zero for all methods due to GPT-2's limited QA capability" but experimental setup (Section 5.1) specifies Qwen2.5-7B-Instruct. This is a direct factual contradiction. If Qwen2.5-7B-Instruct is the actual model used, the near-zero coverage claim is either outdated text or a different experiment's caption copied in.
-*Location:* Figure 3 caption, line 306; Section 5.1 generator paragraph, line 213
-*Resolution:* Update caption to reference Qwen2.5-7B-Instruct, or explain which results use which model.
+- **NQ-open admits only 27.1% of test cases** (p_A=0.271), making coverage unattainable per paper's own theory
+- **No runtime diagnostic** to detect admissibility failure before deploying to production
+- **K=10 hard-coded** with no principled selection rule; entropy-dependent guidance missing
+- **Sub-Gaussian assumption** for Theorem 2 unvalidated empirically
+- **Latency analysis absent**; inference cost per query unknown
+- **NLI dependency** (DeBERTa-v3-large: ≥100 forward passes per calibration/test instance) causes operational brittleness
 
-**W3. Near-Zero Coverage Contradicts the 33% Set-Size Reduction Claim**
-Severity: 4/5
-The Discussion (line 351) states: "Coverage is near-zero for all methods due to GPT-2's limited QA capability." Yet the abstract and Section 7 claim "33% smaller set sizes" — a 33% reduction is only meaningful if the baseline achieves non-trivial coverage. If both baselines have near-zero coverage, the set-size comparison is meaningless: comparing empty sets to slightly smaller empty sets.
-*Location:* Abstract, line 27; Discussion, line 351; Section 7, line 99
-*Resolution:* If Qwen2.5-7B-Instruct produces near-zero coverage (p_A << 0.90), remove or qualify the 33% claim. If it produces meaningful coverage, update the Discussion.
-
-**W4. Code Not Released — Reproducibility Score Capped**
-Severity: 3/5
-"Code and experiment scripts will be released upon publication" is a reproducibility concern. Without released code, the claim that the kernel optimization, NLI partitioning, and lifted scoring pipeline can be reproduced is unverifiable. The NeurIPS checklist item 5 is addressed by a promise, not evidence.
-*Location:* Abstract, line 27; Conclusion, line 115; NeurIPS checklist item 5
-*Resolution:* Release code at submission time, not upon publication.
-
-**W5. TODO_HOURS Placeholder in Hyperparameter Table**
-Severity: 2/5
-Table 2 (hyperparameters) contains "TODO_HOURS" for total wall-clock time. This signals experiments were not fully documented at draft time and suggests the full experimental matrix may not have been executed.
-*Location:* Table 2, line 221; Section 5.1 hardware paragraph
-*Resolution:* Fill in actual runtime.
-
-**W6. Bandwidth Grid Is Coarse and Not Justified**
-Severity: 3/5
-Bandwidth grid is {0.1, 0.3, 0.5, 1.0, 2.0, 4.0} — 6 values over 2 orders of magnitude with no justification or sensitivity analysis. A production practitioner implementing this on a new domain has no guidance on bandwidth selection. The adaptive bandwidth ablation (SemCP-Adaptive: 14.19) performs slightly worse than globally optimized bandwidth (13.35), but the global optimization uses only 6 candidate values — this could be a discretization artifact.
-*Location:* Section 4.2, line 130; Section 5.1 embeddings paragraph, line 217
-*Resolution:* Use finer grid or continuous optimization. Add sensitivity analysis.
-
-**W7. NLI Threshold Fixed at 0.5 With No Ablation**
-Severity: 3/5
-The binarization threshold for bidirectional NLI is fixed at 0.5 with no justification and no sensitivity analysis. This threshold directly controls partition granularity. The paper explicitly acknowledges this as a limitation (line 367) but does not report which threshold was used in the main experiments.
-*Location:* Section 4.1, line 115; Limitations bullet 3, line 367
-*Resolution:* Report threshold value in main text. Add sensitivity sweep.
-
-**W8. DeBERTa-v2-xlarge-MNLI Is a Heavy Operational Dependency**
-Severity: 3/5
-The NLI model is DeBERTa-v2-xlarge-MNLI (86B parameters) — significantly larger than the generator (Qwen2.5-7B). At inference: O(K^2) pairwise judgments per instance — for K=10, that's 100 NLI forward passes per calibration/test instance. The paper does not discuss latency, cost, or throughput of this pipeline, nor what happens when the NLI model is unavailable or rate-limited at 3am.
-*Location:* Section 4.1; Algorithm 1 step 3; Complexity analysis, line 194
-*Resolution:* Report latency breakdowns. Discuss fallback strategies for NLI unavailability.
-
-**W9. K=10 Samples May Be Insufficient for Production Tail Coverage**
-Severity: 3/5
-The paper uses K=10 samples per prompt. For production deployment, p99 tail coverage matters. With K=10, the admissibility event fires with probability p_A^10 for i.i.d. correct samples — if the per-sample correctness rate is 0.3, p_A ≈ 0.028. The paper reports p_A but does not model tail behavior as a function of K.
-*Location:* Section 5.1 K=10 specification; Table 1 admissibility rate column
-*Resolution:* Analyze how p_A scales with K. Recommend minimum K for target p_A.
-
-**W10. Only Two Closed-Form QA Benchmarks — Scope of Evidence Is Narrow**
-Severity: 3/5
-Evaluates on TriviaQA and SQuAD v1.1 only — both closed-form extractive QA tasks. The paper identifies open-ended generation tasks (summarization, dialogue, code generation) as future work but does not evaluate on any of these. A practitioner in code generation or medical dialogue cannot extrapolate from these results.
-*Location:* Section 5.1 datasets paragraph; Limitations bullet 2, line 365
-*Resolution:* Evaluate on at least one open-ended generation task, or explicitly scope claims to extractive QA.
+**Recommendation**: CONDITIONAL ACCEPT — requires mandatory fixes to admissibility diagnostics, failure-mode characterization, and assumption validation before production deployment.
 
 ---
 
-## PER-RUBRIC-DIMENSION SCORES
+## STRENGTHS (5)
 
-| Dimension | Score | Calibration Anchor |
-|-----------|-------|-------------------|
-| 1. Originality / Novelty | 7 | Substantial conceptual advance: quotient-space CP with kernel-based lifted scores is novel. The conditional coverage theorem is a genuine theoretical contribution. |
-| 2. Soundness | 3 | Experiments are not run (TODO_NUM placeholders). Theory is correct but unverifiable empirically. Figure 3 caption/model mismatch is a factual error. Score could recover to 6+ if experiments are run. |
-| 3. Significance | 6 | Important contribution within the subfield of CP-for-LLMs. If 33% set-size reduction holds with real numbers, this is practically significant. The admissibility decomposition is broadly useful. |
-| 4. Clarity | 6 | Well-organized, notation table is helpful, algorithm pseudocode is clean. Figure-caption inconsistency (GPT-2 vs Qwen) is a clarity bug. Mostly readable. |
-| 5. Reproducibility | 4 | Code promised "upon publication" — no code released. Hyperparameter table has TODO_HOURS. Without code, reproducibility is limited to paper description. |
-| 6. Contextualization vs prior work | 6 | Strong related work covering ConU, SAFER, LofreeCP, TECP. SemCP correctly positioned as complementary. Some semantic entropy prior work could be discussed more directly. |
-| 7. Ethical / Broader Impact | 6 | Adequate boilerplate coverage. Legal QA hallucination >75% motivation is real. No specific negative impacts identified — appropriate for UQ infrastructure. |
+### 1. Tight Coverage Validity
+Achieves conditional coverage gaps of -0.007 to +0.021 versus theoretical bound of 0.891. This is not just soundness but empirical alignment with theory—genuinely rare in conformal prediction. The coverage is predictably tight, not accidentally valid.
 
-**Weighted Average:** (7×1.0 + 3×1.5 + 6×1.0 + 6×0.7 + 4×1.0 + 6×0.8 + 6×0.5) / (1.0+1.5+1.0+0.7+1.0+0.8+0.5) = (7 + 4.5 + 6 + 4.2 + 4 + 4.8 + 3) / 6.5 = 33.5 / 6.5 = **5.15**
+### 2. Bandwidth Hyperparameter Elimination
+Theorem 2's closed-form plug-in σ* matches grid-search within 5%. This removes the primary tunable hyperparameter and is critical for production systems where per-dataset hyperparameter tuning is expensive and error-prone. Automated selection is a real win.
 
-**Decision threshold:** 5.15 falls in the **Reject** range (4.0–5.5). The single dimension scoring "3" on Soundness is a rejection trigger per rubric rules (≤4 on any single dimension triggers rejection). Note: Soundness is artificially depressed by TODO_NUM placeholders — if experiments are run and factual errors corrected, Soundness would likely be 6-7.
+### 3. Unified Framework (M-SemCP)
+Recovers ConU, TECP, and LofreeCP as corners of a convex simplex over 3 NLI granularities {τ∈{0.7,0.5,0.3}}. Elegant unification that validates the semantic partitioning approach and clarifies relationships between prior methods. Not ad-hoc.
+
+### 4. O(K log K) Computational Efficiency
+HAC-NLI with prefilter avoids O(K²) pairwise NLI cost. K=10 becomes feasible. Transitivity correction addresses a non-trivial clustering problem (intransitive NLI edges).
+
+### 5. Reproducibility Maturity
+Claims traced to JSON artifacts, checklist 15/15, no unfilled TODOs. v1→v2 improvements systematically address every feedback point. Paper feels complete from an organizational standpoint.
 
 ---
 
-## POINTED QUESTIONS FOR THE AUTHORS
+## WEAKNESSES (9)
 
-1. **"Near-zero coverage" vs the 33% claim:** The Discussion states all methods achieve near-zero coverage due to GPT-2's limited capability, but the abstract claims 33% set-size reduction. These two statements are contradictory: a 33% reduction is only meaningful if baseline prediction sets are non-empty and meaningfully large. Please clarify: (a) which model produced the results reported as "33% smaller," and (b) what are actual baseline and SemCP coverage numbers on Qwen2.5-7B-Instruct?
+### 1. **CRITICAL: Admissibility Failure Undiagnosed at Runtime**
 
-2. **NLI model failure modes in production:** DeBERTa-v2-xlarge-MNLI is a heavy dependency — at inference you run 100 NLI forward passes per calibration/test instance. What is the p99 latency of this pipeline on your target hardware? When the NLI API is rate-limited or errors out, does the system fall back to string-level CP, abstain, or fail entirely? What is the operator runbook for the 3am failure scenario?
+Theorem 1 conditions on "true meaning is sampled" but never defines what "true meaning" is mathematically. Is it an oracle partition? A semantic ground truth independent of NLI model output? 
 
-3. **Bandwidth selection as a production hyperparameter:** Your grid has 6 values over 2 orders of magnitude. In a new domain (medical records, legal contracts, code generation), how should a practitioner choose sigma? The paper acknowledges the constraint can be infeasible (GPT-2 2-3% correct answer rate) — what is the recommended sigma when the constraint is infeasible? Defaulting to smallest set size without coverage guarantee is dangerous.
+The paper states (Sec 6): **"If p_A < 1-α, marginal coverage unattainable—invest in generator."** This is a hard constraint, not a tunable parameter. Yet:
+- **Zero runtime diagnostic** provided to detect p_A < 1-α before deployment
+- Practitioners will deploy, silently produce invalid guarantees, never know why
+- This is a binary validity switch that breaks the entire promise of the method
 
-4. **What is the minimum K for production deployment?** With K=10 and p_A as admissibility rate, marginal coverage is upper-bounded by p_A. If a practitioner targets 90% marginal coverage and their model achieves 30% per-sample correctness, p_A ≈ 0.028 — effectively zero. What is the minimum K you'd recommend for a production system? Have you analyzed how p_A scales with K?
+**Production impact**: Admissibility is a dealbreaker, not a limitation. Deploying without detection is dangerous.
 
-5. **Figure 3 caption says GPT-2 but experiments use Qwen2.5-7B:** This is a factual inconsistency that needs resolution. Was there a GPT-2 experiment later replaced with Qwen2.5-7B? Or is the caption leftover text? Please clarify which results correspond to which model.
+### 2. **Catastrophic Failure on NQ-open (p_A=0.271)**
+
+| Dataset | p_A | Status |
+|---------|-----|--------|
+| TriviaQA | 0.707 | ✅ Marginal coverage feasible |
+| SQuAD | 0.811 | ✅ Marginal coverage feasible |
+| NQ-open | **0.271** | ❌ 73% inadmissible |
+
+NQ-open is a standard open-domain QA benchmark. On 73% of test cases, the method is forced to abstain or return empty sets. The paper acknowledges this but **does not investigate why**:
+- Is semantic partitioning too coarse for open-ended outputs?
+- Does DeBERTa-v3-large-mnli systematically misclassify on open-domain QA?
+- Does Qwen2.5-32B simply not generate diverse enough candidates?
+
+**Without diagnosis, there is no fix, and SemCP is unusable on open-domain QA.**
+
+### 3. **NLI Model Dependency Underspecified**
+
+DeBERTa-v3-large-mnli + gte-Qwen2-7B is a specific stack. Appendix D claims "sensitivity checked" but results are not in the bundle. Unknown:
+- Does DeBERTa make systematic errors on technical QA?
+- What happens with medical, legal, or code-generation domains?
+- NLI models are known to exploit spurious correlations and break on paraphrases
+
+**Missing ablations:**
+- Swap DeBERTa-v3 → T5-large-mnli, RoBERTa-mnli
+- Swap embeddings → all-MiniLM, sentence-transformers
+- Per-domain NLI model validation
+
+### 4. **K=10 is Empirically Constrained, Not Principled**
+
+Ablation (Appendix E) shows K∈{3,5,7,10} but **no guidance on insufficiency**. Paper acknowledges: "higher-entropy queries may need K>10" but:
+- "Entropy" is undefined (query entropy? output variance? logit entropy?)
+- No K(entropy) curve or lookup table
+- Production systems cannot hard-code K=10 for all domains
+
+**What should practitioners do with MMLU, SQuAD-Adversarial, or code generation (higher variance)?** No answer.
+
+### 5. **Contrastive RBF Kernel Lacks Robustness Analysis**
+
+Score: s̃(X,C,S,σ) = 1 - max_c' κσ(φ̄c, φ̄c')
+
+The **max** operation is sensitive to outlier cluster embeddings:
+- If one cluster has extreme centroid (5σ outlier), it dominates all predictions
+- Can inflate |C(X)| arbitrarily
+- No analysis of RBF behavior under distribution shift or adversarial perturbations
+
+**Missing:**
+- Outlier detection and mitigation
+- Adversarial robustness test
+- Distribution-shift stress test
+
+### 6. **Theorem 2 Assumes Sub-Gaussian Embeddings (Unvalidated)**
+
+Closed-form σ* derives from sub-Gaussian variance assumption. Are gte-Qwen2-7B outputs sub-Gaussian? **No empirical test provided.**
+
+If embeddings have heavy tails (bimodal, exponential), the closed-form σ* is suboptimal and the "5% match to grid-search" claim is misleading.
+
+**Required validation:**
+- Kolmogorov-Smirnov test: H0 = ||φ|| ~ N(μ, σ²)
+- Q-Q plots
+- Robust alternative if rejected (e.g., MAD-based σ*)
+
+### 7. **Calibration Split (50/50 on 300 examples) Limits Confidence**
+
+TriviaQA: 150 calibration samples. The quantile ⌈(1-α)(|I|+1)/|I|⌉ has variance O(1/√150). Standard errors (±0.007–±0.058) are **driven by dataset size, not method quality**. Finite-sample concentration analysis missing.
+
+**Risk**: Results may not generalize to 100K+ examples or high-α regimes.
+
+### 8. **Set Size Inflation Under Distribution Shift Not Addressed**
+
+Results are in-distribution (fixed LLM, temperature=1.0). If temperature increases to 2.0 or model outputs shift, what happens?
+- Variance minimization in Theorem 2 assumes fixed embedding distribution
+- Mismatch between calibration and test degrades σ*
+- No OOD stress test provided
+
+### 9. **Transitivity Correction in HAC-NLI Underspecified**
+
+Paper mentions "transitivity-corrected HAC" but **doesn't define the correction** or quantify its impact. If NLI edges are intransitive (A≡B, B≡C, but A≠C), how is this handled? Clustering with non-transitive similarity is non-standard and needs rigor.
+
+---
+
+## SCORES (1-10 scale)
+
+| Dimension | Score | Rationale |
+|-----------|-------|-----------|
+| **Originality (Orig)** | 8 | Novel semantic partitioning + contrastive kernel. Theorem 1 closure is new. M-SemCP unification clever. Docked 2: NLI + conformal is natural; not breakthrough. |
+| **Quality (Qual)** | 7 | Solid math, tight empirical alignment. Major gaps: admissibility brittleness undiagnosed, assumptions unvalidated, K=10 hard-coded. Hides failure modes in discussion. |
+| **Clarity (Clar)** | 7 | Well-written overall. Hides failure modes: "If p_A < 1-α" buried in Sec 6. NQ-open collapse unexplained. Algorithm 1 clear; Theorem 1 conditioning vague. |
+| **Significance (Sig)** | 6 | Incremental for CP-for-LLMs. Tight coverage is nice. Practical impact limited by NLI dependency, admissibility brittleness, K constraints. Unlikely to shift production practice without reliability fixes. |
+
+**Weighted Average**: ~7.0 (solid paper with significant production gaps)
+
+---
+
+## 5+ CRITICAL QUESTIONS
+
+### Q1: Admissibility Measurement at Inference Time
+How should practitioners diagnose p_A < 1-α before deployment? Paper says "invest in generator" but provides no metrics. Should we estimate p̂_A on held-out calibration? What's variance of p̂_A with |I|=150? How large should CI_upper be before aborting?
+
+### Q2: Why Does NQ-open Collapse to p_A=0.271?
+TriviaQA/SQuAD are extraction QA. NQ-open is open-ended. Is semantic partitioning too coarse? Does DeBERTa misclassify on open-domain? Does Qwen2.5 generate insufficiently diverse candidates? **Root cause analysis is missing**—without it, no fix is possible.
+
+### Q3: Sub-Gaussian Validation for gte-Qwen2-7B
+Is σ* valid if embeddings violate sub-Gaussianity? Provide:
+- K-S test (H0 = normality), p-value
+- Q-Q plots
+- If rejected, compute robust σ* (MAD-based) and compare
+
+### Q4: K Selection Rule for New Domains
+Define "entropy" formally (query entropy? output diversity? logit variance?). Provide:
+- K(entropy) curve or lookup table
+- Validation on MMLU, SQuAD-Adversarial, or high-variance benchmarks
+- Minimum K recommendation for target marginal coverage
+
+### Q5: Inference-Time Latency Breakdown
+8 hours total is reported; per-query cost is missing. Provide:
+- Time for NLI clustering per query
+- Time for contrastive RBF scoring
+- Total vs baselines
+- Is <500ms achievable for real-time QA?
+
+### Q6: RBF Kernel Robustness to Outliers
+Does max_c' dominate all set sizes if a cluster has extreme embedding? Can adversarial inputs inflate |C(X)| via embedding manipulation? Provide empirical robustness test.
 
 ---
 
 ## FALSIFIABILITY TEST
 
-**"What evidence would change my decision from Reject to Accept?"**
+**Core Hypothesis:**  
+SemCP provides valid, tight coverage guarantees across diverse QA domains with automatic bandwidth and fixed K=10.
 
-Evidence that would shift the score:
-1. **Actual experimental numbers** — Table 1 populated with real values. If SemCP achieves conditional coverage ≈ 0.89 (as Theorem 1 guarantees) and set sizes of ~13 on SQuAD vs ~20 for ConU, this is a real improvement.
-2. **Resolution of the GPT-2/Qwen mismatch** — Figure 3 caption corrected to reference Qwen2.5-7B-Instruct. Near-zero coverage claim reconciled with actual results.
-3. **Code released before/with submission** — A GitHub link with a working implementation. "Upon publication" promise is not acceptable for NeurIPS-level reproducibility.
-4. **NLI threshold sensitivity** — A small table showing how partition granularity and set sizes change across NLI thresholds {0.3, 0.5, 0.7}.
-5. **Latency breakdown** — p50/p95/p99 latency characterization of the full pipeline.
+### Test Protocol
 
-**Evidence that would shift from Reject to Strong Reject:**
-1. Experiments are run and show no meaningful set-size advantage for SemCP over ConU (the 33% claim does not replicate).
-2. The GPT-2/Qwen mismatch persists after correction, indicating deeper factual inconsistency.
-3. Code is not released even after acceptance notification.
-4. Near-zero coverage generalizes to Qwen2.5-7B-Instruct, making the entire experimental evaluation uninformative.
+**Test 1: Admissibility Threshold**
+- Report p̂_A with 95% CI on NQ-open and a new OOD dataset
+- **Fail condition:** p̂_A + CI_upper < 1-α → coverage unattainable
+- **Current status:** NQ-open already failing (p̂_A=0.271)
 
----
+**Test 2: Theorem 2 Optimality**
+- Compute σ* via Theorem 2 vs σ_oracle = argmin_σ Var(s̃) on test
+- **Fail condition:** |σ* - σ_oracle| / σ_oracle > 15% → sub-Gaussianity violated
+- **Required:** K-S test with p > 0.05 for normality
 
-## CONFIDENCE
+**Test 3: K-Sufficiency for High-Entropy Queries**
+- Run K∈{5,10,15,20} on MMLU open-ended + SQuAD-Adversarial
+- **Fail condition:** K=10 fails coverage on >5% of queries
+- **Required:** Entropy-dependent K recommendation
 
-**3/5**
-
-The theory is solid and the paper's conceptual framework is strong. However, I cannot render a confident judgment because the central empirical results are TODO_NUM placeholders. I have strong evidence that the theory is correct, but the empirical verification is absent. My confidence would rise to 4+ if experiments were run and the Figure 3 caption inconsistency were resolved.
-
----
-
-## DECISION
-
-**Reject (conditional on experiments being run)**
-
-The theoretical contribution is real and valuable. The admissibility-coverage decomposition is the right way to present CP-for-LLM results. The learned kernel contribution is demonstrated in ablation.
-
-However, the paper cannot be accepted in its current form: TODO_NUM placeholders mean central quantitative claims are unverified. Figure 3 caption is a factual error suggesting the paper was assembled from multiple drafts. If the authors resolve these issues — run the experiments, fix the caption, release code — this is an Accept. As submitted, it is a Reject that is one experiment run away from being a strong Accept.
+**Test 4: Robustness to OOD**
+- Shift temperature 1.0 → 2.0, keep σ* fixed
+- **Fail condition:** Coverage gap increases >0.03 or set size inflates >30%
 
 ---
 
-*— The Adversarial Practitioner*
+## CONFIDENCE & DECISION
+
+### Overall Confidence: **2.5 / 5**
+
+| Factor | Score | Assessment |
+|--------|-------|------------|
+| **Mathematical Soundness** | 4/5 | ✅ Proofs appear correct; tight alignment on TriviaQA/SQuAD |
+| **Empirical Robustness** | 2/5 | ⚠️ NQ-open p_A=0.271; K unjustified; assumptions unvalidated |
+| **Production Readiness** | 1.5/5 | ❌ No diagnostics; NLI sensitivity unknown; latency hidden |
+| **Generalization** | 2.5/5 | ⚠️ Works on extraction QA; breaks on open-domain; undiagnosed |
+
+---
+
+## DECISION: CONDITIONAL ACCEPT WITH MAJOR REVISIONS
+
+### Mandatory Revisions (blocking acceptance)
+
+1. **Diagnose NQ-open collapse (p_A=0.271)**
+   - Root-cause analysis: NLI failure? Partitioning coarseness? Sampling diversity?
+   - Either fix for open-domain QA or explicitly scope to extraction QA
+   - Add p_A values for 5+ new domains
+
+2. **Add runtime admissibility diagnostics**
+   - Algorithm to estimate p̂_A with 95% CI at inference time
+   - Warning: "p̂_A + CI_upper < 1-α → abort deployment"
+   - Variance analysis of p̂_A estimation
+
+3. **Validate sub-Gaussianity (Theorem 2)**
+   - K-S test (p-value), Q-Q plots
+   - If rejected: provide robust σ* (MAD-based) and compare
+
+### Strongly Recommended
+
+4. **Replace K=10 with principled selection**
+   - Define entropy formally
+   - K(entropy) curve or table
+   - Validation on high-variance benchmarks
+
+5. **Report inference latency breakdown**
+   - Per-query costs (NLI, RBF, quantile)
+   - Comparison to baselines
+   - Recommendation: <500ms
+
+6. **Ablate NLI model dependency**
+   - Alternative NLI models + embeddings
+   - Per-domain sensitivity
+
+---
+
+## BOTTOM LINE
+
+**What works:** Tight coverage, bandwidth automation, framework unification, reproducibility.
+
+**What breaks:** NQ-open (p_A=0.271), no failure detection, K unjustified, assumptions unvalidated, latency unknown.
+
+**Verdict:** Mathematically sound but operationally brittle. Practitioners deploying on open-domain QA will silently produce invalid guarantees. The checklist-perfect tone obscures this.
+
+**Path forward:** Diagnose NQ-open, add diagnostics, validate assumptions, justify K. Then it's publication-ready.
+
+---
+
+*— The Adversarial Practitioner, 2026-05-05*

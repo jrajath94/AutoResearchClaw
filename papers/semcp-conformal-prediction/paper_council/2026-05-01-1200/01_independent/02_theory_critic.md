@@ -1,103 +1,268 @@
-# Theory Critic Review — SemCP
-
-**Paper:** SemCP: Coverage Guarantees Over Meanings, Not Strings
-**Venue:** NeurIPS 2026
-**Reviewer:** The Theory Critic
+# THEORY CRITIC REVIEW: SemCP v2
+**Venue:** NeurIPS 2025 | **Date:** 2026-05-05 | **Persona:** 02_theory_critic
 
 ---
 
-## Summary
+## EXECUTIVE SUMMARY
 
-This paper proposes SemCP, a conformal prediction framework operating in semantic embedding space rather than token space, using bidirectional NLI to partition outputs into meaning equivalence classes and RBF kernels for nonconformity scoring. The core theoretical contribution is a conditional coverage guarantee (Theorem 1) given an admissibility event. The primary concern is that the paper's central empirical results are TODO_NUM placeholders — the experiments have not been run. This fundamentally undermines the review, as I cannot assess whether the theory is validated. I must also flag an internal contradiction: the paper claims both "near-zero coverage for all methods" (Discussion, Section 7) and "33% smaller set sizes than string-level baseline" (Abstract). The latter claim requires meaningful coverage to be interpretable.
-
----
-
-## Strengths
-
-1. **Theorem 1 is nontrivial and correctly structured.** The conditional coverage guarantee 1-alpha-1/(|I|+1) given admissibility is a genuine split conformal result. The proof structure (exchangeability + fixed partition rule -> conditional coverage via the augmented tuple view in Remark 2) is sound in principle. The admissibility event decomposition is a useful diagnostic for practitioners.
-
-2. **The quotient-space framing is original.** While conformal prediction over strings is established (Quach 2023, Fisch 2020), the idea of using bidirectional NLI to construct semantic equivalence classes as the conformal space is novel. This is not merely an engineering change — it requires rethinking the nonconformity score and the coverage event. The formalization in Section 4.3 (lifted scores via min-aggregation) is precise.
-
-3. **Remark 1 correctly identifies the marginal coverage ceiling.** The paper acknowledges that p_A (admissibility probability) upper-bounds marginal coverage. This is an honest limitation statement and helps practitioners understand when the method is relevant and deployable.
-
-4. **Section 4.1 correctly argues that Pi is not data-adaptive.** The claim that the deterministic NLI partition preserves exchangeability is correct — as long as the partition function does not depend on the calibration labels. The paper explicitly notes this preservation, which is necessary for Theorem 1 to apply.
-
-5. **Min-aggregation reasoning is principled.** The paper provides a clear justification for min-aggregation: a meaning class should be deemed conforming if any of its string-level representatives conforms. The argument that min biases downward uniformly (affecting calibration and test symmetrically, thus preserving exchangeability) is correct.
+SemCP proposes semantic conformal prediction for LLMs by partitioning outputs into meaning equivalence classes (HAC-NLI clustering) and applying CP with a contrastive between-cluster RBF kernel. The paper claims Theorem 1 (conditional coverage 1-α-1/(|I|+1)) and Theorem 2 (closed-form optimal bandwidth σ*). **Verdict: Empirically validated on TriviaQA but with significant proof gaps, clustering robustness concerns, and a critical admissibility bottleneck (p_A) that limits practical utility.**
 
 ---
 
-## Weaknesses
+## STRENGTHS (3)
 
-### W1: Experiments Not Run — Central Empirical Claims Are Placeholders
-**Issue:** Table 1, Section 5.3, and the 33% set-size-reduction claim (Abstract, Section 7) are TODO_NUM placeholders. Without actual numbers, I cannot verify any empirical claim.
-**Location:** Table 1 (all metrics), Section 5.3 (main results), Abstract ("33% smaller set sizes"), Discussion ("33% set size reduction"), Key Claims section.
-**Severity:** 5/5 — This is a rejection-level flaw. A paper with unrun experiments cannot be accepted at NeurIPS.
-**Resolution:** Run all experiments and report actual numbers with confidence intervals.
+### 1. **Clear Problem Formulation & Motivation**
+The semantic-vs-string-space distinction is well-articulated and important. Standard CP on LLM samples treats "the capital of France is Paris" and "Paris is the capital of France" as distinct, inflating set sizes artificially. Semantic coverage is a genuine and under-explored problem in the CP literature.
 
-### W2: Internal Contradiction — Near-Zero Coverage vs. 33% Set-Size Reduction
-**Issue:** The paper simultaneously claims (a) all methods achieve near-zero coverage due to low generator quality (Discussion, Section 7) and (b) SemCP achieves 33% smaller set sizes than Token-CP (Abstract, Key Claims). If coverage is near zero, set size is irrelevant — a trivial predictor (empty set) also has minimum set size. The 33% reduction claim implicitly assumes meaningful coverage.
-**Location:** Discussion Section 7 vs. Abstract.
-**Severity:** 4/5 — This is a fundamental logical inconsistency. The paper must clarify whether coverage is meaningful enough to evaluate set-size tradeoffs.
-**Resolution:** Distinguish between datasets where SemCP achieves useful coverage (where set-size comparison is valid) and datasets where it does not. Report separate analyses.
+**Supporting evidence:** v1→v2 improvements table explicitly traces all feedback, showing systematic problem-solving rather than ad-hoc patching.
 
-### W3: Figure 3 Caption / Model Inconsistency
-**Issue:** Figure 3 caption states "near-zero coverage for all methods due to GPT-2's limited QA capability," but Section 5.1 specifies the generator is Qwen2.5-7B-Instruct. This is a direct factual error.
-**Location:** Fig 3 caption, Section 5.1.
-**Severity:** 3/5 — An editorial error that suggests the paper was assembled from multiple drafts without consolidation.
-**Resolution:** Correct the caption to Qwen2.5-7B-Instruct or clarify if GPT-2 results are reported separately.
+### 2. **Theorem 1 Empirical Validation on TriviaQA**
+Achieves coverage 0.896±0.007 vs predicted bound 1-α-1/(|I|+1)≈0.891. Gap of -0.007 is remarkably tight, suggesting the theoretical construction aligns with practice on at least one real dataset.
 
-### W4: Kernel Bandwidth Selection May Break Exchangeability
-**Issue:** Section 4.2 states sigma is optimized via grid search on a held-out 20% split to minimize set size subject to coverage >= 1-alpha. The conformal guarantee (Theorem 1) assumes the nonconformity score is fixed before calibration. If sigma is selected post-hoc based on calibration-set coverage, exchangeability of the calibrated threshold is not guaranteed. The paper acknowledges a feasibility constraint but does not analyze the effect of this data-dependent selection on coverage.
-**Location:** Section 4.2, Algorithm 1.
-**Severity:** 3/5 — The theory-lemma gap: Theorem 1 assumes a fixed kernel; the method uses a data-adaptively selected one.
-**Resolution:** Either (a) include sigma selection inside the calibration loop with a nested conformal procedure, or (b) prove the grid-search selection does not invalidate exchangeability, or (c) acknowledge this as an empirical heuristic.
+**Concern:** Tightness only validated on 1 of 3 datasets (SQuAD ±0.058 interval, NQ-open valid but not exceptionally tight). Overstating as "tightest valid coverage" without caveating dataset variability.
 
-### W5: Admissibility Probability p_A Is Unbounded Below — No Finite-N Guarantee
-**Issue:** Theorem 1 guarantees conditional coverage given admissibility, but provides no lower bound on p_A. With K=10 samples and complex semantic spaces, p_A could be arbitrarily small. The paper notes this implicitly via "near-zero coverage" but does not bound p_A theoretically.
-**Location:** Theorem 1, Remark 1, Section 7.
-**Severity:** 3/5 — The guarantee is conditional on an event whose probability is unspecified.
-**Resolution:** Provide a lower bound on p_A in terms of K, semantic space complexity, and model's marginal probability of sampling the correct meaning class.
+### 3. **Removes Conformal Hyperparameter Tuning**
+Theorem 2's closed-form bandwidth σ* = √((μ̄μ-μ̄W)/(2log(1/(1-α)))) claims to eliminate grid search for σ. If proven correctly, this simplifies the method and improves reproducibility. Claimed "within 5% of grid search" (Appendix E, not shown in bundle).
 
-### W6: NLI Threshold Fixed at 0.5, Not Justified
-**Issue:** Section 4.1 binarizes bidirectional entailment at 0.5. The Limitations section admits this was not ablated. This is a critical sensitivity parameter: too low and distinct meanings merge; too high and the same meaning fragments.
-**Location:** Section 4.1, Limitations item 3.
-**Severity:** 3/5 — Without ablation, the method's sensitivity to this threshold is unknown.
-**Resolution:** Ablate over threshold values and report sensitivity analysis.
-
-### W7: Theorem 1 Proof Sketch — Admissibility-Selection Effect Is Unresolved
-**Issue:** The proof sketch invokes the standard split-conformal result on the lifted scores, but does not address the selection bias introduced by conditioning on the admissibility set I. Here, I is selected post-hoc based on which calibration examples happened to have their true meaning sampled. The threshold is computed over a subset of calibration points that are systematically easier. The paper does not formally argue that exchangeability holds within this subset.
-**Location:** Theorem 1 proof sketch, Section 4.4.
-**Severity:** 3/5 — A genuine theoretical gap requiring formal justification.
-**Resolution:** Explicitly show that conditional on A_i=1 for all i in I, the lifted scores remain exchangeable, or derive the correct coverage correction term for this selection effect.
-
-### W8: NLI Partition Transitivity Is Assumed But NLI Models Are Not Transitive
-**Issue:** The paper assumes bidirectional entailment is transitive ("under the assumption that the NLI model is logically consistent"). DeBERTa-v2-xlarge-MNLI is not logically consistent — NLI models are known to have non-transitive behavior. The Union-Find closure can produce equivalence classes that violate actual semantic equivalence.
-**Location:** Section 3, Problem Setup.
-**Severity:** 2/5 — Theoretical concern; practically, DeBERTa MNLI is fairly robust on this.
-**Resolution:** Either prove robustness of coverage guarantee to partition errors, or explicitly bound the partition error probability.
-
-### W9: The "33% Set Size Reduction" Is Meaningless Without Coverage Floor
-**Issue:** If coverage is 0%, set size reduction is trivially achieved by predicting the empty set. The 33% figure must come with a coverage floor (e.g., coverage >= 0.90). No such floor is specified in the claim.
-**Location:** Abstract, Discussion, Key Claims.
-**Severity:** 4/5 — Misleading under the near-zero coverage regime.
-**Resolution:** Restate the claim conditional on coverage >= 1-alpha being achieved.
-
-### W10: Code Not Released — Reproducibility Standard Not Met
-**Issue:** The NeurIPS checklist states "Code and experiment scripts will be released upon publication." This does not meet the reproducibility standard. Reviewers cannot verify the algorithm as described.
-**Location:** NeurIPS checklist, Section 5.1.
-**Severity:** 3/5 — NeurIPS standard requires code at review time.
-**Resolution:** Release code now, not upon publication.
+**Caveat:** Proof and constants (sub-Gaussian parameter K) not detailed in bundle; generalization to other kernels/contrastive scores unclear.
 
 ---
 
-## Per-Rubric-Dimension Scores
+## WEAKNESSES (8)
 
-| Dimension | Score | Calibration Anchor |
-|-----------|-------|-------------------|
-| Originality / Novelty | 8 | Genuinely new quotient-space conformal framework; not incremental over prior CP-for-LLM work |
-| Soundness | 4 | Theorem 1 has a proof gap (admissibility-selection); kernel optimization unanalyzed; experiments not run — fatal |
-| Significance | 6 | If 33% claim holds at meaningful coverage, useful UQ contribution; limited by 2 QA datasets and 7B model |
-| Clarity | 6 | Mostly clear; Figure 3 caption error and W2 contradiction hurt |
+### 1. **Theorem 1 Proof Rigor: Exchangeability Given Clustering**
+**Critical gap:** The proof structure claims "exchangeability under admissibility-selection conditioning," but doesn't formally address: **If HAC-NLI clustering has error rate ε_cluster (false negatives: semantically identical outputs in different clusters), how does this propagate to coverage?**
+
+Conformal prediction's coverage guarantee assumes score exchangeability. If clustering places two semantically identical outputs {y₁, y₂} into separate clusters c₁, c₂, then:
+- They become separate *distinct* elements in the partition Π(S)
+- CP guarantees apply individually to c₁ and c₂, not to the meaning {y₁, y₂}
+- The coverage theorem's implicit assumption that "true meaning is sampled" breaks
+
+**Impact:** Without bounding ε_cluster or proving it's negligible, the coverage guarantee is conditional on an unvalidated assumption. This is the **highest-priority theoretical weakness**.
+
+### 2. **Theorem 2: Undefined Notation & Missing Sub-Gaussian Constants**
+**Issue:** The formula σ* = √((μ̄μ-μ̄W)/(2log(1/(1-α)))) uses undefined terms:
+- What is μ̄μ exactly? (between-cluster mean pairwise distance?)
+- What is μ̄W? (within-cluster mean distance? Zero if singleton?)
+- Sub-Gaussian parameter K for RBF kernel not specified
+
+The variance minimization derivation ∂Var_σ(s̃)/∂σ=0 is stated but not shown. For a contrastive score s̃(X,C,S,σ) = 1 - max_c' κσ(φ̄c, φ̄c'), the variance of the max of correlated RBF kernels is complex and requires explicit handling.
+
+**Impact:** Difficult to verify Theorem 2 or to extend the formula to other contrastive scores or kernels. Concentr. bound O(√(log(1/δ)/|I|)) mentioned but not tied to the final σ* formula.
+
+**Evidence gap:** Grid search validation mentioned (Appendix E) but not provided in bundle. "Within 5%" is vague—on which datasets? How was grid search tuned?
+
+### 3. **Admissibility as Implicit Performance Ceiling**
+**Major practical constraint:** Admissibility rates p_A on NQ-open (0.271) and TriviaQA (0.707) reveal that the method's coverage is **fundamentally bottlenecked by generator quality**, not algorithm design.
+
+Marginal coverage ≤ p_A + (1-p_A)·(1-α) ≈ p_A + (1-p_A)·0.9 (assuming α=0.1).
+
+For NQ-open: max achievable coverage ≤ 0.271 + 0.729·0.9 ≈ 0.928. Observed SemCP 0.903, which aligns perfectly.
+
+**Problem:** The paper acknowledges "if p_A < 1-α, marginal coverage unattainable" (Limitation) but doesn't emphasize that on NQ-open, p_A=0.271 is the *actual* performance ceiling. The algorithm can't improve coverage beyond what the generator provides. This makes the empirical improvements on NQ-open (3.54 vs 3.92 set size) marginal and potentially within noise.
+
+**Paper's framing:** "Invest in generator" is appropriate but sidesteps the question: *Is SemCP adding value when p_A is the bottleneck?* Ablating generator quality (e.g., Qwen2.5-32B vs. 7B vs. Llama) would clarify.
+
+### 4. **Clustering Robustness Not Analyzed**
+HAC-NLI with "transitivity-corrected" clustering is mentioned as O(K log K), but:
+- No empirical validation of clustering quality (precision/recall on semantic equivalence)
+- No sensitivity test: if NLI model corruption is introduced, how degraded is coverage?
+- Single embedding model (gte-Qwen2-7B); appendix D mentions sensitivity check but details omitted
+
+**Risk:** If clustering is unreliable, the whole semantic coverage framework collapses. This deserves ablation.
+
+### 5. **M-SemCP Unification is an Observation, Not a Theorem**
+**Claim:** "M-SemCP recovers ConU, LofreeCP, TECP as special cases by varying τ ∈ {0.7, 0.5, 0.3}."
+
+**Problem:** 
+- No formal proof that τ=0.7 exactly recovers ConU (would require showing algorithm reduces to ConU with proof)
+- No ablation showing M-SemCP performance vs individual τ values
+- Statement that M-SemCP "frequently selects single granularity (corner of simplex)" suggests these are actually *different* algorithms, not the same algorithm with different parameters
+
+**Evidence gap:** Table 1 shows only SemCP, ConU, SAFER, LofreeCP, TECP—no M-SemCP results. Without empirical comparison, the unification claim is conceptual, not validated.
+
+**Impact on novelty:** If the unification is true but unproven, the paper undersells its theoretical contribution. If it's false (i.e., M-SemCP is just ConU with Pr > 0.7), the generality claim is inflated.
+
+### 6. **Baseline Inconsistencies: ConU |C|=1.00 on TriviaQA/SQuAD**
+ConU consistently outputs |C|=1.00 on TriviaQA and SQuAD, while SemCP outputs 1.64 and 1.14 respectively.
+
+**Possible explanations (not addressed):**
+1. ConU is not tuned correctly (but paper says "all tuned on 20% held-out")
+2. ConU degenerates to always selecting a single element on these datasets
+3. ConU and SemCP are scoring different objects (strings vs meanings), so comparison is inherently unfair
+
+Without clarity, it's unclear whether SemCP's larger sets represent a fair trade-off (larger sets for semantic coverage) or a measurement artifact.
+
+### 7. **Limited Experimental Scope: K=10, Single LLM, Single Embedding**
+- **K=10:** Only 10 samples per question. For high-entropy queries (e.g., "list movies in the 1990s"), 10 may not capture the output distribution. Ablation in Appendix E (mentioned, not shown) should clarify impact.
+- **Single LLM:** Qwen2.5-32B only. Generalization to Llama 3, GPT-4, smaller models (where clustering may fail due to output repetition) unexplored.
+- **Single embedding model:** gte-Qwen2-7B. What about BAAI/bge, OpenAI text-embedding-3? Appendix D sensitivity check mentioned but not detailed.
+
+**Impact:** Claims about SemCP's superiority may not generalize beyond this specific experimental regime.
+
+### 8. **Proof Completeness: Appendices Referenced but Not Provided**
+The bundle references:
+- **Appendix B:** Theorem 1 proof (3-step outline given, full derivation absent)
+- **Appendix C:** Theorem 2 variance derivation and concentration bounds (absent)
+- **Appendix D:** Embedding sensitivity analysis (absent)
+- **Appendix E:** K ablation and bandwidth validation (absent)
+
+A review can only assess what's presented. Assuming correctness of appendices that aren't shown is a risk. The Theorem 1 proof outline is too compressed to verify rigor of exchangeability argument.
+
+---
+
+## QUANTITATIVE SCORES (1-10 scale)
+
+| Dimension | Score | Rationale |
+|-----------|-------|-----------|
+| **Originality** | 7 | Clear problem (semantic CP), valid technical approach (clustering + contrastive scoring). Prior art comparison weak (no ConU/TECP derivations shown for comparison). |
+| **Quality** | 6 | Theorem 1 empirically validated on TriviaQA (strong), but Theorem 2 proof incomplete, clustering robustness unanalyzed, proof rigor gaps. Experiments real but limited scope (K=10, 1 LLM). |
+| **Clarity** | 6 | Algorithm 1 is clear, main results understandable. But Theorem 2 notation (μ̄μ, μ̄W) undefined; Appendices critical but absent; M-SemCP motivation vague; baseline inconsistencies unexplained. |
+| **Significance** | 5 | Semantic coverage is important, but practical utility limited by p_A bottleneck. On NQ-open (p_A=0.271), marginal gains are incremental. Unification (M-SemCP) could be significant if proven, but isn't yet. |
+
+---
+
+## CRITICAL QUESTIONS (5+)
+
+### Q1: Clustering Error Propagation [HIGHEST PRIORITY]
+*How does the false-negative rate of HAC-NLI clustering (semantically identical outputs in different clusters) impact the coverage guarantee? Specifically, if ε_cluster is the clustering error rate, what is the breakdown of coverage guarantee into:*
+- *Coverage from algorithm (Theorem 1)*
+- *Coverage loss from clustering errors*
+
+*Can you provide a bound or empirical measurement of ε_cluster on your test set?*
+
+### Q2: Theorem 2 Notation & Derivation
+*In σ* = √((μ̄μ-μ̄W)/(2log(1/(1-α)))):*
+- *Define μ̄μ and μ̄W precisely (as functions of embedding clusters φ̄c, φ̄c'?)*
+- *What is the sub-Gaussian parameter K in the RBF kernel?*
+- *Is this formula specific to the contrastive RBF score, or does it generalize to other contrastive kernels?*
+
+### Q3: M-SemCP Unification Proof
+*Provide formal statements (with proofs) that:*
+- *M-SemCP with τ=0.7 (or corresponding weight vector) recovers ConU exactly*
+- *Similarly for τ=0.5→TECP, τ=0.3→LofreeCP*
+- *Or clarify that these are "inspired by" rather than "recover" these methods.*
+- *Show M-SemCP performance (coverage/set size) vs individual methods.*
+
+### Q4: Admissibility Bottleneck Ablation
+*On NQ-open with p_A=0.271, what is the coverage improvement if:*
+- *Generator quality is increased (e.g., Qwen2.5-72B instead of -32B)?*
+- *More samples K are used (K=20, K=50)?*
+- *This clarifies whether SemCP's utility on low-p_A datasets is real or marginal.*
+
+### Q5: Baseline Fairness
+*ConU yields |C|=1.00 consistently on TriviaQA/SQuAD while SemCP yields 1.64/1.14. Either:*
+- *ConU is broken on these datasets (proof of tuning procedure?)*
+- *ConU and SemCP optimize different objectives (string vs semantic), making comparison unfair*
+- *Explain the discrepancy and adjust headline claims accordingly.*
+
+### Q6: Generalization Beyond Qwen2.5-32B
+*Provide results on:*
+- *Llama 3 (or another recent open model)*
+- *A smaller model (7B) to test scaling*
+- *GPT-4 (closed-box, but establishes applicability)*
+- *Current scope (single LLM) is insufficient for a method paper.*
+
+### Q7: NLI Model Sensitivity (Appendix D Details)
+*You mention "sensitivity checked in Appendix D." Provide results comparing:*
+- *gte-Qwen2-7B (current)*
+- *BAAI/bge-large-en-v1.5 or OpenAI text-embedding-3-large*
+- *What's the coverage/set size variance across embedding models?*
+
+---
+
+## FALSIFIABILITY TEST
+
+### Falsifiable Theorem Claims
+✅ **Theorem 1:** Conditional coverage = 1-α-1/(|I|+1)
+- **Test:** On calibration set I, count elements scoring ≤ q̂; check empirical coverage
+- **Result:** TriviaQA passes (0.896 vs 0.891), SQuAD/NQ-open valid but less tight
+- **Status:** Partially falsified (only tight on 1/3 datasets; looseness on others not explained)
+
+✅ **Theorem 2:** σ* matches grid-search within 5%
+- **Test:** Run grid search on held-out set; compare empirical optimal σ_grid to σ*
+- **Result:** Claimed in Appendix E (not shown); cannot verify
+- **Status:** Unverifiable from bundle (appendix missing)
+
+✅ **Set Size Claim:** "SemCP produces comparable or smaller sets"
+- **Test:** Compare |C| across methods
+- **Result:** True on NQ-open (3.54 vs 3.92), but false or unclear on TriviaQA/SQuAD vs ConU
+- **Status:** Partially falsified (ConU baseline inconsistency)
+
+### Non-Falsifiable/Observation Claims (Not Theorems)
+❌ **"Contrastive RBF captures semantic distinctness better"** — Qualitative, no metric
+❌ **"M-SemCP recovers prior methods as corners"** — Stated as observation not theorem; no formal proof provided
+❌ **"HAC-NLI with transitivity correction is superior"** — No comparison to k-means, spectral clustering
+
+---
+
+## CONFIDENCE ASSESSMENT
+
+**Overall confidence in correctness: 3/5 (Medium)**
+
+### Breakdown by Component
+| Component | Confidence | Notes |
+|-----------|-----------|-------|
+| **Theorem 1 (Coverage guarantee)** | 4/5 | Empirically validated on TriviaQA, but proof gap on clustering error; SQuAD/NQ-open valid but loose |
+| **Theorem 2 (Bandwidth formula)** | 2/5 | Notation undefined, derivation not shown, sub-Gaussian constants absent; cannot verify |
+| **HAC-NLI algorithm** | 3/5 | Clustering quality not validated; robustness to embedding/NLI model errors unclear |
+| **M-SemCP unification** | 1/5 | Stated as observation not theorem; no formal proofs or empirical comparison provided |
+| **Experimental results** | 4/5 | Real datasets, proper splits, reproducible (though compute-intensive); limited scope (K=10, 1 LLM, 1 embedding) |
+
+### Key Uncertainties
+1. **Clustering impact (±2 points):** If clustering error >> signal, whole approach fails
+2. **Theorem 2 applicability (±1 point):** If proof has gaps, bandwidth may not be truly optimal
+3. **Generalization (±1 point):** Limited to Qwen2.5, gte-Qwen2, specific datasets; unknown on other LLMs/models
+
+---
+
+## DECISION & RECOMMENDATIONS
+
+### Recommendation: **CONDITIONAL ACCEPT** with major revisions
+
+**Rationale:**
+- ✅ Addresses real problem (semantic CP) with novel approach
+- ✅ Theorem 1 empirically tight on TriviaQA
+- ✅ Real experiments (v1→v2 improvement)
+- ❌ Theorem 2 proof incomplete; Theorem 1 proof has gap on clustering error
+- ❌ M-SemCP unification is observation, not theorem
+- ❌ Limited experimental scope; baseline inconsistencies
+- ❌ p_A bottleneck severely limits practical utility
+
+### Required Changes for Acceptance
+1. **[CRITICAL]** Analyze clustering error propagation: Bound or measure ε_cluster and its impact on coverage. This is the paper's foundational assumption.
+
+2. **[CRITICAL]** Complete Theorem 2 proof: Define μ̄μ, μ̄W; provide sub-Gaussian bounds; show derivation of σ*. Include Appendix C in submission.
+
+3. **[MAJOR]** Clarify M-SemCP unification: Either prove it rigorously (Appendix B') or reframe as an "inspired by" observation, not a recovery. Include empirical M-SemCP results in Table 1.
+
+4. **[MAJOR]** Generalization experiments: Provide results on ≥1 additional LLM (Llama 3, 7B model, or GPT-4) and ≥1 additional embedding model. Appendices D & E must be included.
+
+5. **[MODERATE]** Explain baseline anomaly: Why ConU |C|=1.00 on TriviaQA/SQuAD? If unfair comparison, adjust headline claims.
+
+6. **[MODERATE]** p_A bottleneck ablation: Show how coverage scales with K, LLM size, etc. Clarify practical utility on low-p_A datasets.
+
+### Strength if Revised
+With these revisions, the paper would be a solid methodological contribution: semantic CP is novel, Theorem 1 is validated, Theorem 2 removes hyperparameter, and real experiments (properly generalized) would be convincing.
+
+---
+
+## SUMMARY TABLE
+
+| Aspect | Status | Evidence |
+|--------|--------|----------|
+| **Problem importance** | Strong | Semantic vs string-space distinction well-motivated |
+| **Theorem 1 validity** | Medium | Tight on TriviaQA (gap -0.007), loose on NQ-open (+0.012); clustering error impact unanalyzed |
+| **Theorem 2 completeness** | Weak | Formula stated; derivation & constants missing |
+| **Algorithm clarity** | Good | HAC-NLI and contrastive score well-described, but robustness not validated |
+| **Experimental rigor** | Medium | Real datasets, proper methodology; limited scope (K=10, 1 LLM) |
+| **Claim-evidence alignment** | Medium | Main results shown; appendices (proofs, ablations) absent; M-SemCP unproven |
+| **Falsifiability** | Good | Core theorems are testable; claimed validations (Appendices D-E) not provided |
+
+---
+
+**Review Date:** 2026-05-05  
+**Reviewer Persona:** 02_theory_critic (Mathematical Rigor & Proof Completeness)
 | Reproducibility | 2 | Code not released; all empirical results are TODO_NUM placeholders; cannot be reproduced |
 | Contextualization vs Prior Work | 7 | Strong coverage of CP for LMs; correctly positions SemCP vs ConU/SAFER/LofreeCP/TECP |
 | Ethical / Broader Impact | 6 | Generic boilerplate; adequate but not thoughtful |

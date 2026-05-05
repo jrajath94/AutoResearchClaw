@@ -1,159 +1,240 @@
-# Statistical Rigorist Review — SemCP
-
-**Paper:** SemCP: Coverage Guarantees Over Meanings, Not Strings
-**Reviewer:** The Statistical Rigorist
-**Date:** 2026-05-01
+# Statistical Rigor Review: SemCP v2
+**Reviewer:** 04_statistical_rigorist | **Date:** 2026-05-05 | **Confidence:** 3/5
 
 ---
 
-## Strengths
+## EXECUTIVE SUMMARY
 
-1. **Theorem 1 is properly stated with conditions made explicit.**
-   The conditional coverage guarantee 1-alpha-1/(|I|+1) is conditioned on the admissibility event A = {true meaning in sampled set}. The paper correctly flags that marginal coverage is bounded by p_A (Remark 1). This is honest uncertainty quantification — the authors do not overclaim marginal coverage.
+**Verdict:** CONDITIONAL ACCEPT with significant concerns about inference completeness
 
-2. **Exchangeability reasoning is correctly applied.**
-   Section 4.1 explicitly argues that the fixed partition Pi is NOT data-adaptive, preserving exchangeability. Section 4.4 Remark 2 correctly identifies that sample-dependent scoring preserves exchangeability via the augmented tuple view. These are subtle but important distinctions that many CP papers get wrong.
+SemCP is statistically **sound in theorems** but suffers from **critical gaps in empirical validation**:
+- Theorems 1–2 are valid conditional on stated assumptions
+- Real experiments validate core claims but with **underspecified uncertainty quantification**
+- No p-values, confidence intervals, or formal significance tests on coverage/set-size comparisons
+- Sample sizes (300 ex/dataset, 3 seeds) adequate for descriptive but insufficient for causal claims
+- Effect sizes and variability gaps suggest confounding factors not addressed
 
-3. **Admissibility-coverage decomposition is a useful practitioner diagnostic.**
-   The separation of p_A (admissibility rate, a property of the generator and sample budget K) from conditional coverage (a property of the scoring rule) gives practitioners a principled way to attribute failure modes. This is a genuinely useful framing.
-
-4. **RBF kernel learning problem is well-specified.**
-   Grid search over {0.1, 0.3, 0.5, 1.0, 2.0, 4.0} on a held-out 20% split, minimizing set size subject to coverage >= 1-alpha, is a clear and reproducible specification. The constraint infeasibility caveat (GPT-2 2-3% correct answer rate) is appropriately flagged.
-
-5. **Ablation structure is appropriate.**
-   The 5-variant ablation (SemCP-NoM2O, SemCP-Euclidean, SemCP-Adaptive, Naive Semantic, SemCP-Full) targets the right architectural choices. The finding that learned RBF substantially outperforms Euclidean (18.57 vs 13.35 on SQuAD) is a meaningful component decomposition.
+**Red Flag:** Authors claim "tightest valid coverage" without formal statistical tests to demonstrate superiority.
 
 ---
 
-## Weaknesses
+## STRENGTHS (4/5)
 
-### W1 — ALL EMPIRICAL RESULTS ARE TODO_NUM PLACEHOLDERS
-**Issue:** Table 1, Figure 3, and all reported numbers are unfilled placeholders. The paper cannot be evaluated empirically. A 33% set-size reduction is claimed but no actual numbers exist.
-**Location:** Section 5.3, Table 1, Figure 3, Appendix
-**Severity:** 5/5 (fatal)
-**Resolution:** Run all experiments and fill in actual numbers with 95% bootstrap CIs across all 3 seeds.
+1. **Theorem 1 is mathematically sound with explicit conditions**
+   The conditional coverage guarantee 1-α-1/(|I|+1) is properly conditioned on admissibility (true meaning in sampled set). Theorem 1 proof correctly invokes exchangeability under admissibility-selection conditioning → split-conformal → Jensen's marginalization. Authors honestly acknowledge marginal coverage is bounded by p_A. Exchangeability reasoning is subtle and correct—many CP papers get this wrong.
 
-### W2 — FIGURE 3 CAPTION USES WRONG MODEL
-**Issue:** Fig 3 caption says "near-zero coverage for all methods due to GPT-2's limited QA capability" but Section 5.1 specifies experiments use Qwen2.5-7B-Instruct. This is a direct factual inconsistency.
-**Location:** Figure 3 caption vs. Section 5.1
-**Severity:** 4/5
-**Resolution:** Correct the caption to reference Qwen2.5-7B-Instruct, or verify whether a GPT-2 baseline run was also conducted.
-
-### W3 — MARGINAL COVERAGE AND SET SIZE REDUCTION ARE MUTUALLY INCOHERENT AT NEAR-ZERO COVERAGE
-**Issue:** The paper claims 33% set size reduction (13.35 vs 19.89 Token-CP on SQuAD). But Section 7 Discussion says "all methods get near-zero coverage due to low generator quality." If coverage is near zero, set size comparisons are meaningless — conformal sets collapse to empty sets regardless of scoring rule. These claims cannot both be true simultaneously.
-**Location:** Section 7 vs. Abstract and Key Claim 2
-**Severity:** 5/5
-**Resolution:** Clarify the coverage regime. If coverage is near zero, the 33% reduction claim must be contextualized or removed. If coverage is meaningful, the near-zero claim must be corrected.
-
-### W4 — NO CONFIDENCE INTERVALS REPORTED FOR ANY RESULT
-**Issue:** No standard deviations, CIs, or uncertainty measures are reported for coverage, set size, or any metric. "33% smaller" has no error bars. This makes all comparisons uninterpretable.
-**Location:** Throughout Section 5
-**Severity:** 4/5
-**Resolution:** Report mean ± SD across 3 seeds × bootstrap 1000. Compute 95% CIs for all primary metrics.
-
-### W5 — THREE SEEDS BUT NO MULTI-SEED AGGREGATION DESCRIBED
-**Issue:** Section 5.1 specifies 3 seeds (0,1,2) but provides no description of how results are aggregated. Is the reported number the mean across seeds? Median? Best seed? This is a garden of forking paths for the results.
-**Location:** Section 5.1
-**Severity:** 3/5
-**Resolution:** Pre-specify: "We report mean across seeds with 95% bootstrap CI from 3 independent runs."
-
-### W6 — MULTIPLE COMPARISONS ACROSS 5 METHODS × 2 DATASETS WITHOUT CORRECTION
-**Issue:** The paper compares 5 methods across 2 datasets. If any informal model selection was done (e.g., bandwidth grid chosen to minimize set size on both datasets), the family-wise error is uncontrolled. No multiple-testing correction is mentioned.
-**Location:** Section 5.3 (Table 1)
-**Severity:** 3/5
-**Resolution:** Report adjusted p-values or at minimum acknowledge the multiple comparisons implicitly made.
-
-### W7 — CODE NOT YET RELEASED
-**Issue:** "Code and experiment scripts will be released upon publication" is explicitly stated. The paper cannot be independently verified.
-**Location:** Section 9 Conclusion; Appendix NeurIPS Checklist
-**Severity:** 3/5
-**Resolution:** Release code now, or provide a detailed supplementary with exact hyperparameters, NLI model checkpoint, and embedding model version.
-
-### W8 — NLI THRESHOLD FIXED AT 0.5 NOT ABLATED
-**Issue:** DeBERTa-v2-xlarge-MNLI bidirectional entailment threshold is fixed at 0.5 throughout, yet the paper identifies this as a design choice in Limitations (item 3). With 5 kernel bandwidth values × 3 seeds × multiple datasets, the threshold is a significant unexamined variable.
-**Location:** Section 4.1, Section 8 Limitations item 3
-**Severity:** 2/5
-**Resolution:** Run sensitivity analysis over threshold ∈ {0.3, 0.4, 0.5, 0.6, 0.7}.
-
-### W9 — K=10 SAMPLE BUDGET IS LOW FOR RARE MEANING CLASSES
-**Issue:** With K=10 samples and NLI partition generating potentially large equivalence classes, many meaning classes will have zero sampled representatives. The paper acknowledges this (classes with no representative get +infinity), but does not quantify how often this occurs. The admissibility rate p_A is the binding constraint on marginal coverage.
-**Location:** Section 4.3, Section 5.3 Table 1 (admissibility rate column)
-**Severity:** 2/5
-**Resolution:** Report the empirical admissibility rate explicitly. If p_A ≪ 0.9, the marginal coverage ceiling is the dominant concern.
-
-### W10 — NO EFFECT SIZE FOR 33% SET SIZE REDUCTION
-**Issue:** Key claim: "33% smaller set sizes than string-level baseline on SQuAD." The absolute numbers (13.35 vs 19.89) suggest a difference of 6.54 items. But the denominator is unclear — is this tokens? Meaning classes? The 33% figure without variance makes this claim uninterpretable.
-**Location:** Abstract, Section 7 Discussion, Key Claim 2
-**Severity:** 3/5
-**Resolution:** Report effect size: (19.89 - 13.35) / pooled_SD, with CI. Clarify whether set size unit is tokens or meaning classes.
+2. **Theorem 2 bandwidth optimization is rigorously derived**
+   Sub-Gaussian variance derivation from contrastive RBF scoring. Closed-form σ* from ∂Var/∂σ=0 is valid. Empirically validated: matches grid-search within 5% (Section 5.3). Removes only hyperparameter; eliminates search cost. Concentration bound O(√(log(1/δ)/|I|)) is stated and reasonable.
 
 ---
 
-## Per-Rubric Scores
+3. **Empirical validity checks show no coverage violations**
+   All three datasets show SemCP coverage ≤ theoretical bound (Table 1: -0.007 to +0.021). Achieves conditional coverage tightness within 1–2 percentage points on TriviaQA/SQuAD. Valid across 3 random seeds. No coverage guarantee broken empirically.
 
-| Dimension | Score | Calibration Anchor |
-|-----------|-------|-------------------|
-| Originality / Novelty | 7 | Substantial conceptual advance: first CP framework over semantic embedding space with coverage guarantees. The quotient-space formulation is genuinely novel. |
-| Soundness | 4 | **Reject trigger.** Theorem 1 is correct, but all empirical results are TODO placeholders. Cannot verify methodology claims without data. The Fig 3/GPT-2 inconsistency further undermines confidence. |
-| Significance | 6 | Useful contribution to a niche subfield (conformal prediction for LLMs). 33% set size reduction is potentially impactful if it replicates with proper CIs. |
-| Clarity | 6 | Mostly clear. Theorem statements are well-structured. But TODO placeholders, the Fig 3 inconsistency, and the near-zero coverage contradiction hurt clarity. |
-| Reproducibility | 3 | **Reject trigger.** Code not released. All numbers are placeholders. Experimental details are specified but cannot be verified. |
-| Contextualization vs Prior Work | 7 | Strong coverage of CP-for-LMs literature. ConU, SAFER, LofreeCP, TECP all properly cited and positioned. The relationship to semantic entropy (no coverage guarantee) is correctly identified as gap. |
-| Ethical / Broader Impact | 6 | Adequate boilerplate. Legal QA hallucination motivation is concrete but underdeveloped. |
+4. **Baseline tuning symmetry fixed in v2**
+   All methods (ConU, SAFER, LofreeCP, TECP) tuned on same 20% held-out split. v1→v2 improvement: removes baseline asymmetry that could bias comparisons.
 
-**Weighted Average:** (7×1.0 + 4×1.5 + 6×1.0 + 6×0.7 + 3×1.0 + 7×0.8 + 6×0.5) / (1.0+1.5+1.0+0.7+1.0+0.8+0.5) = (7 + 6 + 6 + 4.2 + 3 + 5.6 + 3) / 6.5 = 34.8 / 6.5 = **5.35**
+5. **M-SemCP unification is theoretically sound**
+   Framework recovers ConU, LofreeCP, TECP as corners of τ∈{0.7, 0.5, 0.3} simplex. Generalization is principled, not ad-hoc.
 
 ---
 
-## Pointed Questions for Authors
+## WEAKNESSES (9/10)
 
-1. **The near-zero coverage claim (Section 7) directly contradicts the 33% set-size reduction claim (Abstract).** If coverage is near zero, conformal sets collapse to the empty set for all methods, making set size comparisons meaningless. Which is true, and under what conditions? Please provide empirical breakdown of coverage by dataset.
+### W1 — NO FORMAL SIGNIFICANCE TESTS ON PRIMARY CLAIMS ⚠️ CRITICAL
+- **Headline claim:** "SemCP achieves tightest valid conditional coverage"
+- **Missing:** No t-test, Wilcoxon, or bootstrapped CI on coverage validity gaps
+- **Available data:** Table 1 shows ±std errors (0.896±0.007 TriviaQA), but no pairwise comparison tests
+- **Expected:** H₀ tests for coverage gap SemCP vs. each baseline; report p-values
+- **Impact:** Cannot distinguish 0.007 TriviaQA gap from noise—headline unsubstantiated
+- **Severity:** HIGH
 
-2. **Figure 3 caption references GPT-2, but experiments use Qwen2.5-7B-Instruct.** Was a GPT-2 baseline run conducted? If so, where are those results? If not, why is GPT-2 mentioned?
+### W2 — INADEQUATE EFFECT SIZE REPORTING
+- **Set size increases without Hedges' g/Cohen's d:**
+  - TriviaQA: SemCP 1.64 vs ConU 1.00 (+64% larger)
+  - SQuAD: 1.14 vs 1.00 (+14%)
+  - NQ-open: 3.54 vs 3.92 (-10%)
+- **Missing:** Confidence intervals on percentage differences; statistical justification for "acceptable" tradeoff
+- **Severity:** MEDIUM
 
-3. **How exactly are the 3 seeds aggregated?** Mean? Median? Best-of-3? The paper specifies 3 seeds but never states the aggregation rule. If you selected the seed producing the best result, this is a form of reporting bias.
+### W3 — MULTIPLE TESTING UNCONTROLLED ⚠️ CRITICAL
+- **Comparisons without adjustment:**
+  - Coverage gaps: 3 datasets × 3 baselines = 9 tests
+  - Set size: 3 datasets × 4 baselines = 12 tests
+  - σ̂ vs grid-search: multiple threshold/dataset combinations
+  - M-SemCP corner selection: 3 datasets
+- **Total:** 24+ pairwise comparisons with α=0.05 per comparison
+- **Expected false positives:** ~1–2 among comparisons
+- **No mention of:** Bonferroni, FDR, pre-registered primary/secondary outcomes
+- **Severity:** HIGH
 
-4. **What is the empirical admissibility rate p_A on each dataset?** This is the binding ceiling on marginal coverage. If p_A ≈ 0.5 on TriviaQA and SQuAD, then marginal coverage cannot exceed 0.5 regardless of the scoring rule — this should be the lead result, not buried in Table 1.
+### W4 — SAMPLE SIZE JUSTIFICATION ABSENT
+- **Factual:** 300 examples/dataset, 3 seeds (seed 0,1,2)
+- **Missing:** Power analysis or prospective justification for effect size detection
+- **Effective n:** 3 seeds × 50 test split = 150 degrees of freedom; quite limited
+- **Observed std:** 0.007–0.058 suggests high variance
+- **Severity:** MEDIUM
 
-5. **The bandwidth grid search minimizes set size subject to coverage >= 1-alpha on a held-out 20% split.** What is the pass rate of this constraint? Section 4.2 mentions it becomes infeasible at very low correct-answer rates. How often was the constraint infeasible in your calibration data? What sigma value was used as default when it failed?
+### W5 — CONFIDENCE INTERVALS NOT REPORTED ⚠️ CRITICAL
+- **Standard practice:** 95% CI on all point estimates (especially coverage guarantees)
+- **Current state:** Point ± std (0.896±0.007) without lower/upper bounds or method
+- **Correct approach:** Bootstrap CI or exact Clopper-Pearson for coverage proportions
+- **Impact:** Cannot assess whether validity gaps are within acceptable tolerance
+- **Severity:** HIGH—essential for probabilistic guarantees
+
+### W6 — ADMISSIBILITY RATE NOT STATISTICALLY MODELED ⚠️ CRITICAL
+- **Data:** p_A ranges 0.271 (NQ-open) to 0.811 (SQuAD)
+- **Problems:**
+  - No binomial CIs on p_A itself
+  - No H₀ test on whether p_A differs from uniform baseline
+  - NQ-open p_A=0.271 << 1-α=0.9: yet coverage 0.903—contradiction not addressed
+- **Root cause:** Depends on NLI model quality (DeBERTa) not validated/sensitivity-tested
+- **Severity:** HIGH—confounds interpretation
+
+### W7 — HYPERPARAMETER TUNING NOT FULLY TRANSPARENT
+- **Missing:**
+  - Exact hyperparameter ranges searched for each baseline
+  - Whether computational budget was equal across methods
+  - Whether selection criteria were identical (coverage-tightness vs. set-size minimization)
+  - Sensitivity: how much do baseline results change with different tuning?
+- **Severity:** MEDIUM
+
+### W8 — VARIANCE DECOMPOSITION NOT CHARACTERIZED
+- **Observed:** Large set size std errors (SQuAD: 1.14±0.15, 13% relative)
+- **Unanalyzed sources:**
+  - Qwen sampling randomness (K=10, temp=1.0)
+  - NLI clustering stochasticity
+  - Calibration set sampling (50% split)
+  - Seed effects
+- **Impact:** Cannot prioritize improvements; uncertainty attribution unclear
+- **Severity:** MEDIUM
+
+### W9 — NO DISTRIBUTIONAL UNCERTAINTY ON THEOREM 2
+- **Theorem 2:** σ̂ is optimal, matches grid-search ±5%
+- **Missing:**
+  - CI on σ̂ itself (how does it vary with calibration perturbation?)
+  - Test for H₀: σ̂ = theoretical σ*
+  - Empirical validation of variance bound O(√(log(1/δ)/|I|))
+- **Impact:** "Plug-in optimal" presented as fact without distributional uncertainty
+- **Severity:** MEDIUM
 
 ---
 
-## Falsifiability Test
+## SCORES (1–10, 10=best)
 
-**What evidence would change my decision?**
+| Dimension | Score | Rationale |
+|-----------|-------|-----------|
+| **Originality** | 8 | Novel semantic-aware conformal framework; covers standard methods as M-SemCP special cases. Theorem 1 properly conditions on admissibility (new). |
+| **Quality** | 5 | Theorems are sound; empirical validation lacks formal tests, CIs, significance testing. Multiple testing uncontrolled. High variance on set sizes. |
+| **Clarity** | 7 | Method/algorithm well-explained; proofs precise. Tables clear but missing standard statistical reporting (CIs, p-values, effect sizes). |
+| **Significance** | 6 | Closes algorithm-theory gap (strong). Empirical improvements marginal and not formally tested. Downstream task impact unknown. |
 
-To move from **Reject** toward **Accept**, I would need to see:
-
-- All TODO_NUM placeholders replaced with actual numbers with 95% bootstrap CIs across 3 seeds
-- Marginal coverage ≥ 0.85 (at alpha=0.10) with lower CI bound ≥ 0.80 on both datasets
-- Set size reduction with Cohen's d and 95% CI that excludes zero
-- Figure 3 caption corrected to match the Qwen2.5-7B-Instruct model
-- Admissibility rate p_A explicitly reported as a primary metric
-- Code repository link with reproducible experiment scripts
-
-If, after running the experiments, coverage is genuinely near zero (~0.1 or below), I would revise the Significance score to 3/5 and recommend rejection on grounds that the method provides no useful coverage guarantee in practice on these benchmarks.
-
-If the 33% set size reduction is real but only conditional on admissibility, I would recommend revision to clearly separate the two claims and reframe the contribution as a set-size efficiency improvement conditioned on meaningful coverage.
+**Average Quality:** 6.5/10 — Sound theory, incomplete empirical validation
 
 ---
 
-## Confidence
+## CRITICAL QUESTIONS (5+)
 
-**3/5** — The theoretical contribution (Theorem 1, exchangeability arguments, admissibility decomposition) is solid and well-structured. The empirical component cannot be evaluated due to placeholders. I have medium confidence that the method works as claimed, but cannot distinguish signal from noise without actual numbers.
+**Q1:** How do you justify "tightest valid coverage" headline without significance tests?
+- SemCP gap: -0.007 (TriviaQA), +0.010 (SQuAD), +0.012 (NQ-open)
+- ConU gap: +0.005, +0.084, +0.109
+- Is apparent TriviaQA superiority statistically significant or noise? → **Required:** Paired t-test with p-value, 95% CI on difference
+
+**Q2:** What is statistical power to detect coverage improvements?
+- With n=300 (eff n≈150), can you detect 0.02 improvement with 80% power?
+- Current stds: 0.007–0.058
+- → **Required:** Post-hoc power analysis OR prospective justification
+
+**Q3:** How do you reconcile NQ-open p_A=0.271 with theory claim that p_A<1-α breaks coverage?
+- Theorem 1 conditions on "true meaning sampled" but p_A≈0.27 << 0.9
+- Yet empirical coverage 0.903—contradiction?
+- → **Required:** Formal admissibility analysis; does theorem apply?
+
+**Q4:** Why does Theorem 2 variance bound not vary with |I|, when set sizes vary 1.14–3.54?
+- Bandwidth derivation assumes sub-Gaussian, but depends on NLI quality
+- How sensitive is σ̂ to NLI model (only DeBERTa tested)?
+- → **Required:** Sensitivity on NLI embedding models; alternative models
+
+**Q5:** Are 3 random seeds sufficient? Standard practice: 5–10 seeds.
+- → **Required:** Justification for n=3 OR extension to 5+ seeds
+
+**Q6:** What multiple testing correction applied to 24+ comparisons?
+- → **Required:** Pre-registered primary/secondary outcomes OR Bonferroni/FDR adjusted p-values
+
+**Q7:** How do baseline hyperparameter ranges compare?
+- If ConU has 10 hyperparameters and SAFER has 2, tuning budget matters
+- → **Required:** Transparent hyperparameter grids; equal computational budget justification
 
 ---
 
-## Decision
+## FALSIFIABILITY TEST
 
-**Reject (4.0–5.5 weighted average)**
+| Claim | Test | Status |
+|-------|------|--------|
+| Coverage ≤ 1-α-1/(ℐ+1) | All datasets ✓ within bound | **VALID** |
+| σ̂ matches grid-search ±5% | Reported match ✓ | **VALID** |
+| Contrastive RBF reduces set size vs ConU | Empirical (1.64 vs 1.00 TriviaQA) but no significance test ⚠ | **UNRESOLVED** |
+| M-SemCP recovers baselines at τ corners | Framework stated; recovery not empirically demonstrated ⚠ | **UNRESOLVED** |
 
-**Primary reason:** The paper's empirical foundation is entirely composed of TODO placeholders. The most critical claims — 33% set size reduction, near-zero coverage, marginal coverage validity — are mutually contradictory and unverifiable. Without experimental data, I cannot assess whether the RBF kernel learning actually helps, whether coverage is meaningful, or whether the 33% figure is real or noise.
-
-**Secondary reason:** The Figure 3 / GPT-2 inconsistency indicates the manuscript was assembled from template text without final consistency checking, raising concerns about review quality more broadly.
-
-**Conditional acceptance path:** If authors run the experiments, fix the contradictions, and demonstrate meaningful conditional coverage (not near-zero) with the kernel-based scoring substantially outperforming frequency-based scoring, I would upgrade to Borderline or Accept depending on effect sizes and CIs.
+**Failure modes:**
+- If DeBERTa degrades: p_A < 1-α → marginal coverage fails (acknowledged)
+- If embedding model changes: σ̂ vs σ* mismatch (untested; critical)
+- If admissibility violated: Theorem 1 doesn't hold (NQ-open edge case)
 
 ---
 
-*— The Statistical Rigorist*
+## CONFIDENCE: 3/5
+
+**Reducing factors:**
+- No p-values/significance tests (−1.5)
+- No CIs on coverage guarantees (−0.5)
+- Multiple testing uncorrected (−0.5)
+- Limited seeds n=3 (−0.5)
+- NQ-open admissibility puzzle (−0.5)
+
+**Increasing factors:**
+- Theorem proofs sound (+1.0)
+- Empirical coverage valid (+1.0)
+- Plug-in bandwidth validated (+0.5)
+
+---
+
+## DECISION: CONDITIONAL ACCEPT
+
+**For publication:** Requires addressing statistical gaps before acceptance.
+
+**Mandatory revisions:**
+
+1. **Formal hypothesis tests** (Wilcoxon/t-test, Bonferroni-corrected) on coverage gap and set size differences with p-values, 95% CIs
+
+2. **Report 95% confidence intervals** on all point estimates (bootstrap or exact methods)
+
+3. **Clarify NQ-open admissibility puzzle:** Why does Theorem 1 apply if p_A=0.271 << 0.9?
+
+4. **Extend seeds to n=5+** and re-report error bars (or justify n=3 statistically)
+
+5. **Declare multiple testing control:** Pre-register outcomes or apply Bonferroni/FDR; report adjusted p-values
+
+**Strongly suggested:**
+
+6. Variance decomposition (Qwen sampling, NLI clustering, calibration stochasticity)
+
+7. Sensitivity analysis on NLI embedding models (not just DeBERTa)
+
+8. Post-hoc power analysis for observed effects
+
+9. M-SemCP empirical recovery verification at τ corners
+
+10. Baseline hyperparameter transparency and equal computational budget justification
+
+---
+
+## FINAL REMARKS
+
+SemCP presents solid theory with proper exchangeability handling and sound proofs. Empirical validation demonstrates validity but not superiority—conformal guarantees hold, but claimed advantages lack formal statistical support.
+
+**For NeurIPS acceptance:** Statistical rigor requires significance tests, CIs, multiple testing control, and sensitivity analysis. Current descriptive statistics insufficient.
+
+**Grade as-is:** 6.5/10 (Borderline → Conditional Accept pending revisions)
+
+**Grade post-revisions:** 8/10 (Accept)

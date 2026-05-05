@@ -1,151 +1,225 @@
-# Naive Reader Review — SemCP: Coverage Guarantees Over Meanings, Not Strings
-
-**Reviewer:** The Naive Reader (1st-year PhD student)
-**Paper:** SemCP (NeurIPS 2026 submission, `artifacts/deliverables/paper.tex`)
-**Date:** 2026-05-01
-
----
-
-## Bottom Line
-
-The paper proposes an interesting idea—moving conformal prediction from strings to meanings—but I cannot give it a fair evaluation because **none of the experiments have been run**. Every number in the main results table is `TODO_NUM`. The figure captions describe GPT-2; the experiments use Qwen2.5-7B-Instruct. The abstract claims 33% set-size reduction; I have no way to verify this. A paper is not a paper without results. If the experiments were real, the ideas are promising but the exposition has serious clarity problems that I detail below.
+# Naive Reader Review: SemCP v2
+**Persona:** 09_naive_reader (Clarity, Exposition, Implicit Assumptions, Jargon, Readability)  
+**Date:** 2026-05-05  
+**Bundle:** SemCP v2 Coverage Guarantees Over Meanings, Not Strings
 
 ---
 
-## Strengths
+## EXECUTIVE SUMMARY
 
-1. **Theorem 1 is well-motivated and clearly positioned.**
-   The conditional coverage guarantee (Section 4.4, Theorem 1) is introduced with explicit comparison to ConU, SAFER, and LofreeCP—showing the paper understands where it sits relative to prior work. The admissibility decomposition in Remark 1 is a genuinely useful diagnostic for practitioners. This is the paper's strongest section.
-
-2. **The quotient-space formalization is novel and well-motivated.**
-   Section 4.3's lift from strings to equivalence classes via the min-aggregation rule (Equation 2) is clearly explained. The intuition that "a meaning class is adequately represented by its best-fitting string" (Section 4.3, line 144) is accessible and correct.
-
-3. **Introduction gives clear motivation with concrete examples.**
-   Line 38: "semantically identical outputs such as 'Paris' and 'The capital of France is Paris' occupy separate positions in the prediction set"—this is the clearest one-sentence articulation of the problem I have seen in any CP-for-LLM paper.
-
-4. **Ablation studies are well-designed.**
-   SemCP-NoM2O, SemCP-Euclidean, and SemCP-Adaptive isolate distinct components cleanly. The finding that learned RBF (13.35) substantially outperforms Euclidean (18.57) on SQuAD would be a clean, interpretable result if the numbers were real.
-
-5. **Limitations section is unusually honest.**
-   Six explicit limitations, including the critical "downstream applications not evaluated." This earns trust even if the paper cannot address all of them.
+The paper tackles a real problem (semantic equivalence in conformal prediction) and now includes real experiments on three datasets (TriviaQA, SQuAD, NQ-open). The results are credible: SemCP achieves tighter conditional coverage than baselines while maintaining reasonable set sizes. However, critical clarity gaps prevent a naive reader—someone without conformal prediction expertise—from understanding what the method is, why it works, or whether the assumptions are realistic. This is an expert-oriented paper that could become accessible with modest exposition work.
 
 ---
 
-## Weaknesses
+## STRENGTHS (Clarity & Communication)
 
-### W1: Experiments Do Not Exist — Paper Cannot Be Reviewed (Severity: 5/5)
-**Where:** Table 1, all numeric results in Section 5.3
-**Issue:** Every cell in Table 1 (main results) is `TODO_NUM`. The paper cannot be evaluated without empirical results. This is not a draft—it is an intent. The abstract makes specific quantitative claims ("33% smaller set sizes than the strongest string-level baseline") that I have no way to verify. The paper is unacceptably incomplete.
+1. **Clear problem statement with strong intuition:** The opening immediately identifies the semantic equivalence problem ("treating semantically identical outputs as distinct inflates set sizes"). A reader unfamiliar with conformal prediction can still grasp why this matters: "Paris" vs. "The capital of France is Paris" should be treated as the same answer, not two different ones.
 
-### W2: Critical Inconsistency — Partition Method (Severity: 4/5)
-**Where:** Section 4.1, line 116 vs. Section 5.1, line 215
-**Issue:** Section 4.1 says: "In our experiments, we instantiate Π as **cosine-similarity thresholding at 0.7** in the MiniLM embedding space." Section 5.1 says the partition is computed by "**bidirectional entailment under DeBERTa-v2-xlarge-MNLI** binarised at probability 0.5." These are completely different operations. One uses embedding cosine similarity; the other uses NLI entailment. Which is actually used? Are they combined? The text never explains.
+2. **Concrete methods summary at scannable level:** Algorithm 1 structure (HAC partition → contrastive score → threshold → predict) is follow-able. The three-step flow is easy to scan, and pseudo-code is appropriately detailed without overwhelming notation.
 
-### W3: Figure 3 Caption References Wrong Model (Severity: 3/5)
-**Where:** Figure 3 caption, line 306
-**Issue:** The caption says "Coverage is near-zero for all methods due to **GPT-2's** limited QA capability." The experiments section (Section 5.1, line 213) specifies "**Qwen2.5-7B-Instruct**." These are completely different models. The caption also calls this a "method comparison" but provides no actual numbers—only a TODO placeholder figure.
+3. **Strong empirical results presentation:** Table 1 is clean and comparison-friendly (SemCP vs. ConU vs. SAFER). Reporting ±stddev and explicit validity gaps (e.g., "−0.007 to +0.021 vs bound") is transparent and quantitative. This builds reader confidence in results.
 
-### W4: Algorithm 1 Pseudocode Does Not Match the Text (Severity: 4/5)
-**Where:** Algorithm 1 vs. Section 4.3
-**Issue:** Algorithm 1 line 180 says the lifted score for calibration is:
-`1 - max_{c' != c_i^*} kappa_sigma(bars_phi_{c_i^*}, bars_phi_{c'})`
-where `c_i^*` is "the correct cluster." But the text (Section 4.3, Equation 2) defines the lifted score as:
-`min_{y' in [y]_s intersect {y_1,...,y_K}} s(x, y')`
-where `s(x,y) = 1 - kappa_theta(phi(y), mu_x)` and `mu_x` is the kernel mean embedding of ALL K samples.
-These are structurally different: one computes a contrast score between clusters; the other computes the minimum score within a cluster relative to the sample centroid. The algorithm and the theory are solving different problems. I could not implement SemCP from this paper.
+4. **Honest treatment of failure modes:** Discussion of when SemCP breaks down (p_A < 1−α) and explicit limitations (embedding dependency, K≤10 budget) shows sophistication. The paper doesn't oversell findings.
 
-### W5: Exchangeability Preservation Claim Is Underspecified (Severity: 3/5)
-**Where:** Section 4.1, line 116 and Theorem 1 proof sketch, line 160
-**Issue:** The paper claims the partition rule Π "is not data-adaptive; preserves exchangeability" (line 40) and that Π is "a deterministic function fixed before observing any data" (line 116). But line 116 also says "In our experiments, we instantiate Π as cosine-similarity thresholding at 0.7 in the MiniLM embedding space"—embedding-based clustering IS data-dependent because embeddings are computed from the specific response strings generated. I do not understand how a fixed rule produces different partitions for different instances without being data-dependent. If the rule is "cluster by NLI entailment," the partitions are still instance-dependent because different instances produce different response sets. The paper needs to be explicit about what "fixed" means here.
-
-### W6: Coverage Constraint Optimization Is Unclear (Severity: 3/5)
-**Where:** Section 4.2, line 132 and Algorithm 1 line 180
-**Issue:** Line 132 says σ is chosen "on a held-out 20% subset of the training split (not the calibration split)." But Algorithm 1 calibrates on ALL calibration examples that are admissible, and σ is not mentioned in Algorithm 1's calibration loop. Is σ fixed from the held-out split before Algorithm 1 runs? If so, the optimization step is disconnected from the conformal calibration step. The dependency structure is: (training split) → held-out split → σ → calibration set → q-hat. This needs explicit statement, not buried prose.
-
-### W7: 33% Set Size Reduction Claim Is Unverifiable (Severity: 4/5)
-**Where:** Abstract (line 13), Section 7 (line 99)
-**Issue:** The paper claims "33% smaller set sizes than the strongest string-level baseline on SQuAD" but Table 1 is all TODO_NUM. I cannot evaluate whether this is real. Section 7 also references "13.35 vs. 19.89 for Token-CP" but these specific numbers appear nowhere in the visible tables—only in prose. This reads as speculative claim dressed as empirical result.
-
-### W8: "Near-Zero Coverage" Contradicts Set-Size Claims (Severity: 3/5)
-**Where:** Section 7, line 351 and Discussion, line 99
-**Issue:** The paper says "near-zero coverage for all methods due to GPT-2's limited QA capability" (Fig 3 caption) AND "33% set size reduction" (Section 7, line 99). Set size reduction means nothing if coverage is near-zero—a conformal set that always predicts the empty set has set size 0 and 0% coverage. These two claims are contradictory: you cannot simultaneously claim a method produces meaningfully smaller sets AND that coverage is near-zero because of generator quality. Which is the real result?
-
-### W9: Abstract Claims Code Released; Checklist Says It Will Be Released (Severity: 2/5)
-**Where:** Abstract (line 27) vs. NeurIPS checklist item 5 (line 415)
-**Issue:** Abstract says "Code and run logs are released for reproducibility." Checklist item 5 says "Code and experiment scripts will be released upon publication." These are contradictory statements. One is a lie. If code is not released, reproducibility is zero regardless of what the paper says.
-
-### W10: Notation Overload Without Worked Example (Severity: 2/5)
-**Where:** Section 4 (passim), Theorem 1 proof sketch
-**Issue:** I counted 20+ symbols in Section 4 alone without a single worked example. The paper defines quotient spaces, kernel mean embeddings, lifted scores, admissibility events, and exchangeability all in quick succession. A single concrete example—showing one prompt, K=3 samples, how the equivalence classes form, how the kernel score is computed, and what the conformal set looks like—would make everything in Section 4 click into place. Without it, the method section reads like a theorem checklist.
+5. **v1→v2 improvements table is confidence-building:** Directly addressing previous feedback (GPT-2→Qwen, real data, O(K log K) algorithm) with a visible change log is excellent practice. Readers can see the paper improved materially.
 
 ---
 
-## Per-Rubric-Dimension Scores
+## WEAKNESSES (Clarity & Exposition Gaps)
 
-| Dimension | Score | Calibration Anchor |
-|-----------|-------|-------------------|
-| **Originality / Novelty** | 7/10 | Substantial conceptual advance: quotient-space conformal prediction is a genuinely new framing. The kernel-based nonconformity scores are the most novel component. |
-| **Soundness** | 3/10 | The theory appears correct but the experiments do not exist. Even if they did, Algorithm 1 does not match the stated theory (W4). Methodology cannot be evaluated. |
-| **Significance** | 6/10 | The idea matters—if it works. Set-size reduction and semantic coverage are real problems. But downstream applications are not evaluated, limiting practical impact. |
-| **Clarity** | 5/10 | Major clarity issues: the partition method is inconsistent across sections, Algorithm 1 contradicts the text, and Figure 3 caption references the wrong model. |
-| **Reproducibility** | 2/10 | No code released (contradiction in paper). No real experimental results. Cannot reproduce without both. |
-| **Contextualization vs Prior Work** | 7/10 | Strong related work. SemCP is clearly positioned as complementary to ConU/SAFER/LofreeCP/TECP. The taxonomy in Section 3 is well-organized. |
-| **Ethical / Broader Impact** | 6/10 | Adequate boilerplate. No specific negative impacts identified. The paper does not engage with risks of "meaning-level" guarantees (e.g., what if NLI is wrong?). |
+1. **Theorem 1 notation undefined (critical accessibility blocker):**
+   The paper states "1-α-1/(|I|+1)" as the coverage bound without ever defining:
+   - What is α? (Presumably miscoverage level, e.g., 0.05, but never stated)
+   - What is |I|? (Presumably calibration set size, but never defined)
+   - Why this specific functional form? (Appears arbitrary; no intuition provided)
+   
+   A naive reader cannot assess the coverage guarantee without these definitions. This alone breaks the paper's accessibility to ~50% of target audience.
 
-**Weighted Average: 5.1/10 (Reject territory)**
+2. **Conformal prediction background entirely assumed:**
+   The paper launches into "conformal prediction," "split-conformal," "admissibility," "exchangeability" without explaining what problem CP solves or why these concepts matter. A reader unfamiliar with Barber et al. (2019) or Vovk's framework will miss core intuition. A 2-3 sentence plain-English definition ("CP is a framework for generating prediction sets with coverage guarantees; it works by...") before Algorithm 1 would unlock the paper for 60% more readers.
+
+3. **HAC-NLI clustering severely underspecified:**
+   "3-stage clustering with embedding prefilter + purity check" is vague. Naive reader questions:
+   - What distance metric drives agglomeration?
+   - What explicitly are the three stages? (The bundle says "preprocessing, clustering, filtering" but doesn't define each)
+   - What is "purity check" exactly? (Transitivity correction, but never unpacked)
+   - What are the key hyperparameters and how sensitive is partitioning to them?
+   
+   The bundle references "Appendix D: sensitivity checked" but provides zero preview of findings in main text.
+
+4. **Contrastive RBF score motivation missing:**
+   The score s̃(X,C,S,σ) = 1 − max_c′ κσ(φ̄c, φ̄c′) is presented without explanation of *why* this captures "semantic distinctness." Naive reader asks:
+   - Why is max RBF to nearest cluster the right penalty?
+   - What does "contrastive" mean here? (Typically implies positive/negative pairs; none are defined)
+   - How does RBF bandwidth σ relate to semantic similarity? (Narrower σ = stricter matching, but never explained)
+   - Why not other scoring schemes (average RBF, margin-based, etc.)?
+   
+   The paper claims this "captures semantic distinctness vs ConU sample-count approach" but provides zero intuition.
+
+5. **M-SemCP unification unvalidated:**
+   The paper claims "recovers ConU, LofreeCP, TECP as special cases" via convex combinations of τ∈{0.7, 0.5, 0.3}. But:
+   - No formula shown for the convex combination.
+   - Which τ maps to which baseline?
+   - Are the three τ values fixed, data-driven, or tuned?
+   - Why exactly three? (Appears ad hoc)
+   
+   This is interesting but completely scaffolding-free.
+
+6. **"True meaning is sampled" assumption is load-bearing but unquantified:**
+   Theorem 1's coverage guarantee assumes "true meaning is sampled" (among the K=10 LLM outputs). Naive reader questions:
+   - What if the oracle answer is a paraphrase that HAC misses?
+   - How robust is coverage if NLI model (DeBERTa) errs?
+   - What is the realistic probability this holds on TriviaQA/SQuAD/NQ-open?
+   
+   This is a critical assumption that directly impacts whether the coverage guarantee applies in practice, yet failure risk is not quantified.
+
+7. **Admissibility-selection conditioning never explained:**
+   Theorem 1 proof references "exchangeability under admissibility-selection conditioning" (Appendix B). Main text never explains:
+   - What is admissibility exactly?
+   - Why condition on it?
+   - How does this differ from standard CP conditioning?
+   
+   A reader cannot evaluate whether this is a straightforward application of existing theory or a novel contribution.
+
+8. **Theorem 2 bandwidth derivation undermotivated:**
+   The closed-form σ* = √((μ̄μ−μ̄W)/(2log(1/(1−α)))) appears without:
+   - Definitions: What are μ̄μ and μ̄W? (Within/between-cluster variance, but never stated)
+   - Intuition: Why does variance minimization lead to valid bandwidth? (Tighter threshold → smaller sets, but why valid?)
+   - Validity of assumptions: Sub-Gaussian for RBF outputs ∈ [0,1]? (RBF has exponential tails, not Gaussian)
+   
+   The empirical result "matches grid-search within 5%" is reassuring but doesn't validate the theory.
+
+9. **Experimental setup choices unjustified:**
+   - Why 50/50 calibration/test? (Standard, but not justified)
+   - Why seed 42 with 3 seeds total? (Low for high-variance QA; confidence intervals missing)
+   - Why K=10? (Mentioned as "open-ended QA budget" but no preview of K∈{3,5,7,10} ablation from Appendix E)
+   - Why temperature=1.0? (Maximal randomness; trade-offs vs. lower temps not discussed)
+
+10. **Implicit comparison assumptions not addressed:**
+    Paper compares to ConU, SAFER, LofreeCP, TECP but never discusses:
+    - Are these the only semantic-aware CP variants? Or most relevant?
+    - Were baselines tuned equally? (Bundle says "all tuned same split" but doesn't show tuning sensitivity)
+    - Why no comparison to e.g., simple majority voting over sampled outputs?
 
 ---
 
-## Pointed Questions for the Authors
+## SCORES (1-10 scale)
 
-**Q1.** Your Section 4.1 says the partition Π uses "cosine-similarity thresholding at 0.7 in the MiniLM embedding space" but Section 5.1 says it uses "bidirectional entailment under DeBERTa-v2-xlarge-MNLI binarised at 0.5." Which is the actual method used in experiments? If both are used, in what order and with what combination rule?
-
-**Q2.** Algorithm 1 (line 180) computes the lifted calibration score as `1 - max_{c' != c_i^*} kappa_sigma(bars_phi_{c_i^*}, bars_phi_{c'})`—a contrastive between-cluster score. But the theory in Section 4.3 defines it as `min_{y' in [y]_s} s(x, y')`—a within-cluster minimum score. These are fundamentally different. Which is SemCP?
-
-**Q3.** What does "fixed partition rule Π" mean in terms of exchangeability? If Π is applied to each instance's response set independently, and different instances produce different equivalence classes, how is the partition independent of the data? Is the argument that "the rule is fixed, the partitions are data-dependent, but the rule is deterministic"? If so, this should be stated explicitly.
-
-**Q4.** In Theorem 1, the coverage guarantee is conditional on the admissibility event A = {true meaning in sampled set}. But you also say marginal coverage is upper-bounded by p_A. If p_A is often much less than 1−α (your Section 5 reports empirical admissibility rates via TODO_NUM), then the conditional guarantee is the only meaningful guarantee. Why not always condition from the start and drop the marginal coverage framing?
-
-**Q5.** The paper claims "33% set size reduction" but also "near-zero coverage due to GPT-2's limited QA capability." If coverage is near-zero, set size is irrelevant. Please clarify: are the 33% and near-zero claims from the same experiments, or from different experiments? If they are from different experiments (e.g., the 33% claim is hypothetical), this should be stated explicitly.
-
-**Q6.** In Section 4.2, line 132: "With a capable model, the constraint becomes active." Which model is "capable" enough? Qwen2.5-7B-Instruct, or only larger models? What is the minimum admissibility rate required for the coverage constraint to be feasible?
-
-**Q7.** The calibration threshold q-hat in Algorithm 1 (line 185) is computed only over admissible calibration points (those where the correct meaning was sampled). This means q-hat is computed from a biased subset of calibration data. Is this selection bias addressed in the theory? Does it affect the coverage guarantee?
+| Dimension | Score | Rationale |
+|-----------|-------|-----------|
+| **Originality (Orig)** | 8 | Novel mapping to semantic space via HAC-NLI + Theorem 2 closed-form bandwidth are non-trivial. Limits: M-SemCP unification feels incremental; theoretical novelty is moderate (applies existing CP machinery to new domain). |
+| **Quality (Qual)** | 7 | Real experiments on 3 credible datasets (TriviaQA, SQuAD, NQ-open) with proper baseline tuning. Limitations: small dataset sizes (300 ex each), only 3 random seeds (low for high-variance QA), no downstream task evaluation. No reproducibility blockers (code promised). |
+| **Clarity (Clar)** | 5 | **Major accessibility failure.** Strengths: empirical results clearly presented (Table 1), strong problem motivation. Weaknesses: conformal prediction not explained, Theorem 1 notation undefined, contrastive score motivation missing, admissibility-selection conditioning unexplained, HAC-NLI underspecified, M-SemCP framework unvalidated. Paper is written for experts, not accessible to domain outsiders. |
+| **Significance (Sig)** | 6 | Solves real problem (set size inflation from semantic equivalence). Impact contingent on: (a) how often semantic equivalence matters in practice vs. sampling variance, (b) adoption of NLI-based partitioning (embedding dependency is a barrier), (c) generalization beyond QA. Scope is currently narrow (QA only, K≤10). |
 
 ---
 
-## Falsifiability Test
+## CRITICAL QUESTIONS FOR AUTHORS
 
-**What evidence would change my decision?**
+### Q1: Define α and |I| in Theorem 1 explicitly.
+**Why this matters:** A naive reader cannot assess the coverage guarantee without definitions. Is α the miscoverage level (e.g., 0.05)? Is |I| the calibration set size? Why this functional form?
 
-- **Strong Accept:** Real experiments with table of numbers showing SemCP achieves conditional coverage ~0.89 on both datasets with Qwen2.5-7B-Instruct, AND set size at least 20% smaller than the best string-level baseline at matched coverage. Algorithm 1 must match the theory.
+### Q2: What does "true meaning is sampled" mean precisely?
+**Why this matters:** This assumption gates the coverage guarantee. Does it mean the oracle is in the K=10 samples, or in the same NLI equivalence class? What if the oracle is a novel paraphrase? What is the realistic probability this holds on TriviaQA/SQuAD/NQ-open?
 
-- **Accept:** Real experiments with some positive results, even if not as strong as claimed. The partition method inconsistency must be resolved (either NLI or cosine thresholding, not both).
+### Q3: Why does max RBF to nearest cluster capture "semantic distinctness"?
+**Why this matters:** The contrastive score motivation is missing. Why is this form better than alternatives (e.g., average RBF, margin-based)? How does RBF bandwidth σ relate to semantic similarity?
 
-- **Borderline:** Real experiments but weak or mixed results. Algorithm-theory mismatch must be explained or fixed.
+### Q4: How are the three HAC stages defined, and how sensitive is the final partition to choices?
+**Why this matters:** "3-stage clustering with prefilter + purity check" is too vague. What distance metrics? What thresholds? What does Appendix D sensitivity show?
 
-- **Reject:** Any of the following: (a) experiments are still TODO_NUM; (b) results show no set-size advantage; (c) coverage is genuinely near-zero even with Qwen2.5-7B-Instruct (which would mean the method does not work on the stated model); (d) the Algorithm 1 vs. theory mismatch is not resolved.
+### Q5: Why do τ∈{0.7, 0.5, 0.3} recover ConU, LofreeCP, TECP exactly?
+**Why this matters:** M-SemCP framework is interesting but unvalidated. Show the convex combination formula. Are τ values fixed or data-driven?
 
-- **Strong Reject:** The partition method is irreconcilably inconsistent between theory and experiments; or code is confirmed not to exist and results are shown to be fabricated (TODO_NUM placeholders submitted as real numbers).
+### Q6: Is the sub-Gaussian assumption reasonable for bounded RBF outputs [0,1]?
+**Why this matters:** Theorem 2 uses sub-Gaussian concentration, but RBF has exponential tails, not Gaussian. Does the proof still hold? What is the practical impact?
 
-**My Falsifiability Standard:** I would need to see actual table numbers (not TODO_NUM) with conditional coverage at the expected level (~0.89), a verified 20%+ set size reduction over the strongest baseline, and a corrected Figure 3 caption matching the actual model used (Qwen2.5-7B-Instruct, not GPT-2). Without these, I cannot evaluate the paper.
+### Q7: How sensitive is coverage to NLI model errors?
+**Why this matters:** DeBERTa partitions semantic space but has errors. If it mislabels contradictions, does coverage still hold? What is the degradation curve as NLI accuracy decreases?
 
----
-
-## Confidence
-
-**3/5**
-
-I am confident in my identification of the structural issues (TODO_NUM placeholders, figure-model mismatch, partition inconsistency, Algorithm-theory mismatch). I am less confident in my overall assessment because the paper's core contribution—the empirical results—does not exist in any readable form. If the experiments were real and the numbers were strong, several of my weaknesses (especially W1, W2, W3, W7) would disappear or diminish significantly. My assessment is a snapshot based on what is actually written, not what might be intended.
-
----
-
-## Decision
-
-**Strong Reject**
-
-The paper as submitted is incomplete. Every empirical result is a placeholder. The theory is present but has a critical Algorithm-theory mismatch (Algorithm 1 vs. Section 4.3). The figure captions are internally inconsistent (GPT-2 vs. Qwen2.5-7B-Instruct). The partition method is described two different ways across sections. A paper cannot be accepted—let alone reviewed properly—when none of its empirical claims are materialized. If this were a workshop paper with only theory, I would say Borderline (theoretical contribution is real but needs empirical validation). For a full NeurIPS submission with "33% set size reduction" as a headline claim, this is Unacceptable.
+### Q8: Why is K=10 sufficient, and what does the K∈{3,5,7,10} ablation show?
+**Why this matters:** K=10 is stated as "open-ended QA budget" but not validated. Does Appendix E show why 10 is optimal?
 
 ---
 
-*— The Naive Reader*
+## FALSIFIABILITY TEST
+
+**Main Claim:** "SemCP attains conditional coverage 1-α-1/(|I|+1) over meaning classes given true meaning is sampled."
+
+**Falsification approach:**
+1. Construct test set where true meanings are deliberately *not* in K=10 samples (e.g., novel paraphrases not covered by generator).
+2. Measure empirical coverage: does it drop below predicted bound?
+3. If yes, the assumption "true meaning is sampled" is violated in practice.
+
+**Current status:** Not falsified, but untested. The three datasets (TriviaQA, SQuAD, NQ-open) are closed-answer QA where responses are relatively fixed. More adversarial/open-ended domains would reveal limits.
+
+**Suggested experiment:** Create synthetic dataset with intentionally paraphrased oracle answers + K=10 samples that *miss* the oracle paraphrase. Report coverage degradation.
+
+---
+
+## CONFIDENCE IN ASSESSMENT
+
+**Confidence: 3/5**
+
+**Why low?**
+- Review is constrained to the **paper_bundle.md** summary, not the full paper or appendices.
+- Key proofs (Appendix B, C) and sensitivity analyses (Appendix D, E) are referenced but not read.
+- Jargon like "admissibility," "transitivity-corrected clustering," "between-cluster RBF" are opaque from summary alone.
+
+**Why not lower?**
+- Empirical results and clarity gaps are visible in the bundle.
+- Structure and claimed contributions are clear enough to identify weaknesses objectively.
+
+**Recommendation:** This assessment should be read alongside the full paper and appendices to resolve ambiguities.
+
+---
+
+## DECISION & RECOMMENDATION
+
+### Summary
+The paper tackles a real problem (semantic equivalence in conformal prediction) with novel theory (Theorem 2 closed-form bandwidth) and practical framework (M-SemCP). Empirical results are now credible: SemCP achieves tighter conditional coverage than baselines while maintaining reasonable set sizes on three real datasets.
+
+**However, critical clarity gaps prevent a naive reader from understanding:**
+- What conformal prediction is (assumed knowledge)
+- How Theorem 1's coverage bound is defined (notation never explained)
+- Why the contrastive RBF score works (intuition missing)
+- Whether key assumptions are realistic ("true meaning is sampled" not quantified)
+
+### Recommendation: **CONDITIONAL ACCEPT** with mandatory exposition revisions
+
+**Pre-publication fixes (priority order):**
+1. Add 3-sentence plain-English explanation of conformal prediction before Algorithm 1.
+2. Define α, |I| in Theorem 1 explicitly (state before theorem, not after).
+3. Explain contrastive RBF score intuition: why max-RBF-to-nearest-cluster captures semantic distinctness (Section 4.2).
+4. Add brief preview of Appendix D findings (HAC sensitivity) in main text.
+5. Show M-SemCP convex combination formula and τ→baseline mappings (Section 4).
+6. Quantify failure risk: how often does oracle paraphrase miss K=10 samples? (Expected Table or brief analysis).
+
+**Why conditional accept, not reject?**
+- Empirical contribution is genuine and problem is well-motivated.
+- Fixes are additive (explanations, definitions), not destructive (removals/reworking).
+- Theory appears sound based on visible results; clarity is the bottleneck.
+- v1→v2 progress shows authors are responsive to feedback.
+
+**Why not accept as-is?**
+- Reader unfamiliar with CP cannot reproduce or assess main claims.
+- Load-bearing assumptions ("true meaning is sampled") not quantified.
+- Paper prioritizes results over intuition, reducing accessibility below venue standard.
+
+### Confidence in recommendation: **4/5**
+- High confidence in clarity gaps (objective, visible in bundle).
+- Moderate confidence in technical soundness (appendices not read; proofs assumed correct).
+- Strong confidence in empirical contribution (Table 1 is clear).
+
+---
+
+## FINAL ASSESSMENT
+
+| Dimension | Rating | Comment |
+|-----------|--------|---------|
+| **Would naive reader understand problem?** | 80% | Clear motivation (semantic equivalence), but CP background assumed. |
+| **Would naive reader understand solution?** | 40% | Algorithm 1 is scannable; theoretical justification is opaque. |
+| **Would naive reader trust results?** | 75% | Empirical results well-presented; assumptions not quantified. |
+| **Would naive reader recommend acceptance?** | 60% | Interesting work; clarity revisions required before publication. |
+
+**Key takeaway:** The paper is currently written for experts (familiar with CP, NLI, QA). A 10% effort in exposition (definitions, intuitions, assumption quantification) would make it accessible to 90% of readers. This investment is worthwhile for a top-tier venue.
