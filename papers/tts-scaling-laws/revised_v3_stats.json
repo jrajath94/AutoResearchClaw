@@ -120,7 +120,7 @@
         "max_ms": 0.10418891906738281,
         "n": 100
       },
-      "produced_at": "2026-05-05 00:42:55"
+      "produced_at": "2026-05-05 01:29:07"
     },
     "qwen3.6_35b-a3b_gsm8k": {
       "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3/results_qwen3.6_35b-a3b_gsm8k.npy",
@@ -242,8 +242,130 @@
         "max_ms": 0.07390975952148438,
         "n": 100
       },
-      "produced_at": "2026-05-05 00:43:18"
+      "produced_at": "2026-05-05 01:29:24"
+    },
+    "qwen3.6_35b-a3b_math500": {
+      "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3/results_qwen3.6_35b-a3b_math500.npy",
+      "n_problems": 100,
+      "n_budgets": 6,
+      "n_temps": 1,
+      "samples_per_cell": 8,
+      "budgets": [
+        32.0,
+        64.0,
+        128.0,
+        256.0,
+        512.0,
+        1024.0
+      ],
+      "n_cells": 100,
+      "n_with_variation": 63,
+      "frac_with_variation": 0.63,
+      "headline": {
+        "staircase_rate_overall": 0.86,
+        "staircase_rate_variation": 0.7777777777777778,
+        "staircase_rate_variation_bh_corrected": 0.7777777777777778,
+        "bh_q": 0.05
+      },
+      "primary_tests": {
+        "spearman_trend_test": {
+          "frac_significant_overall": 0.35,
+          "frac_significant_variation": 0.5555555555555556,
+          "frac_bh_significant_variation": 0.12698412698412698,
+          "interpretation": "Fraction of cells where accuracy increases monotonically with budget at \u03b1=0.05; this is a non-parametric test free of BIC's DOF-penalty bias."
+        },
+        "staircase_shape_coefficient": {
+          "mean_r2_overall": 0.5316373276500836,
+          "mean_r2_variation": 0.8438687740477517,
+          "median_r2_variation": 0.8892307692307693,
+          "frac_high_r2_variation": 0.873015873015873,
+          "interpretation": "Mean R\u00b2 for the best single-split staircase model. R\u00b2>0.7 means most variance is captured by ONE discrete jump, supporting the staircase claim. R\u00b2 is dimensionless and not subject to BIC's penalty."
+        }
+      },
+      "negative_control": {
+        "n_seeds": 5,
+        "permutation_shuffle": {
+          "overall_mean": 0.9800000000000001,
+          "variation_mean": 0.9682539682539681,
+          "variation_bh_mean": 0.9682539682539681,
+          "ci_95_variation": [
+            0.9380952380952381,
+            0.9984126984126984
+          ],
+          "note": "Budget permutation preserves multiset of success counts (weak control)."
+        },
+        "iid_bernoulli_null": {
+          "overall_mean": 0.9879999999999999,
+          "variation_mean": 0.9814785128609154,
+          "ci_95_variation": [
+            0.9711143695014663,
+            0.9850046641791045
+          ],
+          "shape_r2_mean_variation": 0.48517002729519765,
+          "shape_frac_high_r2_variation": 0.2040699180052815,
+          "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control). Shape R^2 on null lets us see if real shape R^2 is meaningfully above chance."
+        },
+        "delta_real_vs_iid_variation": -0.20370073508313757,
+        "interpretation": "WEAK: real \u2248 iid-bernoulli (BIC penalty drives classification, not signal)"
+      },
+      "snell_powerlaw_baseline": {
+        "powerlaw_wins_overall": 14,
+        "powerlaw_wins_variation": 14
+      },
+      "log_concavity_test": {
+        "n": 63,
+        "test_statistic": 0.3804654867255577,
+        "null_mean": -0.20403500655212456,
+        "null_std": 0.560073305770683,
+        "p_value": 0.552,
+        "reject_log_concavity": false,
+        "interpretation": "Fail to reject log-concavity (Theorem 1 grounded)"
+      },
+      "tost_vs_max_budget": {
+        "n": 100,
+        "mean": 3.0,
+        "se": 1.02247471629109,
+        "ci_90": [
+          1.3022920238192923,
+          4.697707976180707
+        ],
+        "eps_bounds": [
+          -2.0,
+          2.0
+        ],
+        "p_low": 1.9499616441542855e-06,
+        "p_high": 0.834775660791712,
+        "equivalent": false,
+        "median_chosen_budget": 1024.0,
+        "mean_chosen_budget": 937.6,
+        "tokens_saved_vs_max_pct": 8.437499999999998
+      },
+      "per_budget_accuracy_curve": [
+        0.0175,
+        0.02125,
+        0.0175,
+        0.04,
+        0.15625,
+        0.24625
+      ],
+      "latency_meta": {
+        "mean_ms": 8553.183029035301,
+        "median_ms": 2637.6430988311768,
+        "p95_ms": 26741.208028793262,
+        "p99_ms": 110843.6885309209,
+        "max_ms": 530869.7621822357,
+        "n": 4799
+      },
+      "gzip_overhead_meta": {
+        "mean_ms": 0.016009807586669922,
+        "median_ms": 0.013113021850585938,
+        "p95_ms": 0.03205537796020507,
+        "p99_ms": 0.07776737213134768,
+        "max_ms": 0.0820159912109375,
+        "n": 100
+      },
+      "produced_at": "2026-05-05 01:29:39"
     }
   },
-  "produced_at": "2026-05-05 00:42:33"
+  "produced_at": "2026-05-05 01:28:51"
 }
