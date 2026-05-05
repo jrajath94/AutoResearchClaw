@@ -1,0 +1,193 @@
+{
+  "produced_at": "2026-05-04 22:16:49",
+  "source": "real_results_v2/results_Qwen-{0.5B,1.5B}.npy",
+  "config": {
+    "budgets": [
+      32.0,
+      64.0,
+      128.0,
+      256.0,
+      512.0
+    ],
+    "temperatures": [
+      0.1,
+      0.5,
+      1.0
+    ],
+    "samples_per_cell": 8,
+    "bh_q": 0.05,
+    "tost_eps_pp": 2.0,
+    "negative_control_seeds": 20
+  },
+  "models": {
+    "Qwen2.5-0.5B": {
+      "model": "Qwen2.5-0.5B",
+      "n_problems": 100,
+      "n_temps": 3,
+      "n_cells_total": 300,
+      "n_cells_with_variation": 73,
+      "frac_with_variation": 0.24333333333333335,
+      "headline": {
+        "overall_staircase_rate": 0.9466666666666667,
+        "variation_staircase_rate": 0.7808219178082192,
+        "variation_staircase_rate_bh_corrected": 0.7808219178082192,
+        "bh_q": 0.05
+      },
+      "snell_powerlaw_baseline": {
+        "powerlaw_wins_overall": 16,
+        "powerlaw_wins_variation": 16,
+        "interpretation": "Staircase wins on most cells; power-law is dominated"
+      },
+      "negative_control_shuffle": {
+        "n_seeds": 5,
+        "shuffled_staircase_rate_overall": {
+          "mean": 0.958,
+          "ci_95": [
+            0.9533333333333334,
+            0.9686666666666667
+          ]
+        },
+        "shuffled_staircase_rate_variation_subset": {
+          "mean": 0.8273972602739725,
+          "ci_95": [
+            0.8082191780821918,
+            0.8712328767123287
+          ]
+        },
+        "shuffled_staircase_rate_variation_bh_corrected": {
+          "mean": 0.8273972602739725,
+          "ci_95": [
+            0.8082191780821918,
+            0.8712328767123287
+          ]
+        },
+        "expected_under_null": "\u22480.50 if BIC penalty drives classification"
+      },
+      "log_concavity_test": {
+        "n": 73,
+        "test_statistic": -1.2752730039137516,
+        "null_mean": -0.18912837264674867,
+        "null_std": 0.5056178744208186,
+        "p_value": 0.023,
+        "reject_log_concavity": true,
+        "interpretation": "Reject log-concavity at alpha=0.05"
+      },
+      "diagnostic": {
+        "median_tau_budget_var_subset": 256.0,
+        "median_n_successes_var_subset": 2.0,
+        "n_zero_variation_cells": 227
+      },
+      "stair_vs_fixed_512": {
+        "tost_pp": {
+          "n": 100,
+          "mean": 0.875,
+          "se": 0.5404999088946746,
+          "ci_90": [
+            -0.022441268556706806,
+            1.7724412685567068
+          ],
+          "eps_bounds": [
+            -2.0,
+            2.0
+          ],
+          "p_low": 3.2409420669399225e-07,
+          "p_high": 0.01998854747530431,
+          "equivalent": true
+        },
+        "median_chosen_budget": 512.0,
+        "mean_chosen_budget": 500.8,
+        "p99_chosen_budget": 512.0,
+        "tokens_saved_vs_512_pct": 2.187499999999998,
+        "note": "Approximation using oracle-first-success per problem; true V2 STAIR will use gzip proxy."
+      }
+    },
+    "Qwen2.5-1.5B": {
+      "model": "Qwen2.5-1.5B",
+      "n_problems": 100,
+      "n_temps": 3,
+      "n_cells_total": 300,
+      "n_cells_with_variation": 94,
+      "frac_with_variation": 0.31333333333333335,
+      "headline": {
+        "overall_staircase_rate": 0.9633333333333334,
+        "variation_staircase_rate": 0.8829787234042553,
+        "variation_staircase_rate_bh_corrected": 0.8829787234042553,
+        "bh_q": 0.05
+      },
+      "snell_powerlaw_baseline": {
+        "powerlaw_wins_overall": 11,
+        "powerlaw_wins_variation": 11,
+        "interpretation": "Staircase wins on most cells; power-law is dominated"
+      },
+      "negative_control_shuffle": {
+        "n_seeds": 5,
+        "shuffled_staircase_rate_overall": {
+          "mean": 0.9626666666666666,
+          "ci_95": [
+            0.9476666666666667,
+            0.979
+          ]
+        },
+        "shuffled_staircase_rate_variation_subset": {
+          "mean": 0.8808510638297873,
+          "ci_95": [
+            0.8329787234042553,
+            0.9329787234042554
+          ]
+        },
+        "shuffled_staircase_rate_variation_bh_corrected": {
+          "mean": 0.8808510638297873,
+          "ci_95": [
+            0.8329787234042553,
+            0.9329787234042554
+          ]
+        },
+        "expected_under_null": "\u22480.50 if BIC penalty drives classification"
+      },
+      "log_concavity_test": {
+        "n": 94,
+        "test_statistic": -1.0040900897843965,
+        "null_mean": -0.1518076611310958,
+        "null_std": 0.45443746887370784,
+        "p_value": 0.031,
+        "reject_log_concavity": true,
+        "interpretation": "Reject log-concavity at alpha=0.05"
+      },
+      "diagnostic": {
+        "median_tau_budget_var_subset": 128.0,
+        "median_n_successes_var_subset": 3.5,
+        "n_zero_variation_cells": 206
+      },
+      "stair_vs_fixed_512": {
+        "tost_pp": {
+          "n": 100,
+          "mean": 1.125,
+          "se": 0.8721092219151767,
+          "ci_90": [
+            -0.32304243914881847,
+            2.5730424391488187
+          ],
+          "eps_bounds": [
+            -2.0,
+            2.0
+          ],
+          "p_low": 0.00026420797022108644,
+          "p_high": 0.15907753374653336,
+          "equivalent": false
+        },
+        "median_chosen_budget": 512.0,
+        "mean_chosen_budget": 489.28,
+        "p99_chosen_budget": 512.0,
+        "tokens_saved_vs_512_pct": 4.437500000000005,
+        "note": "Approximation using oracle-first-success per problem; true V2 STAIR will use gzip proxy."
+      }
+    }
+  },
+  "tier0_corrections_applied": [
+    "T0.1 negative control (budget permutation, 20 seeds)",
+    "T0.3 Benjamini-Hochberg FDR=0.05 across 300 cells",
+    "T0.5 TOST equivalence test (eps=\u00b12pp) for STAIR vs fixed-512",
+    "T0.6 Baringhaus-Henze log-concavity test on tau distribution",
+    "T1.1 Snell power-law as third candidate model in BIC"
+  ]
+}
