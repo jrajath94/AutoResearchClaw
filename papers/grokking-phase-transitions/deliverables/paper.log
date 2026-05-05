@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.19)  30 APR 2026 15:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.2.19)  5 MAY 2026 00:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -494,16 +494,16 @@ File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
- (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+ (./paper_numbers.tex) (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 45.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 47.
  (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 45.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
  (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/microtype/mt-msb.cfg
@@ -511,43 +511,58 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [1
 
 {/Users/rj/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/rj/Library/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}] [2]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 138.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 137.
  (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-Overfull \hbox (18.89313pt too wide) in paragraph at lines 138--141
-[]\T1/ptm/b/it/10 (-20) Superposition\T1/ptm/m/it/10 (-20) : $\OML/cmm/m/it/10 F > w$ \T1/ptm/m/it/10 (-20) fea-tures are en-coded with non-negligible mu-tual in-ter-fer-ence, i.e. $[][] \OMS/cmsy/m/n/10 jh[]\OML/cmm/m/it/10 ; []\OMS/cmsy/m/n/10 ij \OML/cmm/m/it/10 >
- []
-
-
-Overfull \hbox (26.25653pt too wide) in paragraph at lines 170--171
+Overfull \hbox (26.25653pt too wide) in paragraph at lines 167--168
 []\T1/ptm/m/n/10 (-20) The proof has three steps. First, the gra-di-ent con-di-tion $\OMS/cmsy/m/n/10 r[]\OML/cmm/m/it/10 `[] \OT1/cmr/m/n/10 + 2\OML/cmm/m/it/10 ^^U [][]\OMS/cmsy/m/n/10 h\OML/cmm/m/it/10 ^^^[]; ^^^[]\OMS/cmsy/m/n/10 i\OML/cmm/m/it/10 ^^^[] \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^M=n\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ^^^[]=\OMS/cmsy/m/n/10 k\OML/cmm/m/it/10 ^^^[]\OMS/cmsy/m/n/10 k[] \OT1/cmr/m/n/10 =
  []
 
 [3]
-Overfull \hbox (30.60832pt too wide) in paragraph at lines 272--278
-\T1/ptm/m/n/10 (-20) pairs. We sweep over widths $\OML/cmm/m/it/10 w \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 48\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 64\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 96\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 128\OMS/cmsy/m/n/10 g$ \T1/ptm/m/n/10 (-20) and train-ing frac-tions $\OML/cmm/m/it/10 f \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 2\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 3\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 4\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 5\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 6\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 7\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 8\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 9\OMS/cmsy/m/n/10 g$\T1/ptm/m/n/10 (-20) ,
- []
 
-[4] [5]
-<fig2_phase_diagram.png, id=247, 608.2725pt x 349.7868pt>
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 182.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 182.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 182.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 201.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 201.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 201.
+
+[4] [5] [6]
+<fig2_phase_diagram.png, id=328, 608.2725pt x 349.7868pt>
 File: fig2_phase_diagram.png Graphic file (type png)
 <use fig2_phase_diagram.png>
-Package pdftex.def Info: fig2_phase_diagram.png  used on input line 336.
+Package pdftex.def Info: fig2_phase_diagram.png  used on input line 382.
 (pdftex.def)             Requested size: 433.62pt x 249.35912pt.
- [6 <./fig2_phase_diagram.png>] [7]
-<fig6_grokking_delay.png, id=273, 492.3996pt x 349.7868pt>
-File: fig6_grokking_delay.png Graphic file (type png)
-<use fig6_grokking_delay.png>
-Package pdftex.def Info: fig6_grokking_delay.png  used on input line 441.
-(pdftex.def)             Requested size: 433.62pt x 308.04285pt.
-<fig3_critical_nc.png, id=275, 494.3268pt x 349.7868pt>
+ [7 <./fig2_phase_diagram.png>] [8]
+<fig3_critical_nc.png, id=361, 494.3268pt x 349.7868pt>
 File: fig3_critical_nc.png Graphic file (type png)
 <use fig3_critical_nc.png>
-Package pdftex.def Info: fig3_critical_nc.png  used on input line 456.
+Package pdftex.def Info: fig3_critical_nc.png  used on input line 458.
 (pdftex.def)             Requested size: 433.62pt x 306.83661pt.
- [8]
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 509.
+<fig7_n_eff.png, id=365, 561.7788pt x 346.896pt>
+File: fig7_n_eff.png Graphic file (type png)
+<use fig7_n_eff.png>
+Package pdftex.def Info: fig7_n_eff.png  used on input line 478.
+(pdftex.def)             Requested size: 433.62pt x 267.76709pt.
+ [9 <./fig3_critical_nc.png>] [10 <./fig7_n_eff.png>]
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 525.
  (/Users/rj/Library/TinyTeX/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
@@ -555,59 +570,76 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [9 <./fig6_grokking_delay.png>] [10 <./fig3_critical_nc.png>] [11] [12] [13] [14]
-<fig1_grokking_curves.png, id=361, 997.0851pt x 296.307pt>
-File: fig1_grokking_curves.png Graphic file (type png)
-<use fig1_grokking_curves.png>
-Package pdftex.def Info: fig1_grokking_curves.png  used on input line 828.
-(pdftex.def)             Requested size: 390.25534pt x 115.97522pt.
-<fig4_superposition_dynamics.png, id=362, 853.0269pt x 370.0224pt>
-File: fig4_superposition_dynamics.png Graphic file (type png)
-<use fig4_superposition_dynamics.png>
-Package pdftex.def Info: fig4_superposition_dynamics.png  used on input line 835.
-(pdftex.def)             Requested size: 390.25534pt x 169.2864pt.
-<fig5_scaling_law.png, id=363, 565.6332pt x 385.9218pt>
-File: fig5_scaling_law.png Graphic file (type png)
-<use fig5_scaling_law.png>
-Package pdftex.def Info: fig5_scaling_law.png  used on input line 842.
-(pdftex.def)             Requested size: 390.25534pt x 266.26277pt.
+ [11] [12] [13] [14] [15]
+<fig6_grokking_delay.png, id=456, 492.3996pt x 349.7868pt>
+File: fig6_grokking_delay.png Graphic file (type png)
+<use fig6_grokking_delay.png>
+Package pdftex.def Info: fig6_grokking_delay.png  used on input line 865.
+(pdftex.def)             Requested size: 368.57964pt x 261.83775pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[15 <./fig1_grokking_curves.png> <./fig4_superposition_dynamics.png>] [16 <./fig5_scaling_law.png>] [17]
-Overfull \hbox (26.59117pt too wide) in paragraph at lines 915--919
+
+Overfull \hbox (35.94876pt too wide) in paragraph at lines 895--896
+[]\T1/ptm/m/n/10 (-20) We swept widths $\OML/cmm/m/it/10 w \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 64\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 96\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 128\OMS/cmsy/m/n/10 g$ \T1/ptm/m/n/10 (-20) (with $\OT1/cmr/m/n/10 4$ \T1/ptm/m/n/10 (-20) at-ten-tion heads, head dim $\OML/cmm/m/it/10 w=\OT1/cmr/m/n/10 4$\T1/ptm/m/n/10 (-20) ), train-ing frac-tions $\OMS/cmsy/m/n/10 f\OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 3\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 4\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 5\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 6\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 :\OT1/cmr/m/n/10 7\OMS/cmsy/m/n/10 g$\T1/ptm/m/n/10 (-20) ,
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[16]
+<fig1_grokking_curves.png, id=468, 997.0851pt x 296.307pt>
+File: fig1_grokking_curves.png Graphic file (type png)
+<use fig1_grokking_curves.png>
+Package pdftex.def Info: fig1_grokking_curves.png  used on input line 951.
+(pdftex.def)             Requested size: 390.25534pt x 115.97522pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<fig4_superposition_dynamics.png, id=469, 853.0269pt x 370.0224pt>
+File: fig4_superposition_dynamics.png Graphic file (type png)
+<use fig4_superposition_dynamics.png>
+Package pdftex.def Info: fig4_superposition_dynamics.png  used on input line 958.
+(pdftex.def)             Requested size: 390.25534pt x 169.2864pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<fig5_scaling_law.png, id=470, 565.6332pt x 385.9218pt>
+File: fig5_scaling_law.png Graphic file (type png)
+<use fig5_scaling_law.png>
+Package pdftex.def Info: fig5_scaling_law.png  used on input line 965.
+(pdftex.def)             Requested size: 390.25534pt x 266.26277pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[17 <./fig6_grokking_delay.png>] [18 <./fig1_grokking_curves.png>] [19 <./fig4_superposition_dynamics.png>] [20 <./fig5_scaling_law.png>]
+Overfull \hbox (26.59117pt too wide) in paragraph at lines 1038--1042
 \T1/ptm/m/n/10 (-20) Justification: The re-leased code (\T1/pcr/m/n/10 reproduce.py\T1/ptm/m/n/10 (-20) , \T1/pcr/m/n/10 README.md\T1/ptm/m/n/10 (-20) ) and JSON logs (\T1/pcr/m/n/10 sweep_results.json\T1/ptm/m/n/10 (-20) ,
  []
 
-[18] (./paper.aux)
+[21] (./paper.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-Package rerunfilecheck Warning: File `paper.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `paper.out':
-(rerunfilecheck)             Before: 1C33870BE63F31F73A18253F82A4EA6B;4683
-(rerunfilecheck)             After:  D018A64F0F1B68670241E8477E9494FC;4668.
+Package rerunfilecheck Info: File `paper.out' has not changed.
+(rerunfilecheck)             Checksum: 7989EFBD5092EE462AF5ABFBAA9DE6BC;7435.
  ) 
 Here is how much of TeX's memory you used:
- 15982 strings out of 469514
- 253026 string characters out of 5469022
- 709713 words of memory out of 5000000
- 43993 multiletter control sequences out of 15000+600000
- 681006 words of font info for 262 fonts, out of 8000000 for 9000
+ 16145 strings out of 469514
+ 255503 string characters out of 5469022
+ 708179 words of memory out of 5000000
+ 44094 multiletter control sequences out of 15000+600000
+ 687165 words of font info for 283 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,12n,79p,1002b,600s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1148b,602s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/rj/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (18 pages, 1416772 bytes).
+Output written on paper.pdf (21 pages, 1571170 bytes).
 PDF statistics:
- 524 PDF objects out of 1000 (max. 8388607)
- 456 compressed objects within 5 object streams
- 154 named destinations out of 1000 (max. 500000)
- 52999 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 646 PDF objects out of 1000 (max. 8388607)
+ 572 compressed objects within 6 object streams
+ 181 named destinations out of 1000 (max. 500000)
+ 59228 words of extra memory for PDF output out of 61914 (max. 10000000)
 

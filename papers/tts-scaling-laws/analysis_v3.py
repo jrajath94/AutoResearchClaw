@@ -172,9 +172,11 @@ def analyze_v3(npy_path: Path, meta_path: Path | None = None,
     # driving classification. If staircase wins at a much lower rate, we have
     # evidence of genuine per-problem discrete structure.
     rates_iid_overall, rates_iid_var = [], []
+    iid_shape_r2_var = []  # also compute shape R^2 on the null to compare
+    iid_frac_high_r2_var = []
     for seed in range(n_neg_seeds):
         rng = np.random.default_rng(20260504 + 1000 + seed)
-        f_, h_ = [], []
+        f_, h_, r2_ = [], [], []
         for p_idx in range(n_problems):
             for t_idx in range(n_temps):
                 k_orig = successes[p_idx, :, t_idx]
@@ -184,10 +186,14 @@ def analyze_v3(npy_path: Path, meta_path: Path | None = None,
                 r = select_per_cell(k_iid, S, budgets)
                 f_.append(r["favored"] == "staircase")
                 h_.append(r["has_variation"])
-        f_ = np.array(f_); h_ = np.array(h_)
+                r2, _ = staircase_shape_coefficient(k_iid, S)
+                r2_.append(r2)
+        f_ = np.array(f_); h_ = np.array(h_); r2_ = np.array(r2_)
         rates_iid_overall.append(float(f_.mean()))
         if h_.any():
             rates_iid_var.append(float(f_[h_].mean()))
+            iid_shape_r2_var.append(float(np.mean(r2_[h_])))
+            iid_frac_high_r2_var.append(float((r2_[h_] > 0.7).mean()))
 
     # ── Log-concavity test on tau (variation subset)
     tau_lc = tau_bs[has_var]
@@ -273,7 +279,13 @@ def analyze_v3(npy_path: Path, meta_path: Path | None = None,
                     [float(np.percentile(rates_iid_var, 2.5)), float(np.percentile(rates_iid_var, 97.5))]
                     if len(rates_iid_var) >= 2 else [float("nan"), float("nan")]
                 ),
-                "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control).",
+                "shape_r2_mean_variation": (
+                    float(np.mean(iid_shape_r2_var)) if iid_shape_r2_var else float("nan")
+                ),
+                "shape_frac_high_r2_variation": (
+                    float(np.mean(iid_frac_high_r2_var)) if iid_frac_high_r2_var else float("nan")
+                ),
+                "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control). Shape R^2 on null lets us see if real shape R^2 is meaningfully above chance.",
             },
             "delta_real_vs_iid_variation": (
                 float(var_rate - np.mean(rates_iid_var))
@@ -315,6 +327,8 @@ def main():
     for npy_path in npys:
         if "_meta" in npy_path.stem or "accuracy_" in npy_path.stem or "successes_" in npy_path.stem:
             continue
+        if ".ckpt" in npy_path.name:  # checkpoint shadow files
+            continue
         meta_path = npy_path.with_name(npy_path.stem + "_meta.json")
         key = npy_path.stem.replace("results_", "")
         try:
@@ -322,10 +336,20 @@ def main():
             out["models"][key] = analysis
             head = analysis["headline"]
             nc = analysis["negative_control"]
-            print(f"[v3] {key}: real_var={head['staircase_rate_variation']:.3f}  "
-                  f"shuffled_var={nc['shuffled_variation_mean']:.3f}  "
-                  f"delta={nc['delta_real_minus_shuffled_variation']:.3f}  "
-                  f"-- {nc['interpretation']}")
+            primary = analysis.get("primary_tests", {})
+            shape = primary.get("staircase_shape_coefficient", {})
+            print(f"[v3] {key}:")
+            print(f"     real_var (BIC)        = {head['staircase_rate_variation']:.3f}")
+            print(f"     real_var (BH-corr)    = {head['staircase_rate_variation_bh_corrected']:.3f}")
+            print(f"     permutation null      = {nc['permutation_shuffle']['variation_mean']:.3f}")
+            print(f"     IID-Bernoulli null    = {nc['iid_bernoulli_null']['variation_mean']:.3f}")
+            print(f"     delta_real-vs-iid     = {nc['delta_real_vs_iid_variation']:.3f}")
+            print(f"     SHAPE R^2 mean        = {shape.get('mean_r2_variation', float('nan')):.3f}  "
+                  f"(null: {nc['iid_bernoulli_null'].get('shape_r2_mean_variation', float('nan')):.3f})")
+            print(f"     SHAPE frac R^2>0.7    = {shape.get('frac_high_r2_variation', float('nan')):.3f}  "
+                  f"(null: {nc['iid_bernoulli_null'].get('shape_frac_high_r2_variation', float('nan')):.3f})")
+            print(f"     log-conc B-H p        = {analysis['log_concavity_test'].get('p_value', float('nan')):.3f}")
+            print(f"     >>> {nc['interpretation']}")
         except Exception as e:
             print(f"[v3] ERR processing {npy_path}: {e}")
             out["models"][key] = {"error": str(e)}

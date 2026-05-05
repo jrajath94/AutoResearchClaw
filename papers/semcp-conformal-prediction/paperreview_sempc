@@ -1,0 +1,71 @@
+SemCP: Coverage Guarantees Over Meanings, Not Strings
+NeurIPS
+Submitted: April 13, 2026
+Contents
+Summary
+Strengths
+Weaknesses
+Detailed Comments
+Questions
+Overall Assessment
+Summary
+This paper proposes SemCP, a semantic conformal prediction framework that constructs prediction sets over equivalence classes of meanings rather than surface strings by clustering LLM outputs in an embedding space and calibrating lifted, kernel-based nonconformity scores. The authors argue this shift reduces redundancy from paraphrases and leads to guarantees over meanings; empirically, they report smaller sets than token-level CP on SQuAD with GPT-2 and highlight a negative result that when the generator rarely produces correct answers, empirical coverage is near zero for all methods. A theorem is provided asserting marginal coverage over meaning classes under a fixed partition, along with an RBF-kernel scoring design intended to better capture semantic similarity than Euclidean distance.
+
+Strengths
+Technical novelty and innovation
+Introduces a quotient-space perspective for conformal prediction that explicitly targets meaning equivalence rather than strings, which is a compelling conceptual advance for open-ended generation.
+Proposes lifted nonconformity scores aggregated over semantic classes and uses a learnable RBF kernel to adapt the sensitivity of embedding-space distances, an idea that could mitigate known embedding-space pathologies.
+Identifies and clearly articulates an important negative result: coverage in generative CP is fundamentally limited by the generator’s ability to produce correct outputs.
+Experimental rigor and validation
+Provides ablations on kernel choice and a (limited) many-to-one aggregation variant, suggesting the learned kernel is a key driver of set-size improvements.
+Reports results with multiple seeds and fixed hyperparameters, making the limited experiments at least internally consistent and reproducible.
+Clarity of presentation
+The high-level motivation and pipeline overview are well explained; the intuition for quotient-space calibration and kernel scoring is accessible.
+Limitations are candidly discussed, including model scale and the vacuity of coverage guarantees with weak generators.
+Significance of contributions
+Tackles the practically important paraphrase redundancy problem that plagues string-level CP for LLMs, aiming to make prediction sets more interpretable and useful.
+If theoretically sound and empirically validated on capable models, meaning-level coverage guarantees would be impactful for applications like selective abstention and RAG.
+Weaknesses
+Technical limitations or concerns
+Theoretical–algorithmic mismatch: the stated guarantee presumes prediction sets over the entire quotient space, but the implementation constructs sets only from classes represented among K sampled responses, making the guarantee inapplicable without additional assumptions (e.g., “a correct meaning is sampled”). This conditioning/abstention assumption is standard in recent works but is neither stated nor analyzed here.
+Inconsistencies in the “fixed partition” requirement: the theorem requires Π fixed before observing data, while the method section says Π is “computed once on the calibration set,” and the experiments seem to recompute per-instance partitions using a cosine threshold. These variants have different implications for exchangeability; the paper does not provide a rigorous treatment of which is actually used and why it preserves validity.
+Handling of empty intersections is undefined: the lifted score uses a min over [Y]_s ∩ {samples}; if no sample is in the true class, the score is undefined (or effectively +∞). This design choice appears to be a major reason coverage collapses, but it is not mathematically specified or analyzed.
+The kernel-mean embedding of the sampled outputs, μ_x, makes the score depend on the random sample pool rather than solely on (x, y). This adds algorithmic randomness and departs from standard CP constructions; the implications for exchangeability and validity are not addressed beyond a brief sketch.
+Experimental gaps or methodological issues
+Evaluation is extremely small-scale (100 examples per dataset, K=20, GPT-2 base). The key claim—semantic CP with valid coverage over meanings—is not validated; all methods exhibit near-zero empirical coverage.
+The constrained optimization for σ “subject to coverage ≥ 1−α” is contradicted by the reported coverage near zero; it is unclear how the constraint is enforced, on which split, or why it fails.
+Important baselines are missing: recent black-box conformal methods that explicitly handle the “must-sample-a-correct-answer” caveat (e.g., ConU, LofreeCP, TECP, SAFER) are not compared, despite being directly relevant and having demonstrations of valid coverage (often conditional or abstention-aware).
+No analysis of the equivalence relation’s quality: experiments switch from the proposed bidirectional NLI to cosine-threshold clustering, but there is no evaluation of clustering fidelity, transitivity, or robustness to negation—key to the central premise.
+Clarity or presentation issues
+The paper oscillates between NLI-based equivalence and cosine-similarity clustering, and between “fixed” vs. “computed from calibration” partitions, creating confusion about the exact method used in theory and practice.
+Algorithmic details are incomplete (e.g., handling of empty intersections; whether σ is tuned on a train split or held-out from calibration; how the coverage constraint is imposed).
+Figures report coverage with a y-axis max of 0.8 while the target is 0.9, which is potentially misleading.
+Missing related work or comparisons
+Lacks empirical comparisons and conceptual alignment with methods that already combine semantic clustering and CP under an explicit “correct answer appears in the sample” assumption or with abstention (e.g., ConU, TECP, LofreeCP, SAFER). These works also discuss how to retain guarantees in practice and would provide strong baselines and framing for SemCP’s contributions.
+Detailed Comments
+Technical soundness evaluation
+The quotient-space framing is intriguing, but the proof sketch for Theorem 1 appears to rely on a stronger condition than what is implemented. Standard split-CP validity requires that the scoring function used to compute calibration scores be fixed independently of the calibration data and that prediction sets be constructed as {y: s(x, y) ≤ q̂}. Here, (i) the partition Π is described inconsistently (fixed a priori vs. computed on calibration vs. recomputed per instance), (ii) the scoring function depends on the random sample pool via μ_x, and (iii) test-time prediction sets are restricted to classes present among K samples. Without explicitly conditioning on the presence of a correct sample (as in ConU/TECP/SAFER) or introducing an abstention mechanism, the claimed marginal coverage over meanings is generally unattainable in this sampling-restricted regime. The negative empirical coverage confirms this, but the theory section does not reconcile it.
+The min-aggregation over representatives of a meaning class is reasonable if the class is represented, but the treatment of unrepresented true classes is unspecified. This is critical for any coverage statement and should be formalized (e.g., defining +∞ and then proving conditional or abstention-aware guarantees).
+Using μ_x as a kernel mean embedding of generated candidates is a clever idea to capture semantic “centrality,” but it makes s(x, y) explicitly dependent on the sample set. This should be incorporated into the formalism (treating sampling randomness as part of the data-generating process and ensuring exchangeability holds conditionally) and analyzed for stability with small K.
+Experimental evaluation assessment
+The evaluation is too limited to substantiate the core claims. The headline result (33% set-size reduction) is measured against a token-level baseline that also fails to provide valid coverage. Efficiency without validity is not very informative in CP. Moreover, K=20 and 100 examples offer little statistical power or realism for modern LLM settings.
+The optimization of σ with a coverage constraint appears inconsistent with the observed results; if the constraint is enforced on a held-out split, one would expect at least that split to meet coverage. Please clarify splits and constraints.
+The pivot from NLI-based equivalence to cosine-threshold clustering in experiments significantly undercuts the stated approach and raises questions about partition quality and its impact on both coverage and set size.
+Comparison with related work (using the summaries provided)
+ConU (2407.00499) uses semantic clustering plus split CP with a correctness-aligned nonconformity score and explicitly assumes at least one correct sample is present; it demonstrates valid correctness coverage and compact sets across several models and datasets. SAFER (2510.10193) formalizes an abstention-aware two-stage pipeline to handle unattainable guarantees under sampling caps and preserves risk bounds. TECP (2509.00461) and LofreeCP (2403.01216) provide black-box CP methods with practical nonconformity scores and report meeting nominal coverage (typically conditional on sampling admissible answers).
+Relative to these, SemCP’s core semantic idea (quotient-space classes and lifted scores) is original, but the lack of conditioning/abstention and of empirical comparisons weakens the contribution. The paper should either (i) adopt a conditional/abstaining guarantee like ConU/SAFER and compare fairly, or (ii) justify a different target guarantee and demonstrate it empirically on models that can realize it.
+Discussion of broader impact and significance
+If made sound and scaled to capable models, meaning-level coverage could yield smaller, more interpretable sets, likely improving human decision-making and selective abstention. The negative finding is also valuable: it reiterates the need to verify minimal model competence before relying on CP-style guarantees.
+However, the present state does not yet deliver actionable guarantees or validated utility in downstream tasks (e.g., abstention or RAG). Addressing the theoretical gap and adding stronger empirical evaluations would markedly increase impact.
+Questions for Authors
+What is the precise theoretical guarantee you intend to claim for the implemented algorithm that constructs prediction sets only from sampled classes? Do you require an assumption that at least one correct class is sampled (as in ConU/TECP), or do you plan to introduce abstention (as in SAFER)? Please restate the guarantee and its assumptions formally.
+How do you handle calibration cases where [Y]_s ∩ {y_1,…,y_K} is empty? Is the lifted score set to +∞ or some maximum? How does this choice affect the quantile and the validity argument?
+Is the semantic partition Π fixed a priori, computed from calibration data, or recomputed per instance using a deterministic rule? Please reconcile Section 4.1, Theorem 1, and the experimental protocol, and provide a rigorous exchangeability argument under the chosen variant.
+Why did the experiments use cosine-threshold clustering rather than the proposed bidirectional NLI equivalence? How sensitive are results to the threshold, and how reliable are transitivity and equivalence under this heuristic?
+How exactly is σ learned “subject to coverage ≥ 1−α” given that observed coverage is near zero? Which split enforces the constraint, and why does it fail to carry over to test? Could you report validation coverage and set sizes to verify the constraint?
+Can you add comparisons to ConU, TECP, LofreeCP, and SAFER, including conditional/abstention-aware coverage and set size? These would directly contextualize SemCP’s benefits and limitations.
+Could you provide at least a small-scale experiment with a stronger LLM (e.g., Llama-3-8B or similar) to show whether semantic many-to-one calibration becomes beneficial and whether any form of coverage (conditional or abstention-aware) is attainable?
+Please ablate K and the semantic clustering threshold, and analyze the trade-off between paraphrase deduplication, set size, and coverage.
+If the kernel score depends on μ_x from sampled outputs, have you analyzed variability across sampling seeds and its effect on stability of predictions?
+Overall Assessment
+The paper presents an appealing and timely idea—performing conformal calibration over meanings rather than strings via a semantic quotient space and kernel-based lifted scores. Conceptually, this addresses a real pain point in generative CP, and the negative empirical observation about minimum model capability is important. However, the current version has significant theoretical and empirical shortcomings: the claimed marginal semantic coverage does not align with the implemented sampling-restricted construction; key assumptions (fixed partition vs. data-dependent partition) are inconsistently stated; critical implementation details (empty-class handling, σ-constraint) are unclear; and the evaluation is too small and weak to substantiate the benefits, with missing comparisons to closely related conditional/abstention-aware CP approaches that already deliver valid guarantees. I view the direction as promising, but the paper is not yet ready for a top-tier venue. Strengthening the theoretical guarantees to reflect the sampling reality (possibly via conditional coverage or abstention), clarifying and unifying the partitioning approach, and adding rigorous comparisons on stronger LLMs would substantially improve the submission.

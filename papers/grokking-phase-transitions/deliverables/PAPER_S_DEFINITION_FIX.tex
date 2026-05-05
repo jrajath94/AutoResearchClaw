@@ -1,0 +1,37 @@
+% =============================================================================
+% Definition fix for the superposition index S
+% Goes into §3.1 of paper.tex
+% =============================================================================
+% RATIONALE: The borderline draft states "phi_i is the i-th learned feature
+% vector". Operationally this could be (a) readout row, (b) embedding column,
+% or (c) class-mean hidden activation. We instrument all three and find that
+% (c) is where the dramatic phase transition lives. We update the definition
+% to make this explicit and choose (c) as the canonical operational def.
+% =============================================================================
+
+% REPLACE the paragraph defining phi_i in §3.1:
+
+\paragraph{Operational definition of features.}
+The energy functional \eqref{eq:energy} is generic: it depends on the inner-product structure of feature vectors $\feat_i \in \reals^w$ but not on \emph{how} those features are operationally identified.
+For a network mapping inputs $x$ to hidden representations $h(x) \in \reals^w$ and then to logits, three natural candidates for $\feat_i$ are:
+\begin{itemize}
+  \item[(a)] $\feat_i = $ the $i$-th row of the readout matrix $W_{\text{out}}$ (output direction for class $i$);
+  \item[(b)] $\feat_i = $ the $i$-th column of the input embedding $W_{\text{in}}$ (representation of input token $i$);
+  \item[(c)] $\feat_i = \mathbb{E}_{x : \text{label}(x)=i}\!\left[h(x)\right]$ (per-class mean hidden activation).
+\end{itemize}
+All three obey Theorem~\ref{thm:phase_transition} (proof depends only on the inner-product structure), but they may exhibit different transition magnitudes.
+Empirically (Section~\ref{sec:f3_result}) we find that \emph{(c)} -- per-class mean hidden activations -- is the locus where the dramatic superposition$\to$clean drop occurs; \emph{(a)} starts near-orthogonal under standard initialization (Glorot) and shows only modest changes during grokking.
+We adopt (c) as the canonical operational definition of $\feat_i$ for the empirical sections, while reporting the superposition index for all three to maintain transparency.
+
+% Then update Definition 1:
+\begin{definition}[Representation Regimes -- updated]
+\label{def:regimes_updated}
+Given a network with hidden representations $h(x) \in \reals^w$ and a labeling $\text{label}(x) \in \{1, \ldots, F\}$, define $\feat_i := \mathbb{E}_{x : \text{label}(x)=i}\!\left[h(x)\right]$.
+A configuration is in:
+\begin{itemize}
+    \item \textbf{Superposition} if $\max_{i\neq j}|\langle \hat\feat_i, \hat\feat_j\rangle| > \epsilon$ for some $\epsilon > 0$;
+    \item \textbf{Clean features} if features are near-orthogonal: $\max_{i\neq j}|\langle \hat\feat_i, \hat\feat_j\rangle| \leq \epsilon$.
+\end{itemize}
+\end{definition}
+
+% No change needed to Eq. (3) defining S itself.

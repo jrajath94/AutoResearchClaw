@@ -1,0 +1,127 @@
+{
+  "models": {
+    "qwen3.6_35b-a3b_gsm8k": {
+      "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3/results_qwen3.6_35b-a3b_gsm8k.npy",
+      "n_problems": 100,
+      "n_budgets": 6,
+      "n_temps": 1,
+      "samples_per_cell": 8,
+      "budgets": [
+        32.0,
+        64.0,
+        128.0,
+        256.0,
+        512.0,
+        1024.0
+      ],
+      "n_cells": 100,
+      "n_with_variation": 98,
+      "frac_with_variation": 0.98,
+      "headline": {
+        "staircase_rate_overall": 0.84,
+        "staircase_rate_variation": 0.8367346938775511,
+        "staircase_rate_variation_bh_corrected": 0.8367346938775511,
+        "bh_q": 0.05
+      },
+      "primary_tests": {
+        "spearman_trend_test": {
+          "frac_significant_overall": 0.91,
+          "frac_significant_variation": 0.9285714285714286,
+          "frac_bh_significant_variation": 0.9285714285714286,
+          "interpretation": "Fraction of cells where accuracy increases monotonically with budget at \u03b1=0.05; this is a non-parametric test free of BIC's DOF-penalty bias."
+        },
+        "staircase_shape_coefficient": {
+          "mean_r2_overall": 0.8065345431540303,
+          "mean_r2_variation": 0.8229944317898267,
+          "median_r2_variation": 0.8575054387237129,
+          "frac_high_r2_variation": 0.8571428571428571,
+          "interpretation": "Mean R\u00b2 for the best single-split staircase model. R\u00b2>0.7 means most variance is captured by ONE discrete jump, supporting the staircase claim. R\u00b2 is dimensionless and not subject to BIC's penalty."
+        }
+      },
+      "negative_control": {
+        "n_seeds": 5,
+        "permutation_shuffle": {
+          "overall_mean": 0.962,
+          "variation_mean": 0.9612244897959183,
+          "variation_bh_mean": 0.9612244897959183,
+          "ci_95_variation": [
+            0.9500000000000001,
+            0.9693877551020408
+          ],
+          "note": "Budget permutation preserves multiset of success counts (weak control)."
+        },
+        "iid_bernoulli_null": {
+          "overall_mean": 0.968,
+          "variation_mean": 0.9692602040816325,
+          "ci_95_variation": [
+            0.9417729591836735,
+            0.9795918367346939
+          ],
+          "shape_r2_mean_variation": 0.4721074701455,
+          "shape_frac_high_r2_variation": 0.18647959183673468,
+          "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control). Shape R^2 on null lets us see if real shape R^2 is meaningfully above chance."
+        },
+        "delta_real_vs_iid_variation": -0.13252551020408143,
+        "interpretation": "WEAK: real \u2248 iid-bernoulli (BIC penalty drives classification, not signal)"
+      },
+      "snell_powerlaw_baseline": {
+        "powerlaw_wins_overall": 16,
+        "powerlaw_wins_variation": 16
+      },
+      "log_concavity_test": {
+        "n": 98,
+        "test_statistic": 1.6567272326783762,
+        "null_mean": -0.14019412647941168,
+        "null_std": 0.44630031823902955,
+        "p_value": 0.006,
+        "reject_log_concavity": true,
+        "interpretation": "Reject log-concavity at alpha=0.05"
+      },
+      "tost_vs_max_budget": {
+        "n": 100,
+        "mean": 3.375,
+        "se": 1.801856155762886,
+        "ci_90": [
+          0.38321397455653106,
+          6.366786025443469
+        ],
+        "eps_bounds": [
+          -2.0,
+          2.0
+        ],
+        "p_low": 0.0017969192552201863,
+        "p_high": 0.776391413340998,
+        "equivalent": false,
+        "median_chosen_budget": 512.0,
+        "mean_chosen_budget": 650.88,
+        "tokens_saved_vs_max_pct": 36.4375
+      },
+      "per_budget_accuracy_curve": [
+        0.00125,
+        0.01375,
+        0.06875,
+        0.29875,
+        0.39875,
+        0.47125
+      ],
+      "latency_meta": {
+        "mean_ms": 3735.291790018479,
+        "median_ms": 2620.693564414978,
+        "p95_ms": 9380.07644414902,
+        "p99_ms": 12425.576865673067,
+        "max_ms": 37946.364879608154,
+        "n": 4800
+      },
+      "gzip_overhead_meta": {
+        "mean_ms": 0.015027523040771484,
+        "median_ms": 0.014066696166992188,
+        "p95_ms": 0.0209808349609375,
+        "p99_ms": 0.0373244285583498,
+        "max_ms": 0.07390975952148438,
+        "n": 100
+      },
+      "produced_at": "2026-05-05 00:13:48"
+    }
+  },
+  "produced_at": "2026-05-05 00:13:27"
+}

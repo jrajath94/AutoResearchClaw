@@ -1,0 +1,40 @@
+{
+  "model": "qwen3.6:35b-a3b",
+  "backend": "openrouter:qwen/qwen3.6-35b-a3b",
+  "dataset": "gsm8k",
+  "n_problems": 100,
+  "budgets": [
+    32,
+    64,
+    128,
+    256,
+    512,
+    1024
+  ],
+  "temperatures": [
+    0.5
+  ],
+  "samples_per_cell": 8,
+  "total_calls": 4800,
+  "elapsed_seconds": 1502.6089708805084,
+  "calls_per_second": 3.19444385932773,
+  "overall_accuracy": 0.20875,
+  "latency_ms": {
+    "mean_ms": 3735.291790018479,
+    "median_ms": 2620.693564414978,
+    "p95_ms": 9380.07644414902,
+    "p99_ms": 12425.576865673067,
+    "max_ms": 37946.364879608154,
+    "n": 4800
+  },
+  "gzip_overhead_ms": {
+    "mean_ms": 0.015027523040771484,
+    "median_ms": 0.014066696166992188,
+    "p95_ms": 0.0209808349609375,
+    "p99_ms": 0.0373244285583498,
+    "max_ms": 0.07390975952148438,
+    "n": 100
+  },
+  "produced_at": "2026-05-05 00:10:02",
+  "seed_base": 42
+}

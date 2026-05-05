@@ -1,0 +1,95 @@
+{
+  "f3_correlations": {
+    "S_W_out": {
+      "s_metric": "S_W_out",
+      "r_midpoint": null,
+      "n_midpoint": 2,
+      "r_legacy": null,
+      "n_legacy": 0
+    },
+    "S_W_in_a": {
+      "s_metric": "S_W_in_a",
+      "r_midpoint": null,
+      "n_midpoint": 2,
+      "r_legacy": null,
+      "n_legacy": 0
+    },
+    "S_W_in_b": {
+      "s_metric": "S_W_in_b",
+      "r_midpoint": null,
+      "n_midpoint": 2,
+      "r_legacy": null,
+      "n_legacy": 0
+    },
+    "S_H_class": {
+      "s_metric": "S_H_class",
+      "r_midpoint": null,
+      "n_midpoint": 2,
+      "r_legacy": null,
+      "n_legacy": 0
+    }
+  },
+  "n_eff_alignment": {
+    "n": 2,
+    "r": null
+  },
+  "n_c_per_width": {
+    "32": {
+      "f_c": 0.7,
+      "n_c": 673
+    },
+    "64": {
+      "f_c": null,
+      "n_c": null
+    }
+  },
+  "spectral_F_eff": {
+    "n_widths": 1
+  },
+  "beta_per_width": {
+    "32": {
+      "n_points": 0,
+      "beta": null
+    }
+  },
+  "scaling_collapse": {
+    "nu_used": 0.5,
+    "points": [
+      {
+        "width": 32,
+        "frac": 0.3,
+        "n_train": 288,
+        "x_rescaled": -394240.0,
+        "grok_rate": 0.0
+      },
+      {
+        "width": 32,
+        "frac": 0.4,
+        "n_train": 384,
+        "x_rescaled": -295936.0,
+        "grok_rate": 0.0
+      },
+      {
+        "width": 32,
+        "frac": 0.5,
+        "n_train": 480,
+        "x_rescaled": -197632.0,
+        "grok_rate": 0.0
+      },
+      {
+        "width": 32,
+        "frac": 0.6,
+        "n_train": 577,
+        "x_rescaled": -98304.0,
+        "grok_rate": 0.0
+      },
+      {
+        "width": 32,
+        "frac": 0.7,
+        "n_train": 673,
+        "x_rescaled": 0.0,
+        "grok_rate": 0.6666666666666666
+      }
+    ]
+  }
+}

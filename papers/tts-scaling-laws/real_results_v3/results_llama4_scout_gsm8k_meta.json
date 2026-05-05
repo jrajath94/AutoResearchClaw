@@ -1,0 +1,40 @@
+{
+  "model": "llama4:scout",
+  "backend": "openrouter:meta-llama/llama-4-scout",
+  "dataset": "gsm8k",
+  "n_problems": 100,
+  "budgets": [
+    32,
+    64,
+    128,
+    256,
+    512,
+    1024
+  ],
+  "temperatures": [
+    0.5
+  ],
+  "samples_per_cell": 8,
+  "total_calls": 4800,
+  "elapsed_seconds": 1127.274668931961,
+  "calls_per_second": 4.25805718188254,
+  "overall_accuracy": 0.50125,
+  "latency_ms": {
+    "mean_ms": 1871.8291056652863,
+    "median_ms": 1368.859052658081,
+    "p95_ms": 4335.255730152134,
+    "p99_ms": 6068.023812770845,
+    "max_ms": 16669.997215270996,
+    "n": 4800
+  },
+  "gzip_overhead_ms": {
+    "mean_ms": 0.016210079193115234,
+    "median_ms": 0.014781951904296875,
+    "p95_ms": 0.020301342010498043,
+    "p99_ms": 0.0395154953002933,
+    "max_ms": 0.10418891906738281,
+    "n": 100
+  },
+  "produced_at": "2026-05-05 00:29:17",
+  "seed_base": 42
+}

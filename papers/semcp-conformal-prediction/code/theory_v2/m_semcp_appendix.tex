@@ -1,0 +1,52 @@
+% =============================================================
+% Appendix: Multi-Resolution SemCP (M-SemCP) detail
+% =============================================================
+\section{M-SemCP: Multi-Resolution Conformal Prediction}
+\label{app:msemcp}
+
+We provide additional detail on the M-SemCP framework and its
+relationship to existing CP-for-LLMs methods.
+
+\paragraph{Construction.} Given $G$ NLI partition granularities
+$\{\Pi^{(g)}\}_{g=1}^{G}$ (each a deterministic function of
+$(S_i, X_i, f_\text{NLI}, \tau_\text{ent}^{(g)})$) and a convex weight
+vector $w \in \Delta^{G-1}$, define the multi-resolution lifted score
+\[
+\tilde{s}^\text{M}(X, c; S, w) =
+   \sum_{g=1}^{G} w_g \tilde{s}^{(g)}(X, c; S, \sigma_g),
+\]
+where $\sigma_g$ is the plug-in optimal bandwidth for granularity $g$
+(Theorem~\ref{thm:plugin}). For each cluster $c$ at the canonical
+medium granularity, we map to a corresponding cluster at each other
+granularity by majority vote of underlying samples.
+
+\paragraph{Validity.} Theorem~\ref{thm:conditional} applies to the
+multi-resolution score: $\tilde{s}^\text{M}$ is a deterministic function
+of $(X_i, S_i, f_\text{NLI}, \varphi)$, the convex combination is
+deterministic in $w$, and $w$ is selected on a held-out split disjoint
+from the conformal calibration fold.
+
+\paragraph{Recovers existing methods.} Setting $w$ to a corner of the
+simplex recovers single-resolution baselines:
+\begin{itemize}
+\item $w = (1, 0, 0)$ with $\tau_\text{ent} = 0.7$ → strict-NLI SemCP $\approx$ ConU's frequency cluster (with kernel score replacing frequency).
+\item $w = (0, 0, 1)$ with $\tau_\text{ent} = 0.3$ → near-string-level CP $\approx$ LofreeCP / TECP.
+\item $w = (0, 1, 0)$ with $\tau_\text{ent} = 0.5$ → standard SemCP-v2.
+\item Interior $w$ → strict Pareto improvements on (set\_size, conditional coverage).
+\end{itemize}
+
+\paragraph{Why convex aggregation helps.} Strict NLI clustering merges
+aggressively, producing fewer, larger clusters and tight kernel scores
+but losing fine-grained distinctions. Lenient NLI clustering preserves
+distinctions but inflates the partition. Convex combinations
+\emph{interpolate} the bias--variance trade-off: the $w$-tuned mixture
+captures fine distinctions at lenient granularities while exploiting
+clustering at strict granularities, and the calibration fold determines
+the optimal balance per dataset.
+
+\paragraph{Computation.} M-SemCP's overhead is $G \times$ that of
+single-resolution SemCP for the partition phase (each partition
+requires its own NLI threshold), and a single linear combination at
+score time. With our $G = 3$ default and HAC-NLI's $O(K \log K)$ cost
+per granularity, the total NLI cost is $O(G K \log K)$ — still
+linear in $K$ for fixed $G$.
