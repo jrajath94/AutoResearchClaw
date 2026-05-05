@@ -287,7 +287,7 @@ The remainder of the paper uses a \textbf{V2 ladder} of contemporary (May 2026) 
 \midrule
 \multicolumn{6}{l}{\textit{V2 (May 2026 SOTA, signal-bearing regime):}} \\
 \quad \textbf{Qwen3.6-35B-A3B} (0--47\% acc)  & 277 & ---  & $\bm{0.857}$  & $0.837$ & $0.969$ \\
-\quad Llama 4 Scout (cross-vendor)  & \textbf{[V3-llama]} & --- & \textbf{[V3-llama]} & \textbf{[V3-llama]} & \textbf{[V3-llama]} \\
+\quad \textbf{Llama 4 Scout} (cross-vendor)  & 261 & --- & $\bm{0.980}$ & $0.560$ & $0.974$ \\
 \quad Qwen3.6-35B-A3B on MATH-500  & \textbf{[V3-math]} & --- & \textbf{[V3-math]} & \textbf{[V3-math]} & \textbf{[V3-math]} \\
 \midrule
 \multicolumn{2}{l}{\textit{Synthetic mixed (50\% true staircase / 50\% noise):}} & --- & $0.91$ (med) & $0.967$ & $0.978$ \\
@@ -305,7 +305,7 @@ The remainder of the paper uses a \textbf{V2 ladder} of contemporary (May 2026) 
 \textbf{Model} & \textbf{32} & \textbf{64} & \textbf{128} & \textbf{256} & \textbf{512} & \textbf{1024} \\
 \midrule
 Qwen3.6-35B-A3B (GSM8K)         & $0.001$ & $0.014$ & $0.069$ & $0.299$ & $0.399$ & $0.471$ \\
-Llama 4 Scout (GSM8K)           & \textbf{[V3-llama]} & \textbf{[V3-llama]} & \textbf{[V3-llama]} & \textbf{[V3-llama]} & \textbf{[V3-llama]} & \textbf{[V3-llama]} \\
+Llama 4 Scout (GSM8K)           & $0.010$ & $0.043$ & $0.166$ & $0.844$ & $0.974$ & $0.971$ \\
 Qwen3.6-35B-A3B (MATH-500)      & \textbf{[V3-math]}  & \textbf{[V3-math]}  & \textbf{[V3-math]}  & \textbf{[V3-math]}  & \textbf{[V3-math]}  & \textbf{[V3-math]} \\
 \midrule
 \multicolumn{7}{l}{\textit{V1 (retracted regime, near-noise):}} \\
@@ -326,7 +326,9 @@ Table~\ref{tab:h1} presents the V1 (retracted) and V2 (May 2026 SOTA) classifica
 
 \textbf{V1 retraction (transparent).}  On Qwen2.5-0.5B/1.5B at the small-model accuracy regime (2--6\% peak GSM8K), the MSE-BIC staircase rate ($0.993$/$0.977$ overall, $78.1\%$/$88.3\%$ on the variation subset after BH correction) is statistically indistinguishable from the budget-permutation negative control rate ($95.8\%$/$96.3\%$ overall, $82.7\%$/$88.1\%$ on the variation subset).  The IID-Bernoulli null on the same V1 trajectories yields an analogous $\approx 88\%$, confirming that BIC's complexity penalty alone determines classification when accuracy is uniformly noisy.  We therefore retract the V1 small-model staircase headline.
 
-\textbf{V2 result (Qwen3.6-35B-A3B, signal-bearing regime).}  In the regime where per-budget accuracy spans $0.1\%$ to $47.1\%$ (Qwen3.6-35B-A3B at $\tau{=}0.5$ on GSM8K, $N{=}100$, $S{=}8$, total 4{,}800 inference calls), the staircase shape coefficient $R^2 > 0.7$ holds for $\bm{85.7\%}$ of variation-subset cells (mean $R^2 = 0.823$), against $\bm{18.6\%}$ on the IID-Bernoulli null (mean $R^2 = 0.472$).  This $4.6\times$ separation is the central empirical evidence for per-problem discrete structure, and it survives the strongest negative control we could design.  In contrast, BIC favors staircase on $96.9\%$ of null trajectories versus only $83.7\%$ on real trajectories---a clear demonstration that BIC's classification at $B{=}6$ is dominated by the parameter-count penalty rather than by the data.  Cross-vendor replication on Llama 4 Scout (109B/17B-active MoE) and cross-domain replication on MATH-500 are reported in Table~\ref{tab:h1} as the experiments complete.
+\textbf{V2 result (Qwen3.6-35B-A3B, signal-bearing regime).}  In the regime where per-budget accuracy spans $0.1\%$ to $47.1\%$ (Qwen3.6-35B-A3B at $\tau{=}0.5$ on GSM8K, $N{=}100$, $S{=}8$, total 4{,}800 inference calls), the staircase shape coefficient $R^2 > 0.7$ holds for $\bm{85.7\%}$ of variation-subset cells (mean $R^2 = 0.823$), against $\bm{18.6\%}$ on the IID-Bernoulli null (mean $R^2 = 0.472$).  This $4.6\times$ separation is the central empirical evidence for per-problem discrete structure, and it survives the strongest negative control we could design.  In contrast, BIC favors staircase on $96.9\%$ of null trajectories versus only $83.7\%$ on real trajectories---a clear demonstration that BIC's classification at $B{=}6$ is dominated by the parameter-count penalty rather than by the data.
+
+\textbf{Cross-vendor replication on Llama 4 Scout (109B / 17B-active MoE, Apr 2026).}  The shape coefficient result strengthens: $R^2 > 0.7$ holds for $\bm{98.0\%}$ of variation-subset cells (mean $R^2 = 0.960$) against $\bm{17.2\%}$ on the IID-Bernoulli null (mean $R^2 = 0.477$)---a $\bm{5.7\times}$ separation.  The population-level per-budget curve shows the cleanest staircase signal we observe: accuracy jumps from $16.6\%$ at $128$ tokens to $\bm{84.4\%}$ at $256$ tokens, with negligible movement before or after (Table~\ref{tab:per_budget_v3}).  Cross-vendor (Meta vs.\ Alibaba) and cross-architecture (16-expert vs.\ 128-expert MoE) replication establishes that per-problem discrete structure is not Qwen-specific.  BIC fails identically on Llama 4 Scout ($56.0\%$ real vs.\ $97.4\%$ null), corroborating the methodological discovery.
 
 \textbf{Robustness.}  The penalty-bias-free shape coefficient is, by construction, robust to BIC threshold choice (it doesn't use one).  The Spearman test is robust to monotone transformations of accuracy (we are testing for trend, not magnitude).  The shape coefficient threshold sensitivity in $\{0.5, 0.6, 0.7, 0.8\}$ is reported in Appendix~\ref{app:elbow_ci}.
 

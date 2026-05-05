@@ -1,5 +1,127 @@
 {
   "models": {
+    "llama4_scout_gsm8k": {
+      "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3/results_llama4_scout_gsm8k.npy",
+      "n_problems": 100,
+      "n_budgets": 6,
+      "n_temps": 1,
+      "samples_per_cell": 8,
+      "budgets": [
+        32.0,
+        64.0,
+        128.0,
+        256.0,
+        512.0,
+        1024.0
+      ],
+      "n_cells": 100,
+      "n_with_variation": 100,
+      "frac_with_variation": 1.0,
+      "headline": {
+        "staircase_rate_overall": 0.56,
+        "staircase_rate_variation": 0.56,
+        "staircase_rate_variation_bh_corrected": 0.56,
+        "bh_q": 0.05
+      },
+      "primary_tests": {
+        "spearman_trend_test": {
+          "frac_significant_overall": 0.97,
+          "frac_significant_variation": 0.97,
+          "frac_bh_significant_variation": 0.97,
+          "interpretation": "Fraction of cells where accuracy increases monotonically with budget at \u03b1=0.05; this is a non-parametric test free of BIC's DOF-penalty bias."
+        },
+        "staircase_shape_coefficient": {
+          "mean_r2_overall": 0.9602861457719439,
+          "mean_r2_variation": 0.9602861457719439,
+          "median_r2_variation": 0.9924953095684802,
+          "frac_high_r2_variation": 0.98,
+          "interpretation": "Mean R\u00b2 for the best single-split staircase model. R\u00b2>0.7 means most variance is captured by ONE discrete jump, supporting the staircase claim. R\u00b2 is dimensionless and not subject to BIC's penalty."
+        }
+      },
+      "negative_control": {
+        "n_seeds": 5,
+        "permutation_shuffle": {
+          "overall_mean": 0.9720000000000001,
+          "variation_mean": 0.9720000000000001,
+          "variation_bh_mean": 0.9720000000000001,
+          "ci_95_variation": [
+            0.96,
+            0.99
+          ],
+          "note": "Budget permutation preserves multiset of success counts (weak control)."
+        },
+        "iid_bernoulli_null": {
+          "overall_mean": 0.974,
+          "variation_mean": 0.974,
+          "ci_95_variation": [
+            0.952,
+            0.998
+          ],
+          "shape_r2_mean_variation": 0.47727450726358533,
+          "shape_frac_high_r2_variation": 0.17200000000000001,
+          "note": "IID-Bernoulli at trajectory mean fully destroys budget-accuracy relationship (strong control). Shape R^2 on null lets us see if real shape R^2 is meaningfully above chance."
+        },
+        "delta_real_vs_iid_variation": -0.4139999999999999,
+        "interpretation": "WEAK: real \u2248 iid-bernoulli (BIC penalty drives classification, not signal)"
+      },
+      "snell_powerlaw_baseline": {
+        "powerlaw_wins_overall": 44,
+        "powerlaw_wins_variation": 44
+      },
+      "log_concavity_test": {
+        "n": 100,
+        "test_statistic": 1.750805317447787,
+        "null_mean": -0.1384001919627692,
+        "null_std": 0.45143486334975547,
+        "p_value": 0.002,
+        "reject_log_concavity": true,
+        "interpretation": "Reject log-concavity at alpha=0.05"
+      },
+      "tost_vs_max_budget": {
+        "n": 100,
+        "mean": -9.0,
+        "se": 1.6096301099659793,
+        "ci_90": [
+          -11.672615599046168,
+          -6.327384400953832
+        ],
+        "eps_bounds": [
+          -2.0,
+          2.0
+        ],
+        "p_low": 0.999983366385012,
+        "p_high": 3.410423002765345e-10,
+        "equivalent": false,
+        "median_chosen_budget": 256.0,
+        "mean_chosen_budget": 264.32,
+        "tokens_saved_vs_max_pct": 74.1875
+      },
+      "per_budget_accuracy_curve": [
+        0.01,
+        0.0425,
+        0.16625,
+        0.84375,
+        0.97375,
+        0.97125
+      ],
+      "latency_meta": {
+        "mean_ms": 1871.8291056652863,
+        "median_ms": 1368.859052658081,
+        "p95_ms": 4335.255730152134,
+        "p99_ms": 6068.023812770845,
+        "max_ms": 16669.997215270996,
+        "n": 4800
+      },
+      "gzip_overhead_meta": {
+        "mean_ms": 0.016210079193115234,
+        "median_ms": 0.014781951904296875,
+        "p95_ms": 0.020301342010498043,
+        "p99_ms": 0.0395154953002933,
+        "max_ms": 0.10418891906738281,
+        "n": 100
+      },
+      "produced_at": "2026-05-05 00:42:55"
+    },
     "qwen3.6_35b-a3b_gsm8k": {
       "model_npy": "/Users/rj/research-claw/papers/tts-scaling-laws/real_results_v3/results_qwen3.6_35b-a3b_gsm8k.npy",
       "n_problems": 100,
@@ -120,8 +242,8 @@
         "max_ms": 0.07390975952148438,
         "n": 100
       },
-      "produced_at": "2026-05-05 00:13:48"
+      "produced_at": "2026-05-05 00:43:18"
     }
   },
-  "produced_at": "2026-05-05 00:13:27"
+  "produced_at": "2026-05-05 00:42:33"
 }
