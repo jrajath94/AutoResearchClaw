@@ -1,0 +1,15 @@
+{
+  "folder": "/Users/rj/research-claw/papers/tts-scaling-laws",
+  "main_tex": "/Users/rj/research-claw/papers/tts-scaling-laws/latex/main.tex",
+  "main_pdf": "/Users/rj/research-claw/papers/tts-scaling-laws/latex/main.pdf",
+  "bibliography": "/Users/rj/research-claw/papers/tts-scaling-laws/artifacts/stage-04/references.bib",
+  "bibliography_inline": false,
+  "figures_dir": "/Users/rj/research-claw/papers/tts-scaling-laws/latex/figures",
+  "sections_dir": "",
+  "page_count": 20,
+  "pdf_size_mb": 1,
+  "uses_neurips_sty": true,
+  "track": "main(default)",
+  "anonymized": true,
+  "checklist_present": false
+}

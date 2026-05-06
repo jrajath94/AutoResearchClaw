@@ -46,7 +46,7 @@
 Test-time compute scaling in large language models is conventionally modeled as a smooth, monotonic, task-determined function of the reasoning budget; we argue this view silently conflates two distinct objects, a smooth population-average curve and the (potentially discrete) per-problem curves that average into it.  Our main contribution is \textbf{Theorem~\ref{thm:population}}: under log-concave critical-depth distributions, the population-level scaling curve is smooth and concave \emph{even when every individual problem exhibits a one-step (``staircase'') accuracy function}.  The proof proceeds by Pr\'{e}kopa's theorem on log-concave measures, and we empirically validate the log-concavity assumption on real reasoning data using the Baringhaus--Henze test.  Building on this reconciliation, we introduce \method{} (Staircase Test-time Adaptive Inference Routing), which decomposes scaling curves into per-problem components via Bayesian Information Criterion (BIC) model selection and routes each problem to its critical depth using a pre-inference gzip complexity proxy whose latency is negligible relative to a single forward pass.  We report three findings.
 \textbf{(1)}~On real LLM inference with Qwen3.6-35B-A3B (population-level GSM8K accuracy spanning $0.1\%$ at 32 tokens to $47.1\%$ at 1024 tokens, the regime where BIC has signal to discriminate), our \emph{primary} test is the staircase shape coefficient $R^2$, defined as the fraction of per-cell variance captured by the single best split.  $R^2 > 0.7$ holds for $\bm{85.7\%}$ of variation-subset cells on real data versus $\bm{18.6\%}$ on the IID-Bernoulli null (a $4.6\times$ separation).  In contrast, the BIC staircase rate is $83.7\%$ on real data versus $96.9\%$ on the null---confirming the methodological discovery that BIC at small $B$ is structurally biased toward the lower-DOF model regardless of signal.  We therefore demote BIC to a robustness diagnostic and report shape $R^2$ as primary.  V1's small-model BIC headline (78--88\% variation-subset) was indistinguishable from the budget-permutation negative control on V1 (83--88\%), confirming the V1 result was a complexity-penalty artifact; we explicitly retract the V1 small-model staircase claim.
 \textbf{(2)}~Sequential circuit depth predicts scaling elbows substantially better than description-length proxies on synthetic data ($\rho{=}0.96$ vs.\ $0.38$); on real GSM8K, the negative correlation of gzip with the empirical elbow at small-model accuracy ($\rho{=}0.147$) is itself the prediction that the theory makes---when model \emph{capability} bottlenecks performance, neither task complexity nor description length should predict the elbow.
-\textbf{(3)}~At the per-problem level, an oracle-best routing policy that picks the smallest budget at which each problem first succeeds saves $36.4\%$ of tokens against the max budget while maintaining or improving accuracy (mean $+3.4$pp, $90\%$ CI $[0.4, 6.4]$pp).  The gzip routing-proxy overhead is $0.037$\,ms p99 against $12.4$\,s p99 end-to-end inference latency---a negligible $0.0003\%$.  We do \emph{not} report a deployed learned allocator at the V3 scale; the V1 allocator's claimed token savings rested on the same small-model regime we retracted, so we treat learned routing as future work and report the oracle as the upper bound.
+\textbf{(3)}~At the per-problem level, an oracle-best routing policy that picks the smallest budget at which each problem first succeeds saves $36.4\%$ of tokens against the max budget while maintaining or improving accuracy (mean $+3.4$pp, $90\%$ CI $[0.4, 6.4]$pp).  The gzip routing-proxy overhead is $0.037$\,ms p99 against $12.4$\,s p99 end-to-end inference latency---a negligible $0.0003\%$.  Learned routing is future work; we report the oracle bound.
 Together these results reframe how the field should think about test-time scaling: smoothness is a population-averaging artifact, not a per-problem law, and exploiting per-problem discreteness yields substantial inference-cost savings while remaining honest about the regimes in which the BIC machinery has signal vs.\ noise to fit.
 \end{abstract}
 
@@ -113,25 +113,10 @@ Let each problem $x_i$ have a 1-staircase accuracy function with critical depth 
 \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Proof (explicit, 7 steps)]
-\textbf{Step 1 (population accuracy as a CDF).}  By the per-problem 1-staircase structure (Definition~\ref{def:staircase}),
-$\bar{a}(t) \;=\; \E_{x_i}[\,a(t \mid x_i)\,]
-   \;=\; \alpha_0 \cdot \Pr[\tau_i > t] + \alpha_1 \cdot \Pr[\tau_i \le t]
-   \;=\; \alpha_0 + (\alpha_1 - \alpha_0)\, F_\tau(t)$,
-where $F_\tau$ is the CDF of the critical depth distribution.
-
-\textbf{Step 2 (Pr\'{e}kopa's theorem).}  $f_\tau$ is log-concave by hypothesis.  Pr\'{e}kopa's theorem~\citep{prekopa1973logconcave} states that the marginalization (here, integration over $(-\infty, t]$) of a log-concave density yields a log-concave CDF.  Hence $F_\tau$ is log-concave on its support.
-
-\textbf{Step 3 (monotonicity).}  $F_\tau$ is monotonically non-decreasing on $\mathbb{R}$ as a CDF.  Because $\alpha_1 > \alpha_0$, the affine map $u \mapsto \alpha_0 + (\alpha_1 - \alpha_0) u$ is strictly increasing.  Therefore $\bar{a}(t)$ is monotonically increasing in $t$.
-
-\textbf{Step 4 (concavity on positive support).}  A log-concave CDF $F_\tau$ on a connected positive support is concave (this is a standard consequence of $\log F$ being concave and the chain $F = \exp(\log F)$ giving $F'' = F\,(\log F)'' + F\,((\log F)')^2$; sign-checking gives concavity wherever $\log F$ is concave and $F > 0$).  Affine maps with positive multiplier preserve concavity, so $\bar{a}$ is concave on $\{t : F_\tau(t) \in (0, 1)\}$.
-
-\textbf{Step 5 (smoothness).}  Since $f_\tau$ is log-concave with full support, it is continuous in the interior of its support (log-concave densities are continuous; cf.\ \citealp{ibragimov1956log}).  Hence $\bar{a}'(t) = (\alpha_1 - \alpha_0)\, f_\tau(t)$ is continuous, and $\bar{a}$ is $C^1$.
-
-\textbf{Step 6 (elbow location).}  The population elbow is $t^* = \arg\max_t |\bar{a}''(t)|$.  Since $\bar{a}''(t) = (\alpha_1 - \alpha_0)\, f_\tau'(t)$, the magnitude $|\bar{a}''(t)|$ is maximized where $|f_\tau'(t)|$ is maximized.  For a unimodal log-concave density, $f_\tau'$ vanishes precisely at $\mathrm{mode}(f_\tau)$, and $|f_\tau'(t)|$ peaks immediately on either side, with the curvature change of $F_\tau$ being maximal at the mode itself.  Thus $t^* = \mathrm{mode}(f_\tau)$.
-
-\textbf{Step 7 (population property, not individual).}  Step~6 shows $t^*$ depends only on $F_\tau$, not on any individual $\tau_i$.  Therefore the elbow is a property of the \emph{population distribution} of critical depths, not of any single problem.
+\begin{proof}[Proof sketch]
+$\bar{a}(t) = \alpha_0 + (\alpha_1{-}\alpha_0)F_\tau(t)$ is an affine map of the CDF $F_\tau$.  Pr\'ekopa's theorem~\citep{prekopa1973logconcave} preserves log-concavity through marginalisation, so $F_\tau$ is log-concave.  $\bar{a}$ inherits monotonicity (CDF) and concavity on the positive support (log-concave CDF $\Rightarrow$ concave there).  $\bar{a}''(t) = (\alpha_1{-}\alpha_0) f_\tau'(t)$ is maximal in magnitude at $\mathrm{mode}(f_\tau)$.  Full 7-step derivation in Appendix~\ref{app:proof}.
 \end{proof}
+
 
 \paragraph{Remark on the routing implication.}
 Theorem~\ref{thm:population} establishes that population smoothness does \emph{not} require individual smoothness.  This is what justifies per-problem routing: heterogeneous $\tau_i$ drawn from a log-concave $F_\tau$ produce a smooth population curve by averaging, but every individual problem has a single discrete transition.  An allocator that can predict $\tau_i$ for each problem can therefore save tokens by stopping at $\tau_i$ rather than at $t^* = \mathrm{mode}(f_\tau)$.  This bridges the theorem (population property) to the \method{} allocator (per-problem routing) and resolves the apparent tension flagged in early reviews of this work.
@@ -183,14 +168,7 @@ With only $B{=}5$--$6$ budget points, comparing a 3-parameter logistic sigmoid a
 
 We treat $R^2 > 0.7$ as the operational definition of ``staircase-shaped'' for the variation-subset analysis (and report sensitivity at $0.5, 0.6, 0.7, 0.8$ in the appendix).  The Spearman test addresses the qualitative claim ``budget matters,'' the shape coefficient addresses the quantitative claim ``the dependence concentrates in a single discrete jump,'' and BIC remains as a robustness check.
 
-\paragraph{Worked numerical example.}  Take a single problem $x$ with $B{=}3$ token budgets $\{64, 256, 1024\}$ and $S{=}4$ samples per cell.  Suppose the observed success counts are $k(64)=0$, $k(256)=3$, $k(1024)=4$ (a textbook staircase with $\tau \in (64, 256]$).  The staircase MLE puts the split between budget 1 and budget 2, giving $\hat\alpha_0 = 0/4 = 0$, $\hat\alpha_1 = 7/8 = 0.875$ on the right side.  The sigmoid MLE numerically converges to roughly $\hat L \approx 0.97, \hat k \approx 0.022, \hat t_0 \approx 180$.  Binomial log-likelihoods sum across the three cells:
-\[
-\ell_{\text{step}} \approx 4 \log(1{-}\epsilon) + 3 \log 0.875 + 1 \log 0.125 + 4 \log 0.875 \approx -3.10,
-\]
-\[
-\ell_{\text{sig}} \approx 4 \log 0.07 + 3 \log 0.69 + 1 \log 0.31 + 4 \log 0.95 \approx -13.4,
-\]
-where $\epsilon$ is a numerical floor.  Then $\text{BIC}_{\text{Bin}}(\text{step}) = -2(-3.10) + 2 \log 3 \approx 8.4$ and $\text{BIC}_{\text{Bin}}(\text{sig}) = -2(-13.4) + 3 \log 3 \approx 30.1$, giving $\Delta\text{BIC} = 21.7 \gg 2$, ``decisive evidence'' for staircase on the Raftery scale.  Concretely: the staircase is a 2-parameter model that places mass exactly where the data demand it, while the 3-parameter sigmoid is forced to spend its third degree of freedom smoothing the transition.  When data exhibit a sharp transition with $S$ large enough to resolve $\hat p_j$ at each budget, BIC favors the simpler model that fits the transition.  Conversely, when accuracies are uniformly noisy (e.g.\ $k \in \{0,1\}$ at every budget, as in V1's Qwen2.5-0.5B at 2--3\% accuracy), \emph{both} models fit a near-flat curve and the BIC penalty alone determines the verdict; this is the failure mode our V2 design (\S\ref{sec:results}) avoids.
+\paragraph{Worked numerical example.}  A complete worked numerical example (one problem, $B{=}3$ budgets, $S{=}4$ samples) is in Appendix~\ref{app:worked}, demonstrating $\Delta\text{BIC}{=}21.7$ in favour of staircase on a textbook 1-staircase trajectory.
 
 \subsection{Cross-Model Divergence and Non-Monotonicity}
 
@@ -202,26 +180,9 @@ For models $m_A, m_B$, we measure per-problem elbow divergence:
 
 We detect accuracy non-monotonicity when $\hat{a}_i(t_{j+1}) < \hat{a}_i(t_j) - \epsilon$, with $\epsilon = 0.15$ ($\approx 0.85\sigma$ of the worst-case Bernoulli sampling noise at $S{=}8$, $p{=}0.5$: $\sqrt{p(1{-}p)/S} \approx 0.177$).  This is a conservative (not strict-$2\sigma$) threshold, chosen to surface plausible truncation-driven decreases at the cost of some false positives.  Accuracy non-monotonicity is distinct from MI non-monotonicity: the data-processing inequality constrains MI, not empirical accuracy.  Accuracy can decrease due to answer truncation at the token-budget limit, reasoning drift, or generation-length sensitivity---none of which are evidence of information loss along the reasoning chain.
 
-\subsection{\method{} Adaptive Allocator}
+\subsection{\method{} Adaptive Allocator (summary)}
+\method{}'s allocator routes each problem to a budget using a pre-inference gzip proxy followed by per-bucket BIC fitting (full algorithm in Appendix~\ref{app:allocator}). The gzip routing-proxy adds $0.037$\,ms p99 over $12.4$\,s p99 inference latency (negligible).
 
-\begin{algorithm}[t]
-\caption{\method{} Adaptive Inference Budget Allocation}
-\label{alg:stair}
-\begin{algorithmic}[1]
-\REQUIRE Problem $x$, calibrated gzip boundaries $[g_1, g_2]$, per-bucket temperatures $\{\tau^*_k\}_{k=1}^{3}$
-\STATE $g \leftarrow |\text{gzip}(x, \text{level}{=}9)|$ \COMMENT{$O(n)$ complexity proxy, zero forward passes}
-\STATE $k \leftarrow \text{tercile}(g; g_1, g_2)$ \COMMENT{Difficulty bucket: easy/medium/hard}
-\STATE $\tau^* \leftarrow \tau^*_k$ \COMMENT{Pre-calibrated per-bucket temperature}
-\STATE Probe small set of budgets $\{t_j\}$ at temperature $\tau^*$ with $S$ samples each
-\STATE Fit staircase and sigmoid models; select via BIC ($\Delta{=}2$)
-\STATE $\hat{d}_c \leftarrow$ critical depth from selected model (staircase $\tau_i$ or sigmoid $t_0$)
-\RETURN Token budget $\hat{d}_c$ (clipped to the available budget grid)
-\end{algorithmic}
-\end{algorithm}
-
-\textbf{Calibration protocol (real data).}  Problems are split 80/20 within each gzip tercile into a calibration set and an evaluation set (seed-42 stratified split).  Temperature $\tau^*_k$ is grid-searched over $\{0.1, 0.5, 1.0\}$ (the three temperatures sampled in the inference sweep) on the calibration set, minimizing token cost subject to matching the oracle-best accuracy within $1$pp on that bucket.  All test-time numbers reported in Table~\ref{tab:real_pareto} and Figure~\ref{fig:pareto} are on the 20 held-out problems per tercile ($60$ total held-out), never seen during calibration.  Statistical significance is assessed by paired Wilcoxon signed-rank tests on problem-level accuracy and token cost (Appendix~\ref{app:pareto}).  At inference time, the only overhead beyond standard generation is the gzip computation: $O(n)$ in problem text length, requiring zero additional model forward passes.
-
-%=========================================================================
 \section{Experimental Setup}
 \label{sec:setup}
 %=========================================================================
@@ -335,12 +296,7 @@ Qwen3.6-35B-A3B (MATH-500)      & $0.018$ & $0.021$ & $0.018$ & $0.040$ & $0.156
     \label{fig:v3_shape_r2}
 \end{figure}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\textwidth]{figures_v3/fig_v3_bic_vs_shape.pdf}
-    \caption{The methodological discovery, visualized.  BIC (blue, hatched$=$null) returns nearly identical staircase rates on real and IID-Bernoulli noise across all three experiments---confirming that BIC's classification at $B{=}6$ is dominated by the parameter-count penalty rather than by the data.  The shape coefficient $R^2{>}0.7$ test (green) cleanly separates real from noise.  The contrast motivates demoting BIC to a robustness diagnostic and adopting shape $R^2$ as the primary per-cell test.}
-    \label{fig:v3_bic_vs_shape}
-\end{figure}
+
 
 \begin{figure}[t]
     \centering
@@ -370,7 +326,91 @@ Table~\ref{tab:h1} presents the V1 (retracted) and V2 (May 2026 SOTA) classifica
 
 \textbf{Accuracy non-monotonicity is not MI non-monotonicity.}  Real-data accuracy non-monotonicity rates are $5.3\%$ (Qwen-0.5B) and $8.7\%$ (Qwen-1.5B) of (problem, temperature) cells at threshold $\epsilon{=}0.15$ ($\approx 0.85\sigma$ of the $S{=}8$ Bernoulli SE).  The larger model's higher rate is consistent with longer chains occasionally getting truncated before answer emission (\S\ref{sec:setup}).  We explicitly do not claim DPI violations: we observe drops in \emph{empirical accuracy}, an external estimator dependent on answer-emission timing, not in mutual information (which we do not estimate).  Direct MI estimation from logits is future work.
 
-\subsection{H3: Complexity Proxy Validation}
+\subsection{H3: Complexity Proxy Validation (summary)}
+On synthetic data, sequential circuit depth predicts critical depth at $\rho=0.96$ versus $\rho=0.38$ for gzip; on real GSM8K, capability dominates and neither proxy predicts the elbow ($\rho_{\text{gzip,steps}}=0.147$). Full table and analysis in Appendix~\ref{app:h3}.
+
+\subsection{Allocator Performance (summary)}
+Oracle-best per-problem routing saves $36.4\%$ tokens at no accuracy harm (TOST $\Delta\in[+0.4,+6.4]$ pp). \method{}-allocator details + synthetic baseline tables in Appendix~\ref{app:allocator_perf}. We do not claim a deployed learned allocator at V3 scale; learned routing is future work.
+
+\section{Discussion}
+\label{sec:discussion}
+%=========================================================================
+
+\textbf{Theorem-first contribution.}  The irreducible result is Theorem~\ref{thm:population}: under log-concave critical-depth distributions, smooth population curves emerge from discrete per-problem staircases.  This reorganizes how the field should think about test-time scaling: smoothness is an aggregation artifact, not a per-problem truth.  The Theorem is mathematically proven (Pr\'ekopa, Step~2) and survives independently of any specific empirical replication; what the empirical work establishes is whether the log-concavity assumption holds on real data and whether per-problem decomposition can be operationalized for inference cost reduction.
+
+\textbf{Per-problem scaling is discrete \emph{when measured with a penalty-bias-free test}.}  Our primary test, the staircase shape coefficient $R^2$, holds at $R^2 > 0.7$ for $85.7\%$ of variation-subset cells on Qwen3.6-35B-A3B / GSM8K, $98.0\%$ on Llama 4 Scout / GSM8K, and $87.3\%$ on Qwen3.6-35B-A3B / MATH-500---against $17$--$20\%$ on the IID-Bernoulli null on each.  V1's apparent BIC headline (78\%--88\% variation-subset on Qwen2.5-0.5B/1.5B) was indistinguishable from the negative control (83\%--88\%), establishing it as a BIC-penalty artifact, which we retract.  The methodological lesson: per-cell BIC at small $B$ with fixed-DOF model selection silently rewards lower-DOF families regardless of signal; reporting any BIC-based per-cell discreteness claim should be paired with an IID-Bernoulli null at the cell mean.
+
+\textbf{Computational depth dominates when complexity is the bottleneck.}  Circuit depth's $5\times$ MAPE advantage over gzip on synthetic data demonstrates this when model capability is held constant.  At small-model scale on real GSM8K, capability binds and neither proxy predicts the elbow---this was the predicted negative outcome and its observation confirms the theory's directional claim.
+
+\textbf{What we do not claim.}  (i) No DPI violations (MI is not estimated; we measure only empirical accuracy non-monotonicity).  (ii) No real-data usefulness of circuit depth at small-model scale---confirming the theory.  (iii) No significant per-problem accuracy gain for \method{} vs.\ fixed-budget-best (TOST equivalence within $\pm 2$pp, not strict superiority); the contribution is matched accuracy at substantially lower tokens.  (iv) No claim that the V1 small-model staircase rate is real---we retract it explicitly based on the negative-control failure.
+
+%=========================================================================
+\section{Limitations}
+\label{sec:limitations}
+%=========================================================================
+
+\textbf{(1) V1 small-model regime retracted (transparent).}  Qwen2.5-0.5B/1.5B at $\leq$6.5\% GSM8K accuracy with $S{=}8$ samples per cell yielded BIC staircase rates indistinguishable from a budget-permutation negative control (95.8\%/96.3\% shuffled vs.\ 94.7\%/96.3\% real); this confirms the V1 finding was a BIC-penalty artifact and we retract it.  V2 results use Qwen3.6-35B-A3B (May 2026 SOTA, $\sim$45\% GSM8K accuracy) and Llama 4 Scout (cross-vendor MoE) where the dependent variable carries signal.  \textbf{(2) Single primary benchmark.}  We extend to MATH-500 for cross-domain validation, but additional domains (code, multi-hop reasoning) remain future work.  \textbf{(3) Budget-grid resolution.}  Six budget points $\{32, 64, 128, 256, 512, 1024\}$; doubling to 12 would tighten variation-subset CIs.  \textbf{(4) Synthetic--real mismatch.}  The synthetic channel uses planted log-concave $f_\tau$, which the Baringhaus--Henze test now explicitly validates on real critical-depth estimates; mismatch with synthetic non-monotonicity remains.  \textbf{(5) Practical circuit-depth estimation.}  Circuit depth requires ground-truth structure; deployed \method{} uses gzip and we acknowledge this as a known proxy weakness.  $k{=}1$ staircases are a structural restriction.  \textbf{(6) Equivalence not strict superiority.}  TOST equivalence test concludes accuracy is within $\pm$2pp of fixed-budget-best at substantially lower tokens; this is a no-harm result, not a strict accuracy improvement.  \textbf{(7) Logits-based MI estimation.}  We do not estimate MI from logits; accuracy non-monotonicity is observed at the answer-emission level and does not violate DPI.
+
+%=========================================================================
+\section{Broader Impact}
+%=========================================================================
+
+\textbf{Energy footprint.}  Our V3 experiments totaled $\sim$$14{,}400$ inference calls on Qwen3.6-35B-A3B and $\sim$$4{,}800$ on Llama 4 Scout via the OpenRouter API; the V1 retracted experiments used $\sim$$24{,}000$ small-model calls.  Conservatively estimated, our entire experimental program consumed less energy than a single training run of any modern frontier model.  Adaptive routing of the kind we study, if deployed, reduces the carbon footprint of reasoning-intensive LLM deployments roughly proportionally to the per-problem token-savings rate.
+
+\textbf{Dual-use considerations.}  Faster, cheaper reasoning inference can in principle be used to scale up automated misinformation, fraud, or abuse generation.  This concern applies to all efficiency improvements in LLM serving, not specifically to our work; the per-problem routing we study is content-agnostic and does not differentially benefit harmful applications.  We see no specific dual-use harm beyond what already applies to the underlying open-weight models.
+
+Equity and methodological-externality discussion in Appendix~\ref{app:broader_impact_full}.
+
+%=========================================================================
+\section{Conclusion}
+%=========================================================================
+
+\textsc{Staircase} reframes test-time compute scaling around a single mathematical reconciliation: under log-concave critical depths, smooth population curves emerge from discrete per-problem staircases (Theorem~\ref{thm:population}).  This identifies smoothness as an aggregation artifact, not a per-problem law, and motivates per-problem routing.  Three independent experiments substantiate the reconciliation, all using a penalty-bias-free shape coefficient $R^2 > 0.7$ as the primary test:
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Real} & \textbf{IID-null} & \textbf{Sep.} \\
+\midrule
+Qwen3.6-35B-A3B / GSM8K   & $\bm{85.7\%}$ & $18.6\%$ & $4.6\times$ \\
+Llama 4 Scout / GSM8K     & $\bm{98.0\%}$ & $17.2\%$ & $5.7\times$ \\
+Qwen3.6-35B-A3B / MATH-500 & $\bm{87.3\%}$ & $20.4\%$ & $4.3\times$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cross-vendor (Meta vs.\ Alibaba), cross-architecture (16-expert vs.\ 128-expert MoE), and cross-domain (arithmetic vs.\ competition math) replication establishes that per-problem discrete structure is robust.  Circuit depth dominates description length on synthetic data ($\rho{=}0.96$ vs.\ $0.38$); the predicted negative result on real GSM8K (gzip $\rho{=}0.147$) confirms the directional claim.  We additionally report a methodological discovery: BIC at small $B$ with fixed-DOF model selection is structurally biased toward the lower-DOF model regardless of signal (BIC favors staircase on $97\%$+ of IID-Bernoulli noise trajectories).  Future work: extend to multi-hop reasoning, code, and agentic benchmarks; characterise the per-vendor critical-depth distribution to understand when log-concavity holds.
+
+\textbf{Reproducibility.}  Code (\texttt{analysis\_v2.py}, \texttt{analysis\_v3.py}, \texttt{experiment/real\_experiment\_v2.py}, \texttt{failure\_mode\_analysis.py}), data, and configs are in the anonymous supplement.  Both V1 (raw .npy with mean accuracies) and V2 (raw .npy with per-sample successes, plus per-call latency metadata) experiments are reproducible from public datasets and open-weight models with seed 42.  Total compute $\sim$\$15 on OpenRouter (V2 hero + Llama 4 Scout cross-arch + MATH-500 cross-domain), 0 GPU-hours self-managed; V1 was on a single RTX A5000 at $<$\$1.
+
+%=========================================================================
+
+%========= Moved from main body to fit 9-page limit ==========
+\section{\method{} Adaptive Allocator (full description)}
+\label{app:allocator}
+
+
+\begin{algorithm}[t]
+\caption{\method{} Adaptive Inference Budget Allocation}
+\label{alg:stair}
+\begin{algorithmic}[1]
+\REQUIRE Problem $x$, calibrated gzip boundaries $[g_1, g_2]$, per-bucket temperatures $\{\tau^*_k\}_{k=1}^{3}$
+\STATE $g \leftarrow |\text{gzip}(x, \text{level}{=}9)|$ \COMMENT{$O(n)$ complexity proxy, zero forward passes}
+\STATE $k \leftarrow \text{tercile}(g; g_1, g_2)$ \COMMENT{Difficulty bucket: easy/medium/hard}
+\STATE $\tau^* \leftarrow \tau^*_k$ \COMMENT{Pre-calibrated per-bucket temperature}
+\STATE Probe small set of budgets $\{t_j\}$ at temperature $\tau^*$ with $S$ samples each
+\STATE Fit staircase and sigmoid models; select via BIC ($\Delta{=}2$)
+\STATE $\hat{d}_c \leftarrow$ critical depth from selected model (staircase $\tau_i$ or sigmoid $t_0$)
+\RETURN Token budget $\hat{d}_c$ (clipped to the available budget grid)
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Calibration protocol (real data).}  Problems are split 80/20 within each gzip tercile into a calibration set and an evaluation set (seed-42 stratified split).  Temperature $\tau^*_k$ is grid-searched over $\{0.1, 0.5, 1.0\}$ (the three temperatures sampled in the inference sweep) on the calibration set, minimizing token cost subject to matching the oracle-best accuracy within $1$pp on that bucket.  All test-time numbers reported in Table~\ref{tab:real_pareto} and Figure~\ref{fig:pareto} are on the 20 held-out problems per tercile ($60$ total held-out), never seen during calibration.  Statistical significance is assessed by paired Wilcoxon signed-rank tests on problem-level accuracy and token cost (Appendix~\ref{app:pareto}).  At inference time, the only overhead beyond standard generation is the gzip computation: $O(n)$ in problem text length, requiring zero additional model forward passes.
+
+%=========================================================================
+
+\section{H3: Complexity Proxy Validation (full discussion)}
+\label{app:h3}
+
 \label{sec:h3}
 
 \begin{table}[t]
@@ -399,7 +439,10 @@ Gzip vs.\ elbow (1.5B)         & ---                   & ---          & $0.143$ 
 
 \textbf{Real findings and the accuracy-floor confound.}  All three real-GSM8K correlations in Table~\ref{tab:h3} are small and statistically indistinguishable from zero.  This supports rather than refutes our dissociation thesis: gzip--step-count $\rho{=}0.147$ confirms description length and computational depth measure different things (the predicted negative control), and at the $\leq 6.5\%$ accuracy floor model capability---not task complexity---is the binding constraint, so neither proxy predicts the empirical elbow.  Step count varies only over $\{2,\ldots,7\}$ (6 unique values), further attenuating signal.  Full diagnostic plots are in Appendix~\ref{app:elbow_ci}.
 
-\subsection{Allocator Performance and Ablations}
+
+\section{Allocator Performance and Ablations}
+\label{app:allocator_perf}
+
 \label{sec:allocator}
 
 \begin{table}[t]
@@ -448,59 +491,58 @@ Description-length & $37.6 \pm 2.8$ & $31.2$ & $44.0$ \\
 \textbf{Real-data Pareto (held-out eval, 60 problems; full table in Appendix~\ref{app:pareto}).}  On Qwen-1.5B, \method{} achieves $0.075$ accuracy at $128.6$ avg tokens, vs.\ $0.065$ at fixed-$512$ ($75\%$ token reduction, paired Wilcoxon $p{=}0.23$).  It clears the confidence-adaptive baseline ($0.029$ at $80.6$ tokens) by $2.6\times$ in accuracy at $1.6\times$ the cost; the oracle-best upper bound ($0.109$ at $414.4$ tokens) shows headroom for better allocators.  Qwen-0.5B numbers ($0.038$ vs.\ $0.029$, $p{=}0.20$, $81\%$ token reduction) follow the same pattern.  Low absolute accuracy is a property of $\leq 1.5$B-parameter models on GSM8K, not of the allocator (\S\ref{sec:limitations}).
 
 %=========================================================================
-\section{Discussion}
-\label{sec:discussion}
-%=========================================================================
 
-\textbf{Theorem-first contribution.}  The irreducible result is Theorem~\ref{thm:population}: under log-concave critical-depth distributions, smooth population curves emerge from discrete per-problem staircases.  This reorganizes how the field should think about test-time scaling: smoothness is an aggregation artifact, not a per-problem truth.  The Theorem is mathematically proven (Pr\'ekopa, Step~2) and survives independently of any specific empirical replication; what the empirical work establishes is whether the log-concavity assumption holds on real data and whether per-problem decomposition can be operationalized for inference cost reduction.
 
-\textbf{Per-problem scaling is discrete \emph{when measured with a penalty-bias-free test}.}  Our primary test, the staircase shape coefficient $R^2$, holds at $R^2 > 0.7$ for $85.7\%$ of variation-subset cells on Qwen3.6-35B-A3B / GSM8K, $98.0\%$ on Llama 4 Scout / GSM8K, and $87.3\%$ on Qwen3.6-35B-A3B / MATH-500---against $17$--$20\%$ on the IID-Bernoulli null on each.  V1's apparent BIC headline (78\%--88\% variation-subset on Qwen2.5-0.5B/1.5B) was indistinguishable from the negative control (83\%--88\%), establishing it as a BIC-penalty artifact, which we retract.  The methodological lesson: per-cell BIC at small $B$ with fixed-DOF model selection silently rewards lower-DOF families regardless of signal; reporting any BIC-based per-cell discreteness claim should be paired with an IID-Bernoulli null at the cell mean.
+%========= Cut from main body for 9pp limit ==========
+\section{Theorem 1 -- explicit 7-step proof}
+\label{app:proof}
+\begin{proof}[Proof (explicit, 7 steps)]
+\textbf{Step 1 (population accuracy as a CDF).}  By the per-problem 1-staircase structure (Definition~\ref{def:staircase}),
+$\bar{a}(t) \;=\; \E_{x_i}[\,a(t \mid x_i)\,]
+   \;=\; \alpha_0 \cdot \Pr[\tau_i > t] + \alpha_1 \cdot \Pr[\tau_i \le t]
+   \;=\; \alpha_0 + (\alpha_1 - \alpha_0)\, F_\tau(t)$,
+where $F_\tau$ is the CDF of the critical depth distribution.
 
-\textbf{Computational depth dominates when complexity is the bottleneck.}  Circuit depth's $5\times$ MAPE advantage over gzip on synthetic data demonstrates this when model capability is held constant.  At small-model scale on real GSM8K, capability binds and neither proxy predicts the elbow---this was the predicted negative outcome and its observation confirms the theory's directional claim.
+\textbf{Step 2 (Pr\'{e}kopa's theorem).}  $f_\tau$ is log-concave by hypothesis.  Pr\'{e}kopa's theorem~\citep{prekopa1973logconcave} states that the marginalization (here, integration over $(-\infty, t]$) of a log-concave density yields a log-concave CDF.  Hence $F_\tau$ is log-concave on its support.
 
-\textbf{What we do not claim.}  (i) No DPI violations (MI is not estimated; we measure only empirical accuracy non-monotonicity).  (ii) No real-data usefulness of circuit depth at small-model scale---confirming the theory.  (iii) No significant per-problem accuracy gain for \method{} vs.\ fixed-budget-best (TOST equivalence within $\pm 2$pp, not strict superiority); the contribution is matched accuracy at substantially lower tokens.  (iv) No claim that the V1 small-model staircase rate is real---we retract it explicitly based on the negative-control failure.
+\textbf{Step 3 (monotonicity).}  $F_\tau$ is monotonically non-decreasing on $\mathbb{R}$ as a CDF.  Because $\alpha_1 > \alpha_0$, the affine map $u \mapsto \alpha_0 + (\alpha_1 - \alpha_0) u$ is strictly increasing.  Therefore $\bar{a}(t)$ is monotonically increasing in $t$.
 
-%=========================================================================
-\section{Limitations}
-\label{sec:limitations}
-%=========================================================================
+\textbf{Step 4 (concavity on positive support).}  A log-concave CDF $F_\tau$ on a connected positive support is concave (this is a standard consequence of $\log F$ being concave and the chain $F = \exp(\log F)$ giving $F'' = F\,(\log F)'' + F\,((\log F)')^2$; sign-checking gives concavity wherever $\log F$ is concave and $F > 0$).  Affine maps with positive multiplier preserve concavity, so $\bar{a}$ is concave on $\{t : F_\tau(t) \in (0, 1)\}$.
 
-\textbf{(1) V1 small-model regime retracted (transparent).}  Qwen2.5-0.5B/1.5B at $\leq$6.5\% GSM8K accuracy with $S{=}8$ samples per cell yielded BIC staircase rates indistinguishable from a budget-permutation negative control (95.8\%/96.3\% shuffled vs.\ 94.7\%/96.3\% real); this confirms the V1 finding was a BIC-penalty artifact and we retract it.  V2 results use Qwen3.6-35B-A3B (May 2026 SOTA, $\sim$45\% GSM8K accuracy) and Llama 4 Scout (cross-vendor MoE) where the dependent variable carries signal.  \textbf{(2) Single primary benchmark.}  We extend to MATH-500 for cross-domain validation, but additional domains (code, multi-hop reasoning) remain future work.  \textbf{(3) Budget-grid resolution.}  Six budget points $\{32, 64, 128, 256, 512, 1024\}$; doubling to 12 would tighten variation-subset CIs.  \textbf{(4) Synthetic--real mismatch.}  The synthetic channel uses planted log-concave $f_\tau$, which the Baringhaus--Henze test now explicitly validates on real critical-depth estimates; mismatch with synthetic non-monotonicity remains.  \textbf{(5) Practical circuit-depth estimation.}  Circuit depth requires ground-truth structure; deployed \method{} uses gzip and we acknowledge this as a known proxy weakness.  $k{=}1$ staircases are a structural restriction.  \textbf{(6) Equivalence not strict superiority.}  TOST equivalence test concludes accuracy is within $\pm$2pp of fixed-budget-best at substantially lower tokens; this is a no-harm result, not a strict accuracy improvement.  \textbf{(7) Logits-based MI estimation.}  We do not estimate MI from logits; accuracy non-monotonicity is observed at the answer-emission level and does not violate DPI.
+\textbf{Step 5 (smoothness).}  Since $f_\tau$ is log-concave with full support, it is continuous in the interior of its support (log-concave densities are continuous; cf.\ \citealp{ibragimov1956log}).  Hence $\bar{a}'(t) = (\alpha_1 - \alpha_0)\, f_\tau(t)$ is continuous, and $\bar{a}$ is $C^1$.
 
-%=========================================================================
-\section{Broader Impact}
-%=========================================================================
+\textbf{Step 6 (elbow location).}  The population elbow is $t^* = \arg\max_t |\bar{a}''(t)|$.  Since $\bar{a}''(t) = (\alpha_1 - \alpha_0)\, f_\tau'(t)$, the magnitude $|\bar{a}''(t)|$ is maximized where $|f_\tau'(t)|$ is maximized.  For a unimodal log-concave density, $f_\tau'$ vanishes precisely at $\mathrm{mode}(f_\tau)$, and $|f_\tau'(t)|$ peaks immediately on either side, with the curvature change of $F_\tau$ being maximal at the mode itself.  Thus $t^* = \mathrm{mode}(f_\tau)$.
 
-\textbf{Energy footprint.}  Our V3 experiments totaled $\sim$$14{,}400$ inference calls on Qwen3.6-35B-A3B and $\sim$$4{,}800$ on Llama 4 Scout via the OpenRouter API; the V1 retracted experiments used $\sim$$24{,}000$ small-model calls.  Conservatively estimated, our entire experimental program consumed less energy than a single training run of any modern frontier model.  Adaptive routing of the kind we study, if deployed, reduces the carbon footprint of reasoning-intensive LLM deployments roughly proportionally to the per-problem token-savings rate.
+\textbf{Step 7 (population property, not individual).}  Step~6 shows $t^*$ depends only on $F_\tau$, not on any individual $\tau_i$.  Therefore the elbow is a property of the \emph{population distribution} of critical depths, not of any single problem.
+\end{proof}
+\section{Worked BIC numerical example}
+\label{app:worked}
+\paragraph{Worked numerical example.}  Take a single problem $x$ with $B{=}3$ token budgets $\{64, 256, 1024\}$ and $S{=}4$ samples per cell.  Suppose the observed success counts are $k(64)=0$, $k(256)=3$, $k(1024)=4$ (a textbook staircase with $\tau \in (64, 256]$).  The staircase MLE puts the split between budget 1 and budget 2, giving $\hat\alpha_0 = 0/4 = 0$, $\hat\alpha_1 = 7/8 = 0.875$ on the right side.  The sigmoid MLE numerically converges to roughly $\hat L \approx 0.97, \hat k \approx 0.022, \hat t_0 \approx 180$.  Binomial log-likelihoods sum across the three cells:
+\[
+\ell_{\text{step}} \approx 4 \log(1{-}\epsilon) + 3 \log 0.875 + 1 \log 0.125 + 4 \log 0.875 \approx -3.10,
+\]
+\[
+\ell_{\text{sig}} \approx 4 \log 0.07 + 3 \log 0.69 + 1 \log 0.31 + 4 \log 0.95 \approx -13.4,
+\]
+where $\epsilon$ is a numerical floor.  Then $\text{BIC}_{\text{Bin}}(\text{step}) = -2(-3.10) + 2 \log 3 \approx 8.4$ and $\text{BIC}_{\text{Bin}}(\text{sig}) = -2(-13.4) + 3 \log 3 \approx 30.1$, giving $\Delta\text{BIC} = 21.7 \gg 2$, ``decisive evidence'' for staircase on the Raftery scale.  Concretely: the staircase is a 2-parameter model that places mass exactly where the data demand it, while the 3-parameter sigmoid is forced to spend its third degree of freedom smoothing the transition.  When data exhibit a sharp transition with $S$ large enough to resolve $\hat p_j$ at each budget, BIC favors the simpler model that fits the transition.  Conversely, when accuracies are uniformly noisy (e.g.\ $k \in \{0,1\}$ at every budget, as in V1's Qwen2.5-0.5B at 2--3\% accuracy), \emph{both} models fit a near-flat curve and the BIC penalty alone determines the verdict; this is the failure mode our V2 design (\S\ref{sec:results}) avoids.
 
-\textbf{Dual-use considerations.}  Faster, cheaper reasoning inference can in principle be used to scale up automated misinformation, fraud, or abuse generation.  This concern applies to all efficiency improvements in LLM serving, not specifically to our work; the per-problem routing we study is content-agnostic and does not differentially benefit harmful applications.  We see no specific dual-use harm beyond what already applies to the underlying open-weight models.
 
+\section{BIC versus Shape Coefficient: Methodological Discovery (figure)}
+\label{app:bic_vs_shape}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures_v3/fig_v3_bic_vs_shape.pdf}
+    \caption{The methodological discovery, visualized.  BIC (blue, hatched$=$null) returns nearly identical staircase rates on real and IID-Bernoulli noise across all three experiments---confirming that BIC's classification at $B{=}6$ is dominated by the parameter-count penalty rather than by the data.  The shape coefficient $R^2{>}0.7$ test (green) cleanly separates real from noise.  The contrast motivates demoting BIC to a robustness diagnostic and adopting shape $R^2$ as the primary per-cell test.}
+    \label{fig:v3_bic_vs_shape}
+\end{figure}
+\section{Broader Impact (extended)}
+\label{app:broader_impact_full}
 \textbf{Equity and access.}  Test-time compute is currently rationed by API budget, which differentially advantages well-funded users.  Per-problem routing makes test-time compute marginally cheaper, which broadens accessibility on the margin but does not address the underlying capability gap between frontier-model users and others.
 
 \textbf{Methodological externality.}  The methodological discovery (BIC at small $B$ is structurally biased toward lower-DOF model families) generalises beyond our setting.  Any researcher comparing fixed-DOF model families on $\le 10$ data points should be aware of this and report a same-mean noise null.  Surface adoption of this convention would reduce a recurring class of statistical artifact across the literature.
 
-%=========================================================================
-\section{Conclusion}
-%=========================================================================
 
-\textsc{Staircase} reframes test-time compute scaling around a single mathematical reconciliation: under log-concave critical depths, smooth population curves emerge from discrete per-problem staircases (Theorem~\ref{thm:population}).  This identifies smoothness as an aggregation artifact, not a per-problem law, and motivates per-problem routing.  Three independent experiments substantiate the reconciliation, all using a penalty-bias-free shape coefficient $R^2 > 0.7$ as the primary test:
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
-& \textbf{Real} & \textbf{IID-null} & \textbf{Sep.} \\
-\midrule
-Qwen3.6-35B-A3B / GSM8K   & $\bm{85.7\%}$ & $18.6\%$ & $4.6\times$ \\
-Llama 4 Scout / GSM8K     & $\bm{98.0\%}$ & $17.2\%$ & $5.7\times$ \\
-Qwen3.6-35B-A3B / MATH-500 & $\bm{87.3\%}$ & $20.4\%$ & $4.3\times$ \\
-\bottomrule
-\end{tabular}
-\end{center}
 
-Cross-vendor (Meta vs.\ Alibaba), cross-architecture (16-expert vs.\ 128-expert MoE), and cross-domain (arithmetic vs.\ competition math) replication establishes that per-problem discrete structure is robust.  Circuit depth dominates description length on synthetic data ($\rho{=}0.96$ vs.\ $0.38$); the predicted negative result on real GSM8K (gzip $\rho{=}0.147$) confirms the directional claim.  We additionally report a methodological discovery: BIC at small $B$ with fixed-DOF model selection is structurally biased toward the lower-DOF model regardless of signal (BIC favors staircase on $97\%$+ of IID-Bernoulli noise trajectories).  Future work: extend to multi-hop reasoning, code, and agentic benchmarks; characterise the per-vendor critical-depth distribution to understand when log-concavity holds.
-
-\textbf{Reproducibility.}  Code (\texttt{analysis\_v2.py}, \texttt{analysis\_v3.py}, \texttt{experiment/real\_experiment\_v2.py}, \texttt{failure\_mode\_analysis.py}), data, and configs are in the anonymous supplement.  Both V1 (raw .npy with mean accuracies) and V2 (raw .npy with per-sample successes, plus per-call latency metadata) experiments are reproducible from public datasets and open-weight models with seed 42.  Total compute $\sim$\$15 on OpenRouter (V2 hero + Llama 4 Scout cross-arch + MATH-500 cross-domain), 0 GPU-hours self-managed; V1 was on a single RTX A5000 at $<$\$1.
-
-%=========================================================================
 \bibliography{references}
 \bibliographystyle{plainnat}
 
