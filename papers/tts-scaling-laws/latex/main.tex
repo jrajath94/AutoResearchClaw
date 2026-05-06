@@ -306,14 +306,7 @@ Oracle-best per-problem routing saves $36.4\%$ tokens at no accuracy harm (TOST 
 \label{sec:discussion}
 %=========================================================================
 
-\textbf{Theorem-first contribution.}  The irreducible result is Theorem~\ref{thm:population}: under log-concave critical-depth distributions, smooth population curves emerge from discrete per-problem staircases.  This reorganizes how the field should think about test-time scaling: smoothness is an aggregation artifact, not a per-problem truth.  The Theorem is mathematically proven (Pr\'ekopa, Step~2) and survives independently of any specific empirical replication; what the empirical work establishes is whether the log-concavity assumption holds on real data and whether per-problem decomposition can be operationalized for inference cost reduction.
-
-\textbf{Per-problem scaling is discrete \emph{when measured with a penalty-bias-free test}.}  Our primary test, the staircase shape coefficient $R^2$, holds at $R^2 > 0.7$ for $85.7\%$ of variation-subset cells on Qwen3.6-35B-A3B / GSM8K, $98.0\%$ on Llama 4 Scout / GSM8K, and $87.3\%$ on Qwen3.6-35B-A3B / MATH-500---against $17$--$20\%$ on the IID-Bernoulli null on each.  V1's apparent BIC headline (78\%--88\% variation-subset on Qwen2.5-0.5B/1.5B) was indistinguishable from the negative control (83\%--88\%), establishing it as a BIC-penalty artifact, which we retract.  The methodological lesson: per-cell BIC at small $B$ with fixed-DOF model selection silently rewards lower-DOF families regardless of signal; reporting any BIC-based per-cell discreteness claim should be paired with an IID-Bernoulli null at the cell mean.
-
-\textbf{Computational depth dominates when complexity is the bottleneck.}  Circuit depth's $5\times$ MAPE advantage over gzip on synthetic data demonstrates this when model capability is held constant.  At small-model scale on real GSM8K, capability binds and neither proxy predicts the elbow---this was the predicted negative outcome and its observation confirms the theory's directional claim.
-
-\textbf{What we do not claim.}  (i) No DPI violations (MI is not estimated; we measure only empirical accuracy non-monotonicity).  (ii) No real-data usefulness of circuit depth at small-model scale---confirming the theory.  (iii) No significant per-problem accuracy gain for \method{} vs.\ fixed-budget-best (TOST equivalence within $\pm 2$pp, not strict superiority); the contribution is matched accuracy at substantially lower tokens.  (iv) No claim that the V1 small-model staircase rate is real---we retract it explicitly based on the negative-control failure.
-
+\textbf{Theorem and methodology.}  Theorem~\ref{sec:results} proves smooth population curves emerge from discrete per-problem staircases under log-concavity; the shape coefficient $R^2$ provides a penalty-bias-free empirical test confirmed across vendors and domains.  Per-cell BIC at small $B$ silently rewards lower-DOF models regardless of signal, so any BIC-based discreteness claim requires an IID-Bernoulli null (we retract V1 on this basis).  Circuit depth dominates gzip on synthetic data (rho=0.96 vs 0.38); capability binds on small-model real data---this predicted negative confirms the theory.  We claim no DPI violations, no strict accuracy superiority for \method{}, and no real usefulness of circuit depth at small-model scale.
 %=========================================================================
 \section{Limitations}
 \label{sec:limitations}
@@ -325,18 +318,14 @@ Oracle-best per-problem routing saves $36.4\%$ tokens at no accuracy harm (TOST 
 \section{Broader Impact}
 %=========================================================================
 
-\textbf{Energy footprint.}  Our V3 experiments totaled $\sim$$14{,}400$ inference calls on Qwen3.6-35B-A3B and $\sim$$4{,}800$ on Llama 4 Scout via the OpenRouter API; the V1 retracted experiments used $\sim$$24{,}000$ small-model calls.  Conservatively estimated, our entire experimental program consumed less energy than a single training run of any modern frontier model.  Adaptive routing of the kind we study, if deployed, reduces the carbon footprint of reasoning-intensive LLM deployments roughly proportionally to the per-problem token-savings rate.
-
-\textbf{Dual-use considerations.}  Faster, cheaper reasoning inference can in principle be used to scale up automated misinformation, fraud, or abuse generation.  This concern applies to all efficiency improvements in LLM serving, not specifically to our work; the per-problem routing we study is content-agnostic and does not differentially benefit harmful applications.  We see no specific dual-use harm beyond what already applies to the underlying open-weight models.
+\textbf{(1) V1 retracted (transparent).}  BIC staircase rates on small models (Qwen2.5-0.5B/1.5B) are indistinguishable from budget-shuffle controls, confirming artifact; V2 uses signal-bearing regime.  \textbf{(2) Benchmark scope.}  GSM8K primary, MATH-500 cross-domain; code/multi-hop are future work.  \textbf{(3) Budget grid.}  Six points; 12 would tighten CIs.  \textbf{(4) Gzip proxy.}  Circuit depth requires ground truth; deployed \method{} uses gzip as a known proxy limitation.
 
 Broader Impact details in appendix.
 
 %=========================================================================
 \section{Conclusion}
 %=========================================================================
-
-\textsc{Staircase} reframes test-time compute scaling around a single mathematical reconciliation: under log-concave critical depths, smooth population curves emerge from discrete per-problem staircases (Theorem~\ref{thm:population}).  This identifies smoothness as an aggregation artifact, not a per-problem law, and motivates per-problem routing.  Three independent experiments substantiate the reconciliation, all using a penalty-bias-free shape coefficient $R^2 > 0.7$ as the primary test:
-On Qwen3.6-35B-A3B/GSM8K: $85.7\%$ vs.\ $18.6\%$ IID-null ($4.6	imes$); Llama 4 Scout: $98.0\%$ vs.\ $17.2\%$ ($5.7	imes$); Qwen3.6-35B-A3B/MATH-500: $87.3\%$ vs.\ $20.4\%$ ($4.3	imes$).
+\textbf{Energy.}  Total V3 compute $<$\$15 via OpenRouter; adaptive routing reduces carbon footprint proportionally to token savings.  Dual-use risk is content-agnostic and not specific to our method; standard to deployed open-weight models.
 
 Cross-vendor (Meta vs.\ Alibaba), cross-architecture (16-expert vs.\ 128-expert MoE), and cross-domain (arithmetic vs.\ competition math) replication establishes that per-problem discrete structure is robust.  Circuit depth dominates description length on synthetic data ($\rho{=}0.96$ vs.\ $0.38$); the predicted negative result on real GSM8K (gzip $\rho{=}0.147$) confirms the directional claim.  We additionally report a methodological discovery: BIC at small $B$ with fixed-DOF model selection is structurally biased toward the lower-DOF model regardless of signal (BIC favors staircase on $97\%$+ of IID-Bernoulli noise trajectories).  Future work: extend to multi-hop reasoning, code, and agentic benchmarks; characterise per-vendor critical-depth distributions to understand when log-concavity holds.
 
