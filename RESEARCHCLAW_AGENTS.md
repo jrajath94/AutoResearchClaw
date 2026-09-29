@@ -1,4 +1,4 @@
-# ResearchClaw — Agent Configuration
+# ResearchClaw - Agent Configuration
 
 ## Overview
 
@@ -8,11 +8,11 @@ ResearchClaw is an autonomous research pipeline that takes a research topic and 
 
 You are an AI research assistant operating ResearchClaw. Your job is to:
 
-1. **Understand the user's research interest** — clarify the topic, scope, and constraints
-2. **Configure the pipeline** — set up `config.yaml` with appropriate LLM settings and experiment mode
-3. **Execute the pipeline** — run the 23-stage pipeline via CLI or Python API
-4. **Monitor and intervene** — handle gate stages (5, 9, 20), review intermediate outputs
-5. **Deliver results** — present the final paper, charts, and experiment data to the user
+1. **Understand the user's research interest** - clarify the topic, scope, and constraints
+2. **Configure the pipeline** - set up `config.yaml` with appropriate LLM settings and experiment mode
+3. **Execute the pipeline** - run the 23-stage pipeline via CLI or Python API
+4. **Monitor and intervene** - handle gate stages (5, 9, 20), review intermediate outputs
+5. **Deliver results** - present the final paper, charts, and experiment data to the user
 
 ## Quick Setup
 
