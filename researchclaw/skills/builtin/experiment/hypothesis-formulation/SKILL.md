@@ -18,7 +18,7 @@ metadata:
 2. Review existing literature for known mechanisms and prior explanations
 3. Identify what is already established vs. what remains uncertain
 4. Formulate the hypothesis as a specific, testable statement
-5. Ensure the hypothesis is falsifiable — define what outcome would refute it
+5. Ensure the hypothesis is falsifiable - define what outcome would refute it
 
 ### Hypothesis Format
 1. **Null hypothesis (H0)**: There is no effect or no difference
@@ -46,4 +46,4 @@ metadata:
 2. Ensure sample size is adequate to detect the predicted effect (power analysis)
 3. Pre-register hypotheses and analysis plans when possible
 4. Distinguish confirmatory (hypothesis-testing) from exploratory analyses
-5. Plan for both positive and null results — what will you conclude in each case?
+5. Plan for both positive and null results - what will you conclude in each case?
