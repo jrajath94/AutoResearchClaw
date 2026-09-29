@@ -1,8 +1,8 @@
-# AutoResearchClaw — Docker Sandbox Environment Enhancement Plan
+# AutoResearchClaw - Docker Sandbox Environment Enhancement Plan
 
 > Created: 2026-03-15
-> Status: **DONE** — All 10 issues fixed, 1128/1128 tests passing
-> Priority: **CRITICAL** — Without these fixes, experiments fall back to synthetic data, producing meaningless papers
+> Status: **DONE** - All 10 issues fixed, 1128/1128 tests passing
+> Priority: **CRITICAL** - Without these fixes, experiments fall back to synthetic data, producing meaningless papers
 
 ---
 
@@ -13,9 +13,9 @@ the pipeline fails to use them because:
 
 1. The LLM is **not told** which packages are actually available in the Docker image
 2. The Docker sandbox **cannot install packages at runtime** (default `network_policy: "none"`)
-3. Phase 1 pip install is **broken** — packages install in Container A, but experiment runs in Container B (packages lost)
+3. Phase 1 pip install is **broken** - packages install in Container A, but experiment runs in Container B (packages lost)
 4. Only **4 small datasets** are pre-cached (CIFAR-10, FashionMNIST); prompt incorrectly claims CIFAR-100 and MNIST are cached too
-5. **No dataset download mechanism** exists — no setup phase for downloading data before experiment execution
+5. **No dataset download mechanism** exists - no setup phase for downloading data before experiment execution
 6. The Dockerfile is **missing key ML packages** (timm, einops, torchmetrics, ogb, etc.)
 
 **Result:** The LLM generates `torch.randn()` "ImageNet-like" synthetic data as a fallback, making all experiment results meaningless.
@@ -25,16 +25,16 @@ the pipeline fails to use them because:
 ## 1. Reference Solutions Analysis
 
 ### 1.1 AI-Scientist (SakanaAI)
-- **Approach:** "Fat image" — ALL dependencies and datasets baked into Docker image at build time
+- **Approach:** "Fat image" - ALL dependencies and datasets baked into Docker image at build time
 - **Dataset handling:** Pre-download scripts run during `docker build` (enwik8, shakespeare, text8)
-- **Runtime pip install:** None — not supported
+- **Runtime pip install:** None - not supported
 - **Network:** No isolation (user's responsibility)
 - **Lesson:** Pre-caching is the most reliable strategy for reproducibility
 
 ### 1.2 AutoResearch (Karpathy)
 - **Approach:** End-to-end automation in local environment
 - **Dataset handling:** Direct downloads via standard APIs
-- **Lesson:** Simplicity — don't over-engineer isolation if it breaks functionality
+- **Lesson:** Simplicity - don't over-engineer isolation if it breaks functionality
 
 ### 1.3 OpenHands (formerly OpenDevin)
 - **Approach:** Most sophisticated sandbox architecture
@@ -46,7 +46,7 @@ the pipeline fails to use them because:
 ### 1.4 MLCommons Training Benchmarks
 - **Approach:** Host-download, container-mount pattern
 - **Three phases:** Download on host → Build Docker image → Mount data volumes
-- **Lesson:** Large datasets should NEVER be inside Docker images — always volume-mount
+- **Lesson:** Large datasets should NEVER be inside Docker images - always volume-mount
 
 ### 1.5 Docker Desktop Sandboxes
 - **Network policies:** HTTP/HTTPS proxy allowlists per host
@@ -110,7 +110,7 @@ pkg_extras = ", torchdiffeq, gymnasium, networkx, and pip-installable packages"
 
 ### E10: No dataset registry / availability matrix [LOW]
 **File:** `researchclaw/prompts.py`
-**Missing:** The LLM has no knowledge of which datasets are downloadable (and how), which are too large, and what fallback alternatives exist. It should know: "ImageNet is 168GB — use Tiny-ImageNet (200 classes, 500/class) or ImageNet-1k subset instead."
+**Missing:** The LLM has no knowledge of which datasets are downloadable (and how), which are too large, and what fallback alternatives exist. It should know: "ImageNet is 168GB - use Tiny-ImageNet (200 classes, 500/class) or ImageNet-1k subset instead."
 
 ---
 
@@ -171,11 +171,11 @@ pkg_extras = (
 ```
 **Effort:** 10 min
 
-### Task E2: Fix Phase 1/Phase 2 container isolation — single-container execution [CRITICAL]
+### Task E2: Fix Phase 1/Phase 2 container isolation - single-container execution [CRITICAL]
 **Files:**
-- `researchclaw/docker/entrypoint.sh` (NEW) — wrapper script
-- `researchclaw/docker/Dockerfile` (MODIFY) — new entrypoint
-- `researchclaw/experiment/docker_sandbox.py` (MODIFY) — refactor execution model
+- `researchclaw/docker/entrypoint.sh` (NEW) - wrapper script
+- `researchclaw/docker/Dockerfile` (MODIFY) - new entrypoint
+- `researchclaw/experiment/docker_sandbox.py` (MODIFY) - refactor execution model
 
 **E2.1: Create wrapper entrypoint script** (`researchclaw/docker/entrypoint.sh`)
 ```bash
@@ -286,8 +286,8 @@ Also update docstring and config examples.
 
 ### Task E4: Add LLM-generated `setup.py` for dataset downloads [HIGH]
 **Files:**
-- `researchclaw/prompts.py` — add `setup_script_guidance` block
-- `researchclaw/pipeline/executor.py` — code generation stage generates setup.py alongside main.py
+- `researchclaw/prompts.py` - add `setup_script_guidance` block
+- `researchclaw/pipeline/executor.py` - code generation stage generates setup.py alongside main.py
 
 **E4.1: Add `setup_script_guidance` prompt block**
 ```
@@ -312,7 +312,7 @@ In the code generation prompt, instruct the LLM to produce a second file `setup.
 
 **Effort:** 2 hours
 
-### Task E5: Fix pre-cached dataset list — expand + sync with prompt [MEDIUM]
+### Task E5: Fix pre-cached dataset list - expand + sync with prompt [MEDIUM]
 **File:** `researchclaw/docker/Dockerfile:27-30`
 
 **Add to Dockerfile:**
@@ -400,8 +400,8 @@ ImageNet (168GB), LAION (>1TB), etc.
 
 ### Task E8: Add `requirements.txt` generation support [LOW]
 **Files:**
-- `researchclaw/prompts.py` — add requirement to code_generation prompt
-- `researchclaw/experiment/docker_sandbox.py` — auto-generate from detected imports
+- `researchclaw/prompts.py` - add requirement to code_generation prompt
+- `researchclaw/experiment/docker_sandbox.py` - auto-generate from detected imports
 
 **E8.1: LLM generates `requirements.txt`**
 Add to code_generation prompt:
