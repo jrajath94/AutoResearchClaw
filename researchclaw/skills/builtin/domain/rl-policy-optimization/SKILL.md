@@ -33,5 +33,5 @@ Evaluation:
 
 Common pitfalls:
 - Reward shaping can introduce bias
-- Seed sensitivity is HIGH — use 5+ seeds
-- Hyperparameter sensitivity — do a small sweep
+- Seed sensitivity is HIGH - use 5+ seeds
+- Hyperparameter sensitivity - do a small sweep
