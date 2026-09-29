@@ -3,7 +3,7 @@ name: researchclaw
 description: Run the ResearchClaw autonomous research pipeline from a topic, config, and output directory.
 ---
 
-# ResearchClaw — Autonomous Research Pipeline Skill
+# ResearchClaw - Autonomous Research Pipeline Skill
 
 ## Description
 
