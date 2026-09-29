@@ -1,7 +1,7 @@
-# AutoResearchClaw — Phase 5: Showcase Website & Sample Papers
+# AutoResearchClaw - Phase 5: Showcase Website & Sample Papers
 
 > Created: 2026-03-15
-> Status: **Website Built** — static site deployed, showcase papers pending generation
+> Status: **Website Built** - static site deployed, showcase papers pending generation
 > Prerequisites: Phase 3 regression tests complete, all fixes pushed to origin/main
 
 ---
@@ -76,7 +76,7 @@ pipeline:
 | PDF Rendering | **PDF.js** embedded viewer | In-browser paper viewing |
 | Domain | `autoresearchclaw.github.io` or custom | GitHub Pages default |
 
-**Alternative (simpler):** Pure HTML/CSS/JS with no build step — suitable if we want zero dependencies and maximum portability.
+**Alternative (simpler):** Pure HTML/CSS/JS with no build step - suitable if we want zero dependencies and maximum portability.
 
 ### 3.2 Site Structure
 
@@ -223,7 +223,7 @@ Each showcase paper includes a `metadata.json`:
 | 5.1 | Generate 5-6 showcase papers | 1 day (parallel runs) | Phase 3 complete |
 | 5.2 | Review & select 3-4 best papers | 2 hours | 5.1 |
 | 5.3 | Compile LaTeX → PDF for selected papers | 1 hour | 5.2 |
-| 5.4 | Set up website repo structure | 1 hour | — |
+| 5.4 | Set up website repo structure | 1 hour | - |
 | 5.5 | Build landing page + pipeline visualization | 4 hours | 5.4 |
 | 5.6 | Build paper gallery + individual pages | 3 hours | 5.2, 5.4 |
 | 5.7 | Build features page | 2 hours | 5.4 |
@@ -261,23 +261,23 @@ Each showcase paper includes a `metadata.json`:
 - [ ] Review and select best 3-4 papers
 - [ ] Compile PDFs from LaTeX
 - [ ] Create paper metadata.json for each
-- [x] Design pipeline visualization (interactive or static) — interactive click-to-expand
-- [x] Write feature descriptions — 16 feature cards + comparison table
-- [x] Create getting-started guide (adapted from README) — 7-step guide
+- [x] Design pipeline visualization (interactive or static) - interactive click-to-expand
+- [x] Write feature descriptions - 16 feature cards + comparison table
+- [x] Create getting-started guide (adapted from README) - 7-step guide
 - [ ] Record demo video/GIF
-- [x] Build and deploy website — pure HTML/CSS, GitHub Pages via Actions
-- [x] Test on mobile/tablet — responsive CSS with nav toggle
+- [x] Build and deploy website - pure HTML/CSS, GitHub Pages via Actions
+- [x] Test on mobile/tablet - responsive CSS with nav toggle
 - [ ] Add analytics (optional, e.g., Plausible)
 
 ---
 
 ## 9. Open Questions
 
-1. **Custom domain?** — Do we want a custom domain (e.g., `autoresearchclaw.com`) or is `github.io` sufficient?
-2. **Video demo?** — Should we include a screen recording of a full pipeline run, or is a GIF of key stages enough?
-3. **Interactive pipeline?** — Full interactive SVG/Canvas pipeline diagram vs. static image with tooltips?
-4. **Paper format** — Show papers as embedded PDFs, or convert to HTML for better web rendering?
-5. **Localization** — Website in English only, or mirror the multi-language READMEs?
+1. **Custom domain?** - Do we want a custom domain (e.g., `autoresearchclaw.com`) or is `github.io` sufficient?
+2. **Video demo?** - Should we include a screen recording of a full pipeline run, or is a GIF of key stages enough?
+3. **Interactive pipeline?** - Full interactive SVG/Canvas pipeline diagram vs. static image with tooltips?
+4. **Paper format** - Show papers as embedded PDFs, or convert to HTML for better web rendering?
+5. **Localization** - Website in English only, or mirror the multi-language READMEs?
 
 ---
 
