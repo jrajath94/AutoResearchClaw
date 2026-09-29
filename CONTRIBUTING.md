@@ -16,9 +16,9 @@
 
 ## Config Convention
 
-- `config.researchclaw.example.yaml` — tracked template (do not add secrets)
-- `config.arc.yaml` — your local config (gitignored, created by `researchclaw init`)
-- `config.yaml` — also gitignored, supported as fallback
+- `config.researchclaw.example.yaml` - tracked template (do not add secrets)
+- `config.arc.yaml` - your local config (gitignored, created by `researchclaw init`)
+- `config.yaml` - also gitignored, supported as fallback
 
 ## Running Tests
 
