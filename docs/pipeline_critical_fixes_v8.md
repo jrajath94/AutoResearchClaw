@@ -1,4 +1,4 @@
-# Pipeline Critical Fixes V8 — 投稿级论文质量修复
+# Pipeline Critical Fixes V8 - 投稿级论文质量修复
 
 ## 目标
 修复所有阻止 Pipeline 产出符合 AI 顶会投稿标准论文的问题。
@@ -66,7 +66,7 @@
 - **状态**: ✅ 已修复
 
 ### T2.5 强制必需章节验证
-- **问题**: NeurIPS/ICLR 要求 Limitations 章节 — 当前不检查
+- **问题**: NeurIPS/ICLR 要求 Limitations 章节 - 当前不检查
 - **文件**: `researchclaw/templates/converter.py` + `researchclaw/prompts.py`
 - **修复**: `check_paper_completeness()` 增加 Limitations 章节检测；`writing_structure` block 增加 MARKDOWN FORMATTING 规则
 - **状态**: ✅ 已修复
