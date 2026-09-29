@@ -52,7 +52,7 @@ metadata:
 5. Minimize energy: `AllChem.MMFFOptimizeMolecule(mol)`
 
 ### Common Pitfalls
-1. Always sanitize molecules (default behavior) — disable only when needed
+1. Always sanitize molecules (default behavior) - disable only when needed
 2. Add hydrogens explicitly for 3D work: `Chem.AddHs(mol)`
 3. Handle stereochemistry: use `Chem.AssignStereochemistry(mol)`
 4. Large SDF files: use `ForwardSDMolSupplier` for memory efficiency
