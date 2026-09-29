@@ -1,6 +1,6 @@
 # AutoResearchClaw Integration Guide
 
-> **The simplest way to use AutoResearchClaw**: give the repo URL to [OpenClaw](https://github.com/openclaw/openclaw) and say *"Research [your topic]."* That's it — OpenClaw handles cloning, installing, configuring, and running the entire 23-stage pipeline for you.
+> **The simplest way to use AutoResearchClaw**: give the repo URL to [OpenClaw](https://github.com/openclaw/openclaw) and say *"Research [your topic]."* That's it - OpenClaw handles cloning, installing, configuring, and running the entire 23-stage pipeline for you.
 
 This guide is for humans who want to understand what's happening under the hood, or who prefer to set things up manually.
 
@@ -35,7 +35,7 @@ If you use [OpenClaw](https://github.com/openclaw/openclaw) as your AI assistant
    ```
    https://github.com/aiming-lab/AutoResearchClaw
    ```
-2. OpenClaw reads `RESEARCHCLAW_AGENTS.md` and `README.md` — it now understands the entire system.
+2. OpenClaw reads `RESEARCHCLAW_AGENTS.md` and `README.md` - it now understands the entire system.
    > **Note:** `RESEARCHCLAW_AGENTS.md` is generated locally and listed in `.gitignore`. If it doesn't exist, OpenClaw can bootstrap from `README.md` and the project structure.
 3. Say something like:
    ```
@@ -445,7 +445,7 @@ experiment:
     max_memory_mb: 4096
 ```
 
-The pipeline **generates Python code and actually runs it** in a subprocess. The code is validated before execution (AST parsing, import whitelist, no file I/O outside sandbox). **Hardware-aware**: Stage 1 auto-detects your GPU (NVIDIA CUDA / Apple MPS / CPU-only) and adapts the generated code accordingly — high-tier GPUs get full PyTorch code, limited GPUs get lightweight experiments, CPU-only gets NumPy/sklearn only.
+The pipeline **generates Python code and actually runs it** in a subprocess. The code is validated before execution (AST parsing, import whitelist, no file I/O outside sandbox). **Hardware-aware**: Stage 1 auto-detects your GPU (NVIDIA CUDA / Apple MPS / CPU-only) and adapts the generated code accordingly - high-tier GPUs get full PyTorch code, limited GPUs get lightweight experiments, CPU-only gets NumPy/sklearn only.
 
 **Best for**: Real experiments on your local machine. Supports numpy and stdlib; deep learning frameworks (torch, tensorflow) are available if installed in your environment and GPU is detected.
 
@@ -475,10 +475,10 @@ The pipeline runs generated code inside a **Docker container** with GPU passthro
 3. **Phase 2 (experiment)**: Executes the experiment code (network disabled by default via iptables)
 
 **Network policies**:
-- `none` — No network at all (all phases offline). Requires all deps pre-installed in image.
-- `setup_only` (default) — Network during Phase 0+1, disabled before Phase 2 via iptables (`--cap-add=NET_ADMIN`).
-- `pip_only` — Network only during Phase 0 (pip install), disabled for Phase 1+2.
-- `full` — Network available throughout all phases.
+- `none` - No network at all (all phases offline). Requires all deps pre-installed in image.
+- `setup_only` (default) - Network during Phase 0+1, disabled before Phase 2 via iptables (`--cap-add=NET_ADMIN`).
+- `pip_only` - Network only during Phase 0 (pip install), disabled for Phase 1+2.
+- `full` - Network available throughout all phases.
 
 **Pre-cached datasets**: The Docker image includes CIFAR-10/100, MNIST, FashionMNIST, STL-10, and SVHN at `/opt/datasets`, mounted read-only as `/workspace/data`. No download needed for these standard benchmarks.
 
@@ -578,7 +578,7 @@ openclaw_bridge:
 
 When OpenClaw provides a capability (e.g., message sending), the adapter consumes it automatically. When running standalone, recording stubs capture all calls for debugging without side effects.
 
-This is an **extension point** — you don't need to configure it for basic usage.
+This is an **extension point** - you don't need to configure it for basic usage.
 
 ---
 
@@ -675,7 +675,7 @@ metaclaw start --mode skills_only --port 30000
 bash scripts/metaclaw_start.sh
 ```
 
-The proxy is optional — without it, the pipeline still benefits from skill injection via `build_overlay()` and falls back to your configured LLM endpoint.
+The proxy is optional - without it, the pipeline still benefits from skill injection via `build_overlay()` and falls back to your configured LLM endpoint.
 
 ### Experiment Results
 
@@ -695,7 +695,7 @@ In controlled A/B experiments (same topic, same LLM, same configuration):
 | File | Purpose |
 |------|---------|
 | `researchclaw/metaclaw_bridge/` | Integration module (config, session, lesson_to_skill, prm_gate, skill_feedback) |
-| `researchclaw/evolution.py` | `build_overlay()` — reads intra-run lessons + cross-run arc-* skills |
+| `researchclaw/evolution.py` | `build_overlay()` - reads intra-run lessons + cross-run arc-* skills |
 | `researchclaw/llm/client.py` | Proxy routing with automatic fallback |
 | `~/.metaclaw/skills/arc-*/SKILL.md` | Learned skill files (auto-generated) |
 | `scripts/metaclaw_start.sh` | Helper script to launch MetaClaw proxy |
@@ -831,7 +831,7 @@ researchclaw doctor --config config.yaml
 | Code validation rejects all attempts | LLM generates unsafe code | Switch to `simulated` mode, or try a more capable model |
 | Gate stage blocks pipeline | Manual approval required | Use `--auto-approve` for autonomous mode |
 | Pipeline fails mid-run | Transient API error | Run with `--resume` to continue from the last checkpoint |
-| Citations marked HALLUCINATED | LLM invented fake references | This is expected — Stage 23 catches these. Use `references_verified.bib` instead |
+| Citations marked HALLUCINATED | LLM invented fake references | This is expected - Stage 23 catches these. Use `references_verified.bib` instead |
 | LaTeX won't compile | Missing style packages | Install the conference style files, or use `tectonic` which auto-downloads them |
 
 ### Resuming a Failed Run
@@ -860,7 +860,7 @@ This prints a human-readable summary: which stages passed, which failed, key met
 A: Depends on your model and topic complexity. A typical run with GPT-4o makes ~35-60 API calls across all 23 stages (paper drafting now uses 3 sequential calls for section-by-section writing). Expect roughly $3-12 per run. Simulated mode uses slightly fewer tokens since it doesn't generate real experiment code.
 
 **Q: Can I use a local LLM (Ollama, vLLM, etc.)?**
-A: Yes — any OpenAI-compatible endpoint works. Set `llm.base_url` to your local server (e.g., `http://localhost:11434/v1` for Ollama). Quality depends heavily on the model's capabilities.
+A: Yes - any OpenAI-compatible endpoint works. Set `llm.base_url` to your local server (e.g., `http://localhost:11434/v1` for Ollama). Quality depends heavily on the model's capabilities.
 
 **Q: Can I run only part of the pipeline?**
 A: Yes. Use `--from-stage STAGE_NAME` to start from any stage. The stage reads its inputs from previously generated artifacts, so the earlier stages must have completed at least once.
@@ -875,7 +875,7 @@ A: AutoResearchClaw is a research tool, not a paper mill. The output is a strong
 A: The pipeline checkpoints after every stage. Use `--resume` to pick up where it left off. Failed stages are retried according to the `max_retries` setting in each stage's contract.
 
 **Q: Can I change the research topic mid-run?**
-A: Not recommended — the pipeline builds on prior stages' outputs. Start a new run with the new topic instead.
+A: Not recommended - the pipeline builds on prior stages' outputs. Start a new run with the new topic instead.
 
 ---
 
