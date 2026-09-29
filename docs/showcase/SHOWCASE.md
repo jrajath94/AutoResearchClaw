@@ -1,7 +1,7 @@
 <h1 align="center">🏆 Generated Paper Showcase</h1>
 
 <p align="center">
-  <i>From a one-line idea to a conference-ready paper — fully autonomous, zero human intervention.</i>
+  <i>From a one-line idea to a conference-ready paper - fully autonomous, zero human intervention.</i>
 </p>
 
 <p align="center">
@@ -20,9 +20,9 @@
 
 ---
 
-Below are **eight papers** generated **entirely by AutoResearchClaw** — each starting from nothing more than a topic sentence. The pipeline autonomously searched literature, designed experiments, wrote and executed code, generated figures, and produced NeurIPS-formatted LaTeX papers with verified references.
+Below are **eight papers** generated **entirely by AutoResearchClaw** - each starting from nothing more than a topic sentence. The pipeline autonomously searched literature, designed experiments, wrote and executed code, generated figures, and produced NeurIPS-formatted LaTeX papers with verified references.
 
-> 📌 **Two batches, eight domains** — Batch A covers mathematics, statistics, biology, and numerical computing; Batch B covers NLP, reinforcement learning, computer vision, and knowledge distillation — demonstrating the pipeline's cross-domain generality.
+> 📌 **Two batches, eight domains** - Batch A covers mathematics, statistics, biology, and numerical computing; Batch B covers NLP, reinforcement learning, computer vision, and knowledge distillation - demonstrating the pipeline's cross-domain generality.
 
 ---
 
@@ -67,7 +67,7 @@ Below are **eight papers** generated **entirely by AutoResearchClaw** — each s
 </tr>
 </table>
 
-<p align="center"><sub>Each run traverses <b>23 autonomous stages</b> with iterative self-healing, multi-agent peer review, and citation verification — no human in the loop.</sub></p>
+<p align="center"><sub>Each run traverses <b>23 autonomous stages</b> with iterative self-healing, multi-agent peer review, and citation verification - no human in the loop.</sub></p>
 
 ---
 
@@ -106,7 +106,7 @@ Systematically quantify pre-asymptotic, finite-*N* deviations of empirical eigen
 | 📑 **Pages** | 16 pages (NeurIPS format) |
 
 #### 🎯 Key Result
-Produced a finite-*N* correction atlas showing convergence rates of spectral densities, with edge deviations persisting significantly longer than bulk errors — providing practical guidance for when the MP law is "close enough."
+Produced a finite-*N* correction atlas showing convergence rates of spectral densities, with edge deviations persisting significantly longer than bulk errors - providing practical guidance for when the MP law is "close enough."
 
 <a href="papers/paper_I_random_matrix.pdf"><img src="https://img.shields.io/badge/📄_Read_Full_Paper-PDF-d73a49?style=for-the-badge" alt="Read PDF"></a>
 
@@ -115,7 +115,7 @@ Produced a finite-*N* correction atlas showing convergence rates of spectral den
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — MPCX Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - MPCX Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_I_random_matrix.png" width="90%" alt="MPCX Framework Diagram">
@@ -154,7 +154,7 @@ Reframe the classical 2SLS / LIML / Fuller-*k* / JIVE comparison around decision
 | 📑 **Pages** | 14 pages (NeurIPS format) |
 
 #### 🎯 Key Result
-Generated estimator-switching phase diagrams revealing that Fuller-*k* dominates in specific small-*n*, many-instrument regions, while JIVE's bias reduction is systematically offset by variance inflation — providing actionable guidance for empirical researchers.
+Generated estimator-switching phase diagrams revealing that Fuller-*k* dominates in specific small-*n*, many-instrument regions, while JIVE's bias reduction is systematically offset by variance inflation - providing actionable guidance for empirical researchers.
 
 <a href="papers/paper_II_weak_iv_estimators.pdf"><img src="https://img.shields.io/badge/📄_Read_Full_Paper-PDF-d73a49?style=for-the-badge" alt="Read PDF"></a>
 
@@ -163,7 +163,7 @@ Generated estimator-switching phase diagrams revealing that Fuller-*k* dominates
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — IVX Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - IVX Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_II_weak_iv_estimators.png" width="90%" alt="IVX Framework Diagram">
@@ -202,7 +202,7 @@ Map the boundary between structural and practical identifiability in SIR vs. SEI
 | 📑 **Pages** | 18 pages (NeurIPS format) |
 
 #### 🎯 Key Result
-Demonstrated that parameterization and observer design choices affect identifiability diagnostics more strongly than the choice between SIR and SEIR structure — with FIM producing overconfident estimates in specific observation-limited regimes where profile likelihood correctly flags non-identifiability.
+Demonstrated that parameterization and observer design choices affect identifiability diagnostics more strongly than the choice between SIR and SEIR structure - with FIM producing overconfident estimates in specific observation-limited regimes where profile likelihood correctly flags non-identifiability.
 
 <a href="papers/paper_III_sir_seir_identifiability.pdf"><img src="https://img.shields.io/badge/📄_Read_Full_Paper-PDF-d73a49?style=for-the-badge" alt="Read PDF"></a>
 
@@ -211,7 +211,7 @@ Demonstrated that parameterization and observer design choices affect identifiab
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — PRIM Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - PRIM Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_III_sir_seir_identifiability.png" width="90%" alt="PRIM Framework Diagram">
@@ -236,7 +236,7 @@ Demonstrated that parameterization and observer design choices affect identifiab
 <td>
 
 #### 💡 Idea
-Go beyond "which preconditioner wins" — build a feature-conditioned decision map for ILU / Jacobi / SSOR / AMG with CG / GMRES / BiCGSTAB, stratified by sparsity-graph structure and matrix pathology under realistic setup-vs-solve cost budgets.
+Go beyond "which preconditioner wins" - build a feature-conditioned decision map for ILU / Jacobi / SSOR / AMG with CG / GMRES / BiCGSTAB, stratified by sparsity-graph structure and matrix pathology under realistic setup-vs-solve cost budgets.
 
 #### ⚙️ Pipeline Journey
 
@@ -250,7 +250,7 @@ Go beyond "which preconditioner wins" — build a feature-conditioned decision m
 | 📑 **Pages** | 16 pages (NeurIPS format) |
 
 #### 🎯 Key Result
-Produced a setup-vs-solve tradeoff analysis showing that methods considered "best" under solve-time alone are often suboptimal under realistic memory and setup budgets — with AMG dominance limited to specific elliptic SPD matrix families.
+Produced a setup-vs-solve tradeoff analysis showing that methods considered "best" under solve-time alone are often suboptimal under realistic memory and setup budgets - with AMG dominance limited to specific elliptic SPD matrix families.
 
 <a href="papers/paper_IV_krylov_preconditioners.pdf"><img src="https://img.shields.io/badge/📄_Read_Full_Paper-PDF-d73a49?style=for-the-badge" alt="Read PDF"></a>
 
@@ -259,7 +259,7 @@ Produced a setup-vs-solve tradeoff analysis showing that methods considered "bes
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — Krylov Preconditioner Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - Krylov Preconditioner Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_IV_krylov_preconditioners.png" width="90%" alt="Krylov Preconditioner Framework Diagram">
@@ -290,7 +290,7 @@ Produced a setup-vs-solve tradeoff analysis showing that methods considered "bes
 <td>
 
 #### 💡 Idea
-Most LoRA configurations use a fixed, uniform rank across all layers. GARD proposes using the *spectrum of layer-wise gradients* — eigenvalues of gradient covariance — to dynamically allocate rank where it matters most, under a strict parameter budget.
+Most LoRA configurations use a fixed, uniform rank across all layers. GARD proposes using the *spectrum of layer-wise gradients* - eigenvalues of gradient covariance - to dynamically allocate rank where it matters most, under a strict parameter budget.
 
 #### ⚙️ Pipeline Journey
 
@@ -313,7 +313,7 @@ A principled alternative to uniform rank allocation: GARD links intrinsic gradie
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — GARD Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - GARD Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_V_gard_lora.png" width="90%" alt="GARD Framework Diagram">
@@ -362,7 +362,7 @@ DQN baseline achieves **356.7 mean reward** in sparse-reward gridworld tasks. Th
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — LACE Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - LACE Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_VI_lace_exploration.png" width="90%" alt="LACE Framework Diagram">
@@ -411,7 +411,7 @@ ViT-B/16 baseline: **56.54% accuracy** (3 seeds). Detailed analysis of the accur
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — FAME Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - FAME Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_VII_fame_token_merging.png" width="90%" alt="FAME Framework Diagram">
@@ -459,7 +459,7 @@ Standard knowledge distillation transfers teacher knowledge assuming train/test 
 | **AttentionKD** | **82.08%** | **65.95%** |
 | CRD | 68.03% | 50.57% |
 
-Attention-based feature KD improves robustness by **+3 pts** over ERM, while naive CRD degrades it by **-12 pts** — motivating CRAFT's reliability-aware design.
+Attention-based feature KD improves robustness by **+3 pts** over ERM, while naive CRD degrades it by **-12 pts** - motivating CRAFT's reliability-aware design.
 
 <a href="papers/paper_VIII_craft_distillation.pdf"><img src="https://img.shields.io/badge/📄_Read_Full_Paper-PDF-d73a49?style=for-the-badge" alt="Read PDF"></a>
 
@@ -468,7 +468,7 @@ Attention-based feature KD improves robustness by **+3 pts** over ERM, while nai
 </table>
 
 <details>
-<summary>🖼️ <b>Auto-Generated Framework Diagram</b> — CRAFT Architecture</summary>
+<summary>🖼️ <b>Auto-Generated Framework Diagram</b> - CRAFT Architecture</summary>
 <br>
 <p align="center">
 <img src="thumbnails/framework_VIII_craft_distillation.png" width="90%" alt="CRAFT Framework Diagram">
