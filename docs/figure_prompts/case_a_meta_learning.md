@@ -1,4 +1,4 @@
-# Case A: Continual Meta-Learning — Image Generation Prompt
+# Case A: Continual Meta-Learning - Image Generation Prompt
 
 ## Prompt
 
@@ -9,11 +9,11 @@ A premium, modern data visualization infographic on a clean white background wit
 **Y-axis:** "Few-Shot Accuracy (%)" ranging from 15% to 105%. **X-axis:** "Self-Iteration Round" with 5 labeled tick marks.
 
 **Data points and line:**
-- Point 0 (Baseline): 25.9% — large circle marker, colored **slate gray** (#757575). X-label below: "Baseline" with a small gray beaker/flask icon, subtitle "(Initial Code)".
-- Point 1 (Iter 1): 81.2% — large circle marker, colored **emerald green** (#2E7D32). X-label: "Iter 1" with a small green brain/neural-network icon, subtitle "(Deep Encoder + Meta-SGD)".
-- Point 2 (Iter 2): 77.5% — large circle marker, colored **crimson red** (#C62828). X-label: "Iter 2" with a small red warning-triangle icon, subtitle "(Prototype Net — Regression)".
-- Point 3 (Iter 3): 93.4% — large circle marker, colored **emerald green** (#2E7D32). X-label: "Iter 3" with a small green rocket icon, subtitle "(Linear Clf + L2 Anchor)".
-- Point 4 (Iter 4): 93.4% — large circle marker, colored **slate gray** (#757575). X-label: "Iter 4" with a small gray checkmark-circle icon, subtitle "(Converged)".
+- Point 0 (Baseline): 25.9% - large circle marker, colored **slate gray** (#757575). X-label below: "Baseline" with a small gray beaker/flask icon, subtitle "(Initial Code)".
+- Point 1 (Iter 1): 81.2% - large circle marker, colored **emerald green** (#2E7D32). X-label: "Iter 1" with a small green brain/neural-network icon, subtitle "(Deep Encoder + Meta-SGD)".
+- Point 2 (Iter 2): 77.5% - large circle marker, colored **crimson red** (#C62828). X-label: "Iter 2" with a small red warning-triangle icon, subtitle "(Prototype Net - Regression)".
+- Point 3 (Iter 3): 93.4% - large circle marker, colored **emerald green** (#2E7D32). X-label: "Iter 3" with a small green rocket icon, subtitle "(Linear Clf + L2 Anchor)".
+- Point 4 (Iter 4): 93.4% - large circle marker, colored **slate gray** (#757575). X-label: "Iter 4" with a small gray checkmark-circle icon, subtitle "(Converged)".
 
 **Connecting line:** Thick (3px) solid line in **royal blue** (#1565C0) connecting all 5 points in order. The area below the line (above the baseline value of 25.9%) is filled with a very light semi-transparent blue wash (#1565C0 at 8% opacity).
 
@@ -35,6 +35,6 @@ Improvement: +67.5 pts (261% rel.)
 - Red square: "Regressed (auto-recovered)"
 - Gray square: "No change / Baseline"
 
-**Style:** Clean, professional, tech-forward aesthetic. Use a modern sans-serif font (like Inter, SF Pro, or Helvetica Neue). Subtle drop shadows on the summary box and annotation callouts. Smooth anti-aliased lines. The overall feel should be suitable for a top-tier AI research company's product page or investor deck — polished, data-rich, and visually compelling. High contrast text. No 3D effects. Flat design with depth through subtle shadows and layering.
+**Style:** Clean, professional, tech-forward aesthetic. Use a modern sans-serif font (like Inter, SF Pro, or Helvetica Neue). Subtle drop shadows on the summary box and annotation callouts. Smooth anti-aliased lines. The overall feel should be suitable for a top-tier AI research company's product page or investor deck - polished, data-rich, and visually compelling. High contrast text. No 3D effects. Flat design with depth through subtle shadows and layering.
 
 **Dimensions:** 1200 x 900 pixels, 2x retina resolution.
