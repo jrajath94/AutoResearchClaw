@@ -26,5 +26,5 @@ Use torch.cuda.amp for automatic mixed precision:
 - Wrap forward pass in torch.cuda.amp.autocast()
 - Use GradScaler for loss scaling
 - BF16 preferred over FP16 on Ampere+ GPUs (RTX 3xxx, A100, RTX 4xxx)
-- Watch for NaN gradients — reduce learning rate if needed
+- Watch for NaN gradients - reduce learning rate if needed
 - Do NOT use amp with custom CUDA kernels unless tested
