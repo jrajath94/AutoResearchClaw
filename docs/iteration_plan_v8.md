@@ -1,4 +1,4 @@
-# AutoResearchClaw Pipeline — 持续迭代改进方案 V8
+# AutoResearchClaw Pipeline - 持续迭代改进方案 V8
 
 > 创建日期: 2026-03-15
 > 基于: V7 质量修复 (P1-P14) + Run 1-7 测试反馈
@@ -12,16 +12,16 @@
 
 | ID | 问题 | 严重程度 | 类别 |
 |----|------|----------|------|
-| Q1 | **代码过于简单/偷懒** — LLM 生成的实验代码复杂度不足，缺乏真正的算法实现深度 | 🔴 Critical | 代码质量 |
-| Q2 | **不支持 LLM 微调任务** — 无法使用 Llama-Factory/TRL/Axolotl 等框架进行模型训练 | 🔴 Critical | 能力缺失 |
-| Q3 | **Docker 环境缺失关键包** — transformers, PEFT, TRL, datasets, accelerate 未预装 | 🔴 Critical | 基础设施 |
-| Q4 | **计算预算不匹配** — 默认 600s 完全不够 LLM 微调/复杂训练任务 | 🟡 High | 配置 |
-| Q5 | **数据集指导不全** — 只覆盖图像分类(CIFAR-10/FashionMNIST)，缺少 NLP/多模态数据集 | 🟡 High | 提示工程 |
-| Q6 | **缺少先进训练技巧指导** — 无混合精度、梯度累积、LoRA/QLoRA 等指导 | 🟡 High | 提示工程 |
-| Q7 | **选题缺乏前沿性验证** — topic_init 阶段无法确保选题与最新会议趋势对齐 | 🟡 High | 提示工程 |
-| Q8 | **实验设计与代码脱节** — experiment_design 阶段产出的方案过于抽象，代码难以还原 | 🟠 Medium | 流程 |
-| Q9 | **消融实验质量低** — 消融 variant 经常与 baseline 结果相同（代码偷懒） | 🟠 Medium | 代码质量 |
-| Q10 | **论文写作质量待提升** — 数字重复、结构松散、结论与实验脱节 | 🟠 Medium | 写作 |
+| Q1 | **代码过于简单/偷懒** - LLM 生成的实验代码复杂度不足，缺乏真正的算法实现深度 | 🔴 Critical | 代码质量 |
+| Q2 | **不支持 LLM 微调任务** - 无法使用 Llama-Factory/TRL/Axolotl 等框架进行模型训练 | 🔴 Critical | 能力缺失 |
+| Q3 | **Docker 环境缺失关键包** - transformers, PEFT, TRL, datasets, accelerate 未预装 | 🔴 Critical | 基础设施 |
+| Q4 | **计算预算不匹配** - 默认 600s 完全不够 LLM 微调/复杂训练任务 | 🟡 High | 配置 |
+| Q5 | **数据集指导不全** - 只覆盖图像分类(CIFAR-10/FashionMNIST)，缺少 NLP/多模态数据集 | 🟡 High | 提示工程 |
+| Q6 | **缺少先进训练技巧指导** - 无混合精度、梯度累积、LoRA/QLoRA 等指导 | 🟡 High | 提示工程 |
+| Q7 | **选题缺乏前沿性验证** - topic_init 阶段无法确保选题与最新会议趋势对齐 | 🟡 High | 提示工程 |
+| Q8 | **实验设计与代码脱节** - experiment_design 阶段产出的方案过于抽象，代码难以还原 | 🟠 Medium | 流程 |
+| Q9 | **消融实验质量低** - 消融 variant 经常与 baseline 结果相同（代码偷懒） | 🟠 Medium | 代码质量 |
+| Q10 | **论文写作质量待提升** - 数字重复、结构松散、结论与实验脱节 | 🟠 Medium | 写作 |
 
 ### 1.2 硬件环境
 
@@ -382,7 +382,7 @@ RUN pip install --no-cache-dir llamafactory>=0.9.0
 
 ## 九、测试选题库
 
-### 优先级 A — Phase 0 诊断测试用
+### 优先级 A - Phase 0 诊断测试用
 
 | # | 主题 | 类型 | 预期复杂度 | GPU 时间 |
 |---|------|------|-----------|----------|
@@ -390,7 +390,7 @@ RUN pip install --no-cache-dir llamafactory>=0.9.0
 | A2 | Flow Matching vs Diffusion vs Consistency for Offline RL | 强化学习 | 高 | 6-10h |
 | A3 | First-Token Reasoning Quality for Compute Allocation | LLM 推理 | 中 | 3-6h |
 
-### 优先级 B — Phase 2 后 LLM 微调测试
+### 优先级 B - Phase 2 后 LLM 微调测试
 
 | # | 主题 | 类型 | 预期复杂度 | GPU 时间 |
 |---|------|------|-----------|----------|
@@ -398,7 +398,7 @@ RUN pip install --no-cache-dir llamafactory>=0.9.0
 | B2 | GainLoRA++ for LLM Continual Learning | 持续学习 | 高 | 6-10h |
 | B3 | Spurious Forgetting Analysis in Instruction-Tuned LLMs | LLM 分析 | 中 | 4-8h |
 
-### 优先级 C — 多样性覆盖测试
+### 优先级 C - 多样性覆盖测试
 
 | # | 主题 | 类型 | 预期复杂度 | GPU 时间 |
 |---|------|------|-----------|----------|
@@ -437,14 +437,14 @@ RUN pip install --no-cache-dir llamafactory>=0.9.0
 
 #### Phase 3: 回归测试 🔄 进行中
 Run 11-13 结果分析:
-- **Run 11 (QLoRA)**: 代码4/10, 论文7/10 — 合成模拟非真实训练, 但论文质量达标
-- **Run 12 (VLM)**: 代码3/10 — KeyError崩溃, 训练/验证重叠, 损失方向错误
-- **Run 13 (RL)**: 代码6/10 — MuJoCo成功! 但60k步不够收敛, PPO容量不公平
+- **Run 11 (QLoRA)**: 代码4/10, 论文7/10 - 合成模拟非真实训练, 但论文质量达标
+- **Run 12 (VLM)**: 代码3/10 - KeyError崩溃, 训练/验证重叠, 损失方向错误
+- **Run 13 (RL)**: 代码6/10 - MuJoCo成功! 但60k步不够收敛, PPO容量不公平
 
 Phase 3 修复 (本次commit):
 - Q17: Docker HF缓存重复挂载 → 优先HF_HOME, 避免重复
 - Q18: LLM代码审查JSON解析失败 → 正确提取LLMResponse.content + 去除markdown fence
-- Q19: LLM任务合成模拟 → 添加"CRITICAL — NO SIMULATION"规则
+- Q19: LLM任务合成模拟 → 添加"CRITICAL - NO SIMULATION"规则
 - Q20: NumPy 2.0移除API → 检测器 + 禁止模式更新
 - Q21: dict[key]无默认值 → 禁止模式更新
 
