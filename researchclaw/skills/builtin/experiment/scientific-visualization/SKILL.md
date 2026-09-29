@@ -29,7 +29,7 @@ metadata:
 
 ### Colorblind-Safe Design
 1. Use colorblind-friendly palettes: seaborn "colorblind", Okabe-Ito, viridis, cividis
-2. NEVER rely on color alone — combine with shape, pattern, or line style
+2. NEVER rely on color alone - combine with shape, pattern, or line style
 3. Avoid red-green combinations; prefer blue-orange or blue-yellow contrasts
 4. Test figures with a colorblind simulator before submission
 5. Ensure figures work in grayscale for print journals
@@ -46,7 +46,7 @@ metadata:
 2. Always include error bars; specify type in caption (SEM, SD, 95% CI)
 3. Use significance brackets with stars: * p<.05, ** p<.01, *** p<.001
 4. Annotate effect sizes or key statistics directly on the figure when helpful
-5. Never use bar charts for small-n data — use dot plots or box plots instead
+5. Never use bar charts for small-n data - use dot plots or box plots instead
 
 ### Export and Quality Checklist
 1. Save in vector format (PDF/SVG) for line art; TIFF/PNG for photographs
