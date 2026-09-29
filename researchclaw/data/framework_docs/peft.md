@@ -1,4 +1,4 @@
-# PEFT (Parameter-Efficient Fine-Tuning) — API Quick Reference
+# PEFT (Parameter-Efficient Fine-Tuning) - API Quick Reference
 
 ## Installation
 ```bash
