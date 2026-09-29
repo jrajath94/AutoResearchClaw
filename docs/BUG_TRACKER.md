@@ -21,13 +21,13 @@
 - **描述**: Semantic Scholar 和 arXiv API 在并发请求时频繁 429
 - **影响**: 文献收集阶段延迟，但 circuit breaker 保证最终完成
 
-### BUG-04: Stage 10 深度质量检查 — 类方法不足
+### BUG-04: Stage 10 深度质量检查 - 类方法不足
 - **状态**: ✅ 已加强 (远程 commit `855c201`)
 - **描述**: 生成的代码中多个类只有 1 个非 dunder 方法，质量检查报告 "algorithm classes should have at least __init__ + one core method"
 - **影响**: 代码质量评分降低，但不阻塞 pipeline
-- **远程修复**: 新增 Check 6 — ablation 子类必须 override 父类至少一个非 dunder 方法，否则报警告。修复写入 `validator.py` 和 `executor.py` 的 repair prompt。
+- **远程修复**: 新增 Check 6 - ablation 子类必须 override 父类至少一个非 dunder 方法，否则报警告。修复写入 `validator.py` 和 `executor.py` 的 repair prompt。
 
-### BUG-05: Stage 10 深度质量检查 — UnboundLocalError 风险
+### BUG-05: Stage 10 深度质量检查 - UnboundLocalError 风险
 - **状态**: ✅ 已修复 (远程 commit `855c201`)
 - **描述**: 生成代码中变量只在 if 分支内赋值，但在分支外使用（如 main.py:289 `mask`, main.py:300 `out` 等）
 - **影响**: 生成的实验代码可能在运行时崩溃
@@ -54,7 +54,7 @@
 
 ### BUG-08: CodeGen `'str' object has no attribute 'get'` (v8r3 新发现)
 - **状态**: ✅ 已修复
-- **严重度**: 中 — 不阻塞 pipeline（有 fallback），但连续失败 6 次
+- **严重度**: 中 - 不阻塞 pipeline（有 fallback），但连续失败 6 次
 - **描述**: Case 1 在 Stage 14 (RESULT_ANALYSIS) 触发 CodeGen 时连续报 `'str' object has no attribute 'get'`。疑似 LLM 返回了纯字符串而非 dict，代码对返回值调 `.get()` 导致 AttributeError。
 - **远程修复**: executor.py 中 `_check_ablation_effectiveness` 等函数已加 `isinstance` 保护
 - **本地修复**: `code_agent.py` 中 `_parse_json` 结果增加 `isinstance(review, dict)` 检查
