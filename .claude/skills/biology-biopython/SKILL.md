@@ -58,8 +58,8 @@ metadata:
 5. For mmCIF files: use `MMCIFParser()` instead of `PDBParser()`
 
 ### Common Pitfalls
-1. Always handle `SeqIO.parse` as an iterator — it exhausts after one pass
+1. Always handle `SeqIO.parse` as an iterator - it exhausts after one pass
 2. Check sequence alphabet compatibility before operations
 3. Large files: use `SeqIO.index()` not `SeqIO.to_dict()` to avoid memory issues
 4. Set proper timeout for remote BLAST queries (can take minutes)
-5. Validate parsed data — missing annotations are common in public databases
+5. Validate parsed data - missing annotations are common in public databases
