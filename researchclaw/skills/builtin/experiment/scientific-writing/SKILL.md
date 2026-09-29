@@ -23,7 +23,7 @@ metadata:
 ### Paragraph-Level Guidance
 1. Each paragraph should convey ONE main idea
 2. Open with a topic sentence; close with a transition to the next paragraph
-3. Write in full flowing prose — never submit bullet points as final manuscript text
+3. Write in full flowing prose - never submit bullet points as final manuscript text
 4. Use active voice for clarity: "We measured..." not "Measurements were taken..."
 5. Vary sentence length; aim for average 15-25 words per sentence
 
@@ -31,12 +31,12 @@ metadata:
 1. Cite primary sources over reviews when making specific claims
 2. Use citation styles consistently (APA, Vancouver, IEEE) per target journal
 3. Every factual claim needs a citation unless it is common knowledge in the field
-4. Avoid citation strings of 5+ references — select the most relevant 2-3
+4. Avoid citation strings of 5+ references - select the most relevant 2-3
 5. Self-citations should be limited to genuinely relevant prior work
 
 ### Common Writing Pitfalls
-1. Avoid hedge-stacking: "It might possibly suggest..." — choose one hedge
-2. Do not start sentences with "It is well known that" — cite or remove
+1. Avoid hedge-stacking: "It might possibly suggest..." - choose one hedge
+2. Do not start sentences with "It is well known that" - cite or remove
 3. Distinguish "significant" (statistical) from "substantial" (practical)
 4. Ensure figures/tables are referenced in text BEFORE they appear
 5. Keep abbreviations to a minimum; define each on first use
