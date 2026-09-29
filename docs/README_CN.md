@@ -51,7 +51,7 @@
 </td>
 <td valign="middle">
 <b>🏆 生成论文展示</b><br><br>
-<b>8 篇论文覆盖 8 个领域</b> — 数学、统计、生物、计算、NLP、RL、视觉、鲁棒性 — 完全自主生成，或通过人机协作的 Co-Pilot 引导。<br><br>
+<b>8 篇论文覆盖 8 个领域</b> - 数学、统计、生物、计算、NLP、RL、视觉、鲁棒性 - 完全自主生成，或通过人机协作的 Co-Pilot 引导。<br><br>
 <a href="showcase/SHOWCASE.md"><img src="https://img.shields.io/badge/View_Full_Showcase_→-All_8_Papers-d73a49?style=for-the-badge" alt="View Showcase"></a>
 </td>
 </tr>
@@ -59,23 +59,23 @@
 
 ---
 
-> **🧪 我们正在寻找测试者！** 用你自己的研究想法试试这个流水线 — 任何领域 — 然后 [告诉我们你的反馈](TESTER_GUIDE.md)。你的反馈将直接影响下一个版本。 **[→ Testing Guide](TESTER_GUIDE.md)** | **[→ 中文测试指南](TESTER_GUIDE_CN.md)** | **[→ 日本語テストガイド](TESTER_GUIDE_JA.md)**
+> **🧪 我们正在寻找测试者！** 用你自己的研究想法试试这个流水线 - 任何领域 - 然后 [告诉我们你的反馈](TESTER_GUIDE.md)。你的反馈将直接影响下一个版本。 **[→ Testing Guide](TESTER_GUIDE.md)** | **[→ 中文测试指南](TESTER_GUIDE_CN.md)** | **[→ 日本語テストガイド](TESTER_GUIDE_JA.md)**
 
 ---
 
 ## 🔥 News
-- **[04/08/2026]** **伦理与负责任使用准则！** — 新增全面的伦理准则，涵盖学术诚信、透明披露、引用验证、防止滥用和双重用途考量。AI 生成的论文是草稿，不是成品——人工审查不可或缺。
-- **[04/01/2026]** **v0.4.0** — **人机协作 Co-Pilot 系统** — AutoResearchClaw 不再是纯自动化工具。新增 HITL 系统支持 6 种干预模式（`full-auto`、`gate-only`、`checkpoint`、`step-by-step`、`co-pilot`、`custom`），支持逐阶段策略配置与深度人机协作。包括：Idea Workshop（假设共创）、Baseline Navigator（实验设计审核）、Paper Co-Writer（协作撰写论文）、SmartPause（基于置信度的动态暂停）、ALHF 干预学习、反幻觉声明验证、成本预算护栏、流水线分支并行探索假设，以及 CLI 命令（`attach`/`status`/`approve`/`reject`/`guide`）。**[→ 完整 HITL 指南](HITL_GUIDE.md)**
-- **[03/30/2026]** **灵活技能加载** — AutoResearchClaw 现已支持从任何学科加载开源和自定义技能。内置 19 个预加载技能作为即用参考，覆盖科学写作、实验设计、化学、生物等领域，包括社区贡献的 [A-Evolve](https://github.com/A-EVO-Lab/a-evolve) 自进化技能。通过 `researchclaw skills install` 加载或将 `SKILL.md` 放入 `.claude/skills/`。参见[技能库](#-技能库)。
-- **[03/22/2026]** [v0.3.2](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.2) — **跨平台支持 + 重大稳定性更新** — AutoResearchClaw 现已支持任何 ACP 兼容的 AI 代理后端（Claude Code、Codex CLI、Copilot CLI、Gemini CLI、Kimi CLI），并通过 OpenClaw 桥接支持消息平台（Discord、Telegram、飞书、微信）。新增 CLI-agent 代码生成后端，将 Stage 10 和 13 委托给外部 CLI agent，支持预算控制和超时管理。同时包含反数据捏造系统（VerifiedRegistry + 实验诊断与修复循环），100+ 个 bug 修复，模块化 executor 重构，`--resume` 自动检测，LLM 重试加固，以及社区反馈修复。
+- **[04/08/2026]** **伦理与负责任使用准则！** - 新增全面的伦理准则，涵盖学术诚信、透明披露、引用验证、防止滥用和双重用途考量。AI 生成的论文是草稿，不是成品--人工审查不可或缺。
+- **[04/01/2026]** **v0.4.0** - **人机协作 Co-Pilot 系统** - AutoResearchClaw 不再是纯自动化工具。新增 HITL 系统支持 6 种干预模式（`full-auto`、`gate-only`、`checkpoint`、`step-by-step`、`co-pilot`、`custom`），支持逐阶段策略配置与深度人机协作。包括：Idea Workshop（假设共创）、Baseline Navigator（实验设计审核）、Paper Co-Writer（协作撰写论文）、SmartPause（基于置信度的动态暂停）、ALHF 干预学习、反幻觉声明验证、成本预算护栏、流水线分支并行探索假设，以及 CLI 命令（`attach`/`status`/`approve`/`reject`/`guide`）。**[→ 完整 HITL 指南](HITL_GUIDE.md)**
+- **[03/30/2026]** **灵活技能加载** - AutoResearchClaw 现已支持从任何学科加载开源和自定义技能。内置 19 个预加载技能作为即用参考，覆盖科学写作、实验设计、化学、生物等领域，包括社区贡献的 [A-Evolve](https://github.com/A-EVO-Lab/a-evolve) 自进化技能。通过 `researchclaw skills install` 加载或将 `SKILL.md` 放入 `.claude/skills/`。参见[技能库](#-技能库)。
+- **[03/22/2026]** [v0.3.2](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.2) - **跨平台支持 + 重大稳定性更新** - AutoResearchClaw 现已支持任何 ACP 兼容的 AI 代理后端（Claude Code、Codex CLI、Copilot CLI、Gemini CLI、Kimi CLI），并通过 OpenClaw 桥接支持消息平台（Discord、Telegram、飞书、微信）。新增 CLI-agent 代码生成后端，将 Stage 10 和 13 委托给外部 CLI agent，支持预算控制和超时管理。同时包含反数据捏造系统（VerifiedRegistry + 实验诊断与修复循环），100+ 个 bug 修复，模块化 executor 重构，`--resume` 自动检测，LLM 重试加固，以及社区反馈修复。
 
 <details>
 <summary>早期版本</summary>
 
-- **[03/18/2026]** [v0.3.1](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.1) — **OpenCode Beast Mode + Community Contributions** — New "Beast Mode" routes complex code generation to [OpenCode](https://github.com/anomalyco/opencode) with automatic complexity scoring and graceful fallback. Added Novita AI provider support, thread-safety hardening, improved LLM output parsing robustness, and 20+ bug fixes from community PRs and internal audit.
-- **[03/17/2026]** [v0.3.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.0) — **MetaClaw Integration** — AutoResearchClaw now supports [MetaClaw](https://github.com/aiming-lab/MetaClaw) cross-run learning: pipeline failures → structured lessons → reusable skills, injected into all 23 stages. **+18.3%** robustness in controlled experiments. Opt-in (`metaclaw_bridge.enabled: true`), fully backward-compatible. See [Integration Guide](#-metaclaw-integration).
-- **[03/16/2026]** [v0.2.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.2.0) — Three multi-agent subsystems (CodeAgent, BenchmarkAgent, FigureAgent), hardened Docker sandbox with network-policy-aware execution, 4-round paper quality audit (AI-slop detection, 7-dim review scoring, NeurIPS checklist), and 15+ bug fixes from production runs.
-- **[03/15/2026]** [v0.1.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.1.0) — We release AutoResearchClaw: a fully autonomous 23-stage research pipeline that turns a single research idea into a conference-ready paper. No human intervention required.
+- **[03/18/2026]** [v0.3.1](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.1) - **OpenCode Beast Mode + Community Contributions** - New "Beast Mode" routes complex code generation to [OpenCode](https://github.com/anomalyco/opencode) with automatic complexity scoring and graceful fallback. Added Novita AI provider support, thread-safety hardening, improved LLM output parsing robustness, and 20+ bug fixes from community PRs and internal audit.
+- **[03/17/2026]** [v0.3.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.3.0) - **MetaClaw Integration** - AutoResearchClaw now supports [MetaClaw](https://github.com/aiming-lab/MetaClaw) cross-run learning: pipeline failures → structured lessons → reusable skills, injected into all 23 stages. **+18.3%** robustness in controlled experiments. Opt-in (`metaclaw_bridge.enabled: true`), fully backward-compatible. See [Integration Guide](#-metaclaw-integration).
+- **[03/16/2026]** [v0.2.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.2.0) - Three multi-agent subsystems (CodeAgent, BenchmarkAgent, FigureAgent), hardened Docker sandbox with network-policy-aware execution, 4-round paper quality audit (AI-slop detection, 7-dim review scoring, NeurIPS checklist), and 15+ bug fixes from production runs.
+- **[03/15/2026]** [v0.1.0](https://github.com/aiming-lab/AutoResearchClaw/releases/tag/v0.1.0) - We release AutoResearchClaw: a fully autonomous 23-stage research pipeline that turns a single research idea into a conference-ready paper. No human intervention required.
 
 </details>
 
@@ -98,23 +98,23 @@ researchclaw run --topic "Your research idea here" --mode co-pilot
 
 **你有一个灵感，AutoResearchClaw 把它写出来。你来引导关键决策。**
 
-输入一个研究主题——获得一篇完整的学术论文，包含来自 OpenAlex、Semantic Scholar 和 arXiv 的真实文献，硬件感知沙箱实验（自动检测 GPU/MPS/CPU），统计分析，多 Agent 同行评审，以及面向 NeurIPS/ICML/ICLR 的顶会级 LaTeX。完全自主运行，或使用 **Co-Pilot 模式**在关键决策点引导 AI——选择研究方向、审核实验设计、协作撰写论文。不会出现幻觉引用。
+输入一个研究主题--获得一篇完整的学术论文，包含来自 OpenAlex、Semantic Scholar 和 arXiv 的真实文献，硬件感知沙箱实验（自动检测 GPU/MPS/CPU），统计分析，多 Agent 同行评审，以及面向 NeurIPS/ICML/ICLR 的顶会级 LaTeX。完全自主运行，或使用 **Co-Pilot 模式**在关键决策点引导 AI--选择研究方向、审核实验设计、协作撰写论文。不会出现幻觉引用。
 
 <table>
 <tr><td>📄</td><td><code>paper_draft.md</code></td><td>完整学术论文（引言、相关工作、方法、实验、结果、结论）</td></tr>
 <tr><td>📐</td><td><code>paper.tex</code></td><td>适配顶会模板的 LaTeX 文件（NeurIPS / ICLR / ICML）</td></tr>
-<tr><td>📚</td><td><code>references.bib</code></td><td>来自 OpenAlex、Semantic Scholar 和 arXiv 的真实 BibTeX 引用——自动精简至与正文引用一致</td></tr>
+<tr><td>📚</td><td><code>references.bib</code></td><td>来自 OpenAlex、Semantic Scholar 和 arXiv 的真实 BibTeX 引用--自动精简至与正文引用一致</td></tr>
 <tr><td>🔍</td><td><code>verification_report.json</code></td><td>四层引用完整性 + 相关性核查（arXiv、CrossRef、DataCite、LLM）</td></tr>
 <tr><td>🧪</td><td><code>experiment runs/</code></td><td>生成的代码 + 沙箱结果 + 结构化 JSON 指标</td></tr>
 <tr><td>📊</td><td><code>charts/</code></td><td>自动生成的条件对比图（含误差线和置信区间）</td></tr>
 <tr><td>📝</td><td><code>reviews.md</code></td><td>多 Agent 同行评审（含方法论-证据一致性检查）</td></tr>
 <tr><td>🧬</td><td><code>evolution/</code></td><td>从每次运行中提取的自学习教训</td></tr>
-<tr><td>📦</td><td><code>deliverables/</code></td><td>所有最终产出集中在一个文件夹——可直接上传 Overleaf 编译</td></tr>
+<tr><td>📦</td><td><code>deliverables/</code></td><td>所有最终产出集中在一个文件夹--可直接上传 Overleaf 编译</td></tr>
 </table>
 
-流水线**端到端运行** — 完全自动或人机协作。实验失败时自动修复。假设不成立时自主转向。引用是假的？自动删除。你想介入？它会暂停等候。
+流水线**端到端运行** - 完全自动或人机协作。实验失败时自动修复。假设不成立时自主转向。引用是假的？自动删除。你想介入？它会暂停等候。
 
-🌍 **随处可用。** AutoResearchClaw 不绑定任何单一平台。你可以通过 CLI 独立运行，接入 [OpenClaw](https://github.com/openclaw/openclaw)，或对接任何 ACP 兼容的 AI 代理 —— 🤖 Claude Code、💻 Codex CLI、🐙 Copilot CLI、♊ Gemini CLI、🌙 Kimi CLI，应有尽有。而且，借助 OpenClaw 的消息桥接能力，你还可以从 💬 Discord、✈️ Telegram、🐦 飞书、💚 微信，或任何你团队日常使用的平台发起一次完整的研究。输入一个课题，输出一篇论文 —— 无论你在哪里输入。
+🌍 **随处可用。** AutoResearchClaw 不绑定任何单一平台。你可以通过 CLI 独立运行，接入 [OpenClaw](https://github.com/openclaw/openclaw)，或对接任何 ACP 兼容的 AI 代理 -- 🤖 Claude Code、💻 Codex CLI、🐙 Copilot CLI、♊ Gemini CLI、🌙 Kimi CLI，应有尽有。而且，借助 OpenClaw 的消息桥接能力，你还可以从 💬 Discord、✈️ Telegram、🐦 飞书、💚 微信，或任何你团队日常使用的平台发起一次完整的研究。输入一个课题，输出一篇论文 -- 无论你在哪里输入。
 
 ---
 
@@ -139,7 +139,7 @@ export OPENAI_API_KEY="sk-..."
 researchclaw run --config config.arc.yaml --topic "Your research idea" --auto-approve
 ```
 
-输出 → `artifacts/rc-YYYYMMDD-HHMMSS-<hash>/deliverables/` — 可编译的 LaTeX、BibTeX、实验代码、图表。
+输出 → `artifacts/rc-YYYYMMDD-HHMMSS-<hash>/deliverables/` - 可编译的 LaTeX、BibTeX、实验代码、图表。
 
 <details>
 <summary>📝 最小必要配置</summary>
@@ -171,7 +171,7 @@ experiment:
 
 | 能力 | 工作原理 |
 |------|----------|
-| **🧑‍✈️ Co-Pilot 模式** | 6 种干预模式 — 从完全自动到逐步引导。在关键决策（假设、基线、论文写作）时引导 AI，或放手让它自由运行。SmartPause 自动检测何时需要人类输入。 |
+| **🧑‍✈️ Co-Pilot 模式** | 6 种干预模式 - 从完全自动到逐步引导。在关键决策（假设、基线、论文写作）时引导 AI，或放手让它自由运行。SmartPause 自动检测何时需要人类输入。 |
 | **🔄 PIVOT / REFINE 循环** | 第 15 阶段自主决策：PROCEED、REFINE（调参）或 PIVOT（新方向）。产物自动版本化。 |
 | **🤖 多 Agent 辩论** | 假设生成、结果分析、同行评审均使用结构化的多视角辩论。 |
 | **🧬 自学习** | 每次运行提取教训（决策理由、运行时警告、指标异常），30 天时间衰减。未来运行从过去的错误中学习。 |
@@ -187,7 +187,7 @@ experiment:
 <table>
 <tr>
 
-**AutoResearchClaw 是 [OpenClaw](https://github.com/openclaw/openclaw) 兼容服务。** 在 OpenClaw 中安装后，一句话即可启动自主研究——也可通过 CLI、Claude Code 或其他 AI 编码助手独立使用。
+**AutoResearchClaw 是 [OpenClaw](https://github.com/openclaw/openclaw) 兼容服务。** 在 OpenClaw 中安装后，一句话即可启动自主研究--也可通过 CLI、Claude Code 或其他 AI 编码助手独立使用。
 
 </tr>
 </table>
@@ -236,7 +236,7 @@ openclaw_bridge:
 
 ### ACP (Agent Client Protocol)
 
-AutoResearchClaw 可以使用**任何 ACP 兼容的编码 Agent** 作为其 LLM 后端——无需 API 密钥。Agent 通过 [acpx](https://github.com/openclaw/acpx) 通信，在全部 23 个流水线阶段中维持单个持久会话。
+AutoResearchClaw 可以使用**任何 ACP 兼容的编码 Agent** 作为其 LLM 后端--无需 API 密钥。Agent 通过 [acpx](https://github.com/openclaw/acpx) 通信，在全部 23 个流水线阶段中维持单个持久会话。
 
 | Agent | 命令 | 备注 |
 |-------|------|------|
@@ -268,9 +268,9 @@ researchclaw run --config config.yaml --topic "Your research idea" --auto-approv
 |------|--------|
 | **独立 CLI** | `researchclaw run --topic "..." --auto-approve`（自动）或 `--mode co-pilot`（协作） |
 | **Python API** | `from researchclaw.pipeline import Runner; Runner(config).run()` |
-| **Claude Code** | 读取 `RESEARCHCLAW_CLAUDE.md` — 直接说 *"Run research on [主题]"* |
+| **Claude Code** | 读取 `RESEARCHCLAW_CLAUDE.md` - 直接说 *"Run research on [主题]"* |
 | **Copilot CLI** | `researchclaw run --topic "..."` 配合 `llm.acp.agent: "gh"` |
-| **OpenCode** | 读取 `.claude/skills/` — 同样的自然语言交互 |
+| **OpenCode** | 读取 `.claude/skills/` - 同样的自然语言交互 |
 | **任何 AI CLI** | 提供 `RESEARCHCLAW_AGENTS.md` 作为上下文 → agent 自动引导 |
 
 ---
@@ -328,13 +328,13 @@ researchclaw run --config config.yaml --topic "Your research idea" --auto-approv
 
 | 功能 | 说明 |
 |------|------|
-| **📚 多源文献** | 来自 OpenAlex、Semantic Scholar 和 arXiv 的真实论文——查询扩展、去重、三态熔断器与优雅降级 |
+| **📚 多源文献** | 来自 OpenAlex、Semantic Scholar 和 arXiv 的真实论文--查询扩展、去重、三态熔断器与优雅降级 |
 | **🔍 四层引用核查** | arXiv ID 校验 → CrossRef/DataCite DOI → Semantic Scholar 标题匹配 → LLM 相关性评分。幻觉引用自动删除。 |
 | **🖥️ 硬件感知执行** | 自动检测 GPU（NVIDIA CUDA / Apple MPS / 纯 CPU），据此调整代码生成、import 和实验规模 |
-| **🦾 OpenCode Beast Mode** | 复杂实验自动路由至 [OpenCode](https://github.com/anomalyco/opencode)——生成多文件项目，含自定义架构、训练循环和消融实验。通过 `researchclaw setup` 安装。 |
+| **🦾 OpenCode Beast Mode** | 复杂实验自动路由至 [OpenCode](https://github.com/anomalyco/opencode)--生成多文件项目，含自定义架构、训练循环和消融实验。通过 `researchclaw setup` 安装。 |
 | **🧪 沙箱实验** | AST 验证代码、不可变 harness、NaN/Inf 快速失败、自修复、迭代优化（最多 10 轮）、部分结果捕获 |
 | **📝 顶会级写作** | NeurIPS/ICML/ICLR 模板，分段撰写（5,000-6,500 词），反数据捏造守卫、修订长度保障、反免责声明强制 |
-| **📐 模板切换** | `neurips_2025`、`iclr_2026`、`icml_2026` — Markdown → LaTeX，含数学公式、表格、图片、交叉引用、`\cite{}` |
+| **📐 模板切换** | `neurips_2025`、`iclr_2026`、`icml_2026` - Markdown → LaTeX，含数学公式、表格、图片、交叉引用、`\cite{}` |
 | **🛡️ 反数据捏造** | VerifiedRegistry 强制论文中使用经过验证的实验数据。自动诊断失败实验并在写作前修复。未验证数字被清理。 |
 | **🚦 质量门控** | 3 个人工审批门控（阶段 5、9、20），支持回滚。用 `--auto-approve` 跳过。 |
 | **🧑‍✈️ HITL Co-Pilot** | 6 种干预模式，支持逐阶段策略。Idea Workshop、Baseline Navigator、Paper Co-Writer 实现深度协作。SmartPause、成本护栏、升级策略和干预学习确保生产安全。CLI/WebSocket/MCP 适配器。 |
@@ -351,12 +351,12 @@ researchclaw run --config config.yaml --topic "Your research idea" --auto-approv
 
 | 模式 | 命令 | 做什么 |
 |------|------|--------|
-| **完全自动** | `--auto-approve` | 原始行为——无人工干预 |
+| **完全自动** | `--auto-approve` | 原始行为--无人工干预 |
 | **仅门控** | `--mode gate-only` | 在 3 个门控阶段（5、9、20）暂停等待审批 |
 | **检查点** | `--mode checkpoint` | 在每个阶段组边界暂停（8 个检查点） |
 | **Co-Pilot** | `--mode co-pilot` | 在关键阶段深度协作，其余自动执行 |
-| **逐步** | `--mode step-by-step` | 每个阶段后暂停——用于学习流水线 |
-| **快速** | `--mode express` | 快速审核——仅 3 个最关键的门控 |
+| **逐步** | `--mode step-by-step` | 每个阶段后暂停--用于学习流水线 |
+| **快速** | `--mode express` | 快速审核--仅 3 个最关键的门控 |
 
 ### Co-Pilot 工作流
 
@@ -411,10 +411,10 @@ researchclaw guide artifacts/rc-2026-xxx --stage 9 --message "使用 ResNet-50 �
 | **Idea Workshop** | 协作式头脑风暴、评估和优化假设（阶段 7-8） |
 | **Baseline Navigator** | AI 建议基线 + 人工增删 + 可复现性检查清单（阶段 9） |
 | **Paper Co-Writer** | 分段撰写，人工编辑与 AI 润色结合（阶段 16-19） |
-| **SmartPause** | 基于置信度的动态暂停——自动检测何时需要人类输入 |
-| **声明验证** | 与收集的文献进行内联事实检查——标记无依据的声明 |
+| **SmartPause** | 基于置信度的动态暂停--自动检测何时需要人类输入 |
+| **声明验证** | 与收集的文献进行内联事实检查--标记无依据的声明 |
 | **成本护栏** | 预算监控，50%/80%/100% 阈值告警 |
-| **干预学习** | ALHF——从你的审查模式中学习，优化未来的暂停决策 |
+| **干预学习** | ALHF--从你的审查模式中学习，优化未来的暂停决策 |
 | **分支探索** | 分叉流水线探索多个假设，比较后合并最佳路径 |
 | **升级策略** | 分级通知（终端 → Slack → 邮件 → 自动暂停），无人值守时触发 |
 | **3 种适配器** | CLI（终端）、WebSocket（Web 仪表板）、MCP（外部 Agent） |
@@ -459,7 +459,7 @@ hitl:
 
 **AutoResearchClaw + [MetaClaw](https://github.com/aiming-lab/MetaClaw) = 一个能从每次运行中学习的流水线。**
 
-MetaClaw 为 AutoResearchClaw 添加了**跨运行知识迁移**。启用后，流水线会自动从失败和警告中提取教训，将其转化为可复用的技能，并在后续运行中注入到全部 23 个阶段——让同样的错误不再重犯。
+MetaClaw 为 AutoResearchClaw 添加了**跨运行知识迁移**。启用后，流水线会自动从失败和警告中提取教训，将其转化为可复用的技能，并在后续运行中注入到全部 23 个阶段--让同样的错误不再重犯。
 
 ### 工作原理
 
@@ -521,7 +521,7 @@ researchclaw run --config config.arc.yaml --topic "Your idea" --auto-approve
 ### 向后兼容性
 
 - **默认：关闭。** 如果 `metaclaw_bridge` 不存在或 `enabled: false`，流水线行为与之前完全一致。
-- **无新依赖。** MetaClaw 是可选的——核心流水线无需它即可运行。
+- **无新依赖。** MetaClaw 是可选的--核心流水线无需它即可运行。
 - **所有 2,699 项现有测试通过**（包含集成代码）。
 
 ---
@@ -558,7 +558,7 @@ mkdir -p .claude/skills/my-custom-skill
 
 ### 使用技能
 
-技能会自动加载并注入到 LLM 提示中——无需手动激活。使用 CLI 进行检查：
+技能会自动加载并注入到 LLM 提示中--无需手动激活。使用 CLI 进行检查：
 
 ```bash
 researchclaw skills list               # 显示所有已加载的技能及来源
@@ -752,9 +752,9 @@ openclaw_bridge:
 
 灵感来源：
 
-- 🔬 [AI Scientist](https://github.com/SakanaAI/AI-Scientist)（Sakana AI）— 自动化研究先驱
-- 🧠 [AutoResearch](https://github.com/karpathy/autoresearch)（Andrej Karpathy）— 端到端研究自动化
-- 🌐 [FARS](https://analemma.ai/blog/introducing-fars/)（Analemma）— 全自动研究系统
+- 🔬 [AI Scientist](https://github.com/SakanaAI/AI-Scientist)（Sakana AI）- 自动化研究先驱
+- 🧠 [AutoResearch](https://github.com/karpathy/autoresearch)（Andrej Karpathy）- 端到端研究自动化
+- 🌐 [FARS](https://analemma.ai/blog/introducing-fars/)（Analemma）- 全自动研究系统
 
 ---
 
@@ -778,7 +778,7 @@ AutoResearchClaw 是一个研究辅助工具，不是人类研究者的替代品
 
 ## 📄 许可证
 
-MIT — 详见 [LICENSE](../LICENSE)。
+MIT - 详见 [LICENSE](../LICENSE)。
 
 ---
 
