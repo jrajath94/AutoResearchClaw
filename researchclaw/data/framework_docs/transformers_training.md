@@ -1,4 +1,4 @@
-# HuggingFace Transformers Training — API Quick Reference
+# HuggingFace Transformers Training - API Quick Reference
 
 ## TrainingArguments (key parameters)
 ```python
