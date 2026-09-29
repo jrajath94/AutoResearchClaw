@@ -2,7 +2,7 @@
 
 ## What This Is
 
-ResearchClaw is a **fully autonomous academic research pipeline**. Given a research topic, it automatically completes literature review, hypothesis generation, experiment design, code generation & execution, result analysis, paper writing, peer review simulation, and final export — all through a 23-stage state machine driven by LLM calls.
+ResearchClaw is a **fully autonomous academic research pipeline**. Given a research topic, it automatically completes literature review, hypothesis generation, experiment design, code generation & execution, result analysis, paper writing, peer review simulation, and final export - all through a 23-stage state machine driven by LLM calls.
 
 ## Quick Start
 
@@ -116,20 +116,20 @@ Stages 5, 9, and 20 are **gate stages** requiring approval (or `--auto-approve`)
 Config file: `config.yaml` (or `config.researchclaw.example.yaml` as template).
 
 Key sections:
-- `project.name` / `project.mode` — Project identity
-- `research.topic` — The research question
-- `llm.base_url` / `llm.api_key` / `llm.primary_model` — LLM provider
-- `experiment.mode` — `simulated`, `sandbox`, `docker`, `ssh_remote`, or `colab_drive`
-- `experiment.sandbox.python_path` — Python interpreter for sandbox mode
-- `security.hitl_required_stages` — Gate stage numbers (default: [5, 9, 20])
-- `knowledge_base.root` — Directory for knowledge base files
+- `project.name` / `project.mode` - Project identity
+- `research.topic` - The research question
+- `llm.base_url` / `llm.api_key` / `llm.primary_model` - LLM provider
+- `experiment.mode` - `simulated`, `sandbox`, `docker`, `ssh_remote`, or `colab_drive`
+- `experiment.sandbox.python_path` - Python interpreter for sandbox mode
+- `security.hitl_required_stages` - Gate stage numbers (default: [5, 9, 20])
+- `knowledge_base.root` - Directory for knowledge base files
 
 ## Important Constraints
 
 - **Python 3.11+** required
 - **Dependencies**: `pyyaml`, `rich`, `matplotlib` (for visualization)
 - **LLM**: Any OpenAI-compatible API (tested with GPT-4o, GPT-5.x)
-- Sandbox mode executes generated code locally — ensure `experiment.sandbox.python_path` points to a safe environment
+- Sandbox mode executes generated code locally - ensure `experiment.sandbox.python_path` points to a safe environment
 - Code validation (AST + security scan) runs automatically before execution in Stage 10
 
 ## Testing
