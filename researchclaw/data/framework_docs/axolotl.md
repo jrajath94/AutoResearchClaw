@@ -1,4 +1,4 @@
-# Axolotl — API Quick Reference
+# Axolotl - API Quick Reference
 
 ## Installation
 ```bash
