@@ -1,4 +1,4 @@
-# Multi-Agent Figure Generation & Benchmark Selection — Task Requirements
+# Multi-Agent Figure Generation & Benchmark Selection - Task Requirements
 
 > **Created**: 2026-03-15
 > **Updated**: 2026-03-15
@@ -6,12 +6,12 @@
 > **Scope**: Two new multi-agent subsystems for AutoResearchClaw pipeline
 >
 > **Implementation Progress**:
-> - [x] Part B: BenchmarkAgent — fully implemented (4 agents + orchestrator + config + pipeline integration + 43 tests)
-> - [x] Part A: FigureAgent — fully implemented (5 agents + orchestrator + config + pipeline integration + 45 tests)
+> - [x] Part B: BenchmarkAgent - fully implemented (4 agents + orchestrator + config + pipeline integration + 43 tests)
+> - [x] Part A: FigureAgent - fully implemented (5 agents + orchestrator + config + pipeline integration + 45 tests)
 >
 > **Key Research Findings (supplemental)**:
 > - Papers With Code was shut down by Meta in July 2025; HuggingFace Hub API is now the primary dataset discovery source
-> - AI Scientist v2 and MLR-Copilot both use pure LLM-driven dataset selection (no API search) — our API-based approach is more structured
+> - AI Scientist v2 and MLR-Copilot both use pure LLM-driven dataset selection (no API search) - our API-based approach is more structured
 > - MLE-bench (OpenAI) validates the pre-download + container-mount pattern (matches our `setup_only` network policy)
 > - CodeSOTA (codesota.com) provides a lighter-weight benchmark database as an alternative to Papers With Code
 
@@ -36,12 +36,12 @@
 - 缺乏 baseline 方法的自动复现能力
 
 **解决方案**：设计两个独立的多 Agent 子系统：
-1. **FigureAgent** — 智能图表生成系统（6 个子 Agent 协作）
-2. **BenchmarkAgent** — 数据集与基准选择系统（4 个子 Agent 协作）
+1. **FigureAgent** - 智能图表生成系统（6 个子 Agent 协作）
+2. **BenchmarkAgent** - 数据集与基准选择系统（4 个子 Agent 协作）
 
 ---
 
-## Part A: FigureAgent — 多 Agent 图表生成系统
+## Part A: FigureAgent - 多 Agent 图表生成系统
 
 ### A.1 问题分析
 
@@ -131,7 +131,7 @@
   - 验证输出文件存在且可读
   - 检查图像尺寸和分辨率
 
-**5. Critic Agent（质量审查 — 三模态反馈）**
+**5. Critic Agent（质量审查 - 三模态反馈）**
 - 输入：渲染后的图像 + 源数据 + caption 规范
 - 职责（三维度审查，参考 PlotGen）：
   - **数值准确性**：验证图中呈现的数值与源数据一致（读取 JSON → 对比图中数据点）
@@ -265,7 +265,7 @@ Stage 22: Paper Export
 
 ---
 
-## Part B: BenchmarkAgent — 多 Agent 数据集与基准选择系统
+## Part B: BenchmarkAgent - 多 Agent 数据集与基准选择系统
 
 ### B.1 问题分析
 
@@ -328,7 +328,7 @@ Stage 22: Paper Export
   - 搜索 OpenML、Kaggle 的相关 benchmark
   - 分析近 2 年顶会论文（ICML、NeurIPS、ICLR）使用的数据集
   - 汇总领域标准 benchmark 清单（含引用频次、数据规模、难度级别）
-- 输出：`survey_results.json` — 候选 benchmark 列表（按推荐度排序）
+- 输出：`survey_results.json` - 候选 benchmark 列表（按推荐度排序）
 - 数据源优先级：
   1. Papers With Code (Benchmarks API)
   2. HuggingFace Datasets Hub
@@ -358,9 +358,9 @@ Stage 22: Paper Export
   - 处理 HuggingFace `datasets.load_dataset()` / `torchvision.datasets` 等接口
   - 生成 `requirements.txt` 中需要额外安装的包
 - 输出：
-  - `data_loading_snippets.py` — 数据加载代码片段（注入 CodeAgent）
-  - `baseline_snippets.py` — baseline 调用代码片段
-  - `setup.py` 追加内容 — 下载脚本
+  - `data_loading_snippets.py` - 数据加载代码片段（注入 CodeAgent）
+  - `baseline_snippets.py` - baseline 调用代码片段
+  - `setup.py` 追加内容 - 下载脚本
 
 **5. Validator Agent（验证确认）**
 - 输入：Acquirer 生成的下载/加载代码
