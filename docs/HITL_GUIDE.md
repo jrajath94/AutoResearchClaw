@@ -85,7 +85,7 @@ No human intervention. Identical to pre-v0.4.0 behavior.
 
 - **First time using the pipeline?** Start with `step-by-step` to understand each stage.
 - **Publishing a real paper?** Use `co-pilot` for the best quality.
-- **Running overnight?** Use `gate-only` or `express` — fewer interruptions.
+- **Running overnight?** Use `gate-only` or `express` - fewer interruptions.
 - **Batch processing many topics?** Use `full-auto`.
 
 ---
@@ -285,7 +285,7 @@ The Paper Co-Writer supports three workflows:
 
 1. **AI-first** (default): AI writes the draft, you edit and refine
 2. **Human-first**: You write key paragraphs, AI expands and polishes
-3. **Interleaved**: You alternate — you write the Method, AI writes Related Work
+3. **Interleaved**: You alternate - you write the Method, AI writes Related Work
 
 ```
 AI > Paper draft completed (5,200 words, 7 sections).
@@ -429,7 +429,7 @@ SmartPause goes beyond fixed gate stages. It dynamically decides whether to paus
 - **Historical rejection rate**: Stages you frequently reject get paused more often
 - **Confidence**: When the AI is uncertain, it asks for help
 
-You don't need to configure SmartPause — it works automatically in co-pilot mode.
+You don't need to configure SmartPause - it works automatically in co-pilot mode.
 
 ### Intervention Learning (ALHF)
 
@@ -524,11 +524,11 @@ Message types: `get_status`, `approve`, `reject`, `edit`, `inject_guidance`, `ch
 
 External AI agents (Claude, OpenClaw) can interact with the HITL system via MCP tool calls:
 
-- `hitl_get_status` — Check if the pipeline is waiting
-- `hitl_approve_stage` — Approve the current gate
-- `hitl_reject_stage` — Reject with reason
-- `hitl_inject_guidance` — Provide direction
-- `hitl_view_output` — Read stage artifacts
+- `hitl_get_status` - Check if the pipeline is waiting
+- `hitl_approve_stage` - Approve the current gate
+- `hitl_reject_stage` - Reject with reason
+- `hitl_inject_guidance` - Provide direction
+- `hitl_view_output` - Read stage artifacts
 
 This enables **agent-in-the-loop** workflows where another AI system reviews and approves the pipeline's work.
 
@@ -608,12 +608,12 @@ Yes. The MCP adapter exposes HITL tools that any ACP-compatible agent can call. 
 ### What data does HITL store?
 
 Everything goes in `{run_dir}/hitl/`:
-- `session.json` — Session state
-- `interventions.jsonl` — All interventions (append log)
-- `chat_stage_NN.jsonl` — Chat histories
-- `snapshots/` — File backups before edits
-- `guidance/` — Injected guidance per stage
-- `notifications.jsonl` — Notification log
+- `session.json` - Session state
+- `interventions.jsonl` - All interventions (append log)
+- `chat_stage_NN.jsonl` - Chat histories
+- `snapshots/` - File backups before edits
+- `guidance/` - Injected guidance per stage
+- `notifications.jsonl` - Notification log
 
 ### Is it backward compatible?
 
