@@ -1,4 +1,4 @@
-# LLaMA-Factory — API Quick Reference
+# LLaMA-Factory - API Quick Reference
 
 ## Installation
 ```bash
@@ -127,6 +127,6 @@ export_legacy_format: false
 - `template` must match the model's chat format (qwen, llama3, mistral, etc.)
 - `lora_target: all` targets all linear layers (recommended for quality)
 - Use `quantization_bit: 4` for QLoRA to fit large models on limited VRAM
-- `cutoff_len` controls max sequence length — reduce for memory savings
+- `cutoff_len` controls max sequence length - reduce for memory savings
 - Always set `gradient_checkpointing: true` for models > 1B parameters
 - Check supported models: Qwen, LLaMA, Mistral, Phi, ChatGLM, Baichuan, Yi, etc.
