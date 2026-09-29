@@ -1,4 +1,4 @@
-# Bug Fix Document — AutoResearchClaw Pipeline
+# Bug Fix Document - AutoResearchClaw Pipeline
 
 > 生成日期：2026-03-16
 > 反馈来源：2 位测试者（user1: CV 方向 / GPU 环境, user2: Windows 环境）
@@ -25,9 +25,9 @@
 
 ---
 
-## 确认的 Bug — 详细修复方案
+## 确认的 Bug - 详细修复方案
 
-### 🔴 `BUG-001` — 论文硬件信息与实际机器不一致
+### 🔴 `BUG-001` - 论文硬件信息与实际机器不一致
 
 | 字段 | 内容 |
 |------|------|
@@ -70,7 +70,7 @@
 
 ---
 
-### 🔴 `BUG-002` — Windows 环境下 Docker 不可用导致实验链式失败
+### 🔴 `BUG-002` - Windows 环境下 Docker 不可用导致实验链式失败
 
 | 字段 | 内容 |
 |------|------|
@@ -117,7 +117,7 @@ Windows 用户即使没有 Docker，Pipeline 也能通过 subprocess sandbox 完
 
 ---
 
-### 🔴 `BUG-003` — 论文内容自相矛盾（承诺评测数据集但未实际执行）
+### 🔴 `BUG-003` - 论文内容自相矛盾（承诺评测数据集但未实际执行）
 
 | 字段 | 内容 |
 |------|------|
@@ -160,7 +160,7 @@ Windows 用户即使没有 Docker，Pipeline 也能通过 subprocess sandbox 完
 
 ---
 
-### 🔴 `BUG-004` — 生成代码缺少数值稳定性防护（NaN/Inf 导致实验提前终止）
+### 🔴 `BUG-004` - 生成代码缺少数值稳定性防护（NaN/Inf 导致实验提前终止）
 
 | 字段 | 内容 |
 |------|------|
@@ -173,7 +173,7 @@ Windows 用户即使没有 Docker，Pipeline 也能通过 subprocess sandbox 完
 
 **根因分析：**
 - `code_agent.py`：**完全没有** 关于数值稳定性的 prompt 指令。4 个阶段（Planning → Code Generation → Execution-in-the-Loop → Multi-Agent Review）都不检查 NaN guard
-- `experiment/harness_template.py` 第 45-62 行：有 `check_value()` 做 NaN/Inf 检测，但这是 **opt-in 机制**——只有生成代码主动调用 `self.check_value(loss, "loss")` 才有效
+- `experiment/harness_template.py` 第 45-62 行：有 `check_value()` 做 NaN/Inf 检测，但这是 **opt-in 机制**--只有生成代码主动调用 `self.check_value(loss, "loss")` 才有效
 - `executor.py` 第 779-900 行：`_detect_runtime_issues()` 在运行 **之后** 检测 NaN，但此时实验已经失败了
 - `executor.py` 第 3915-3956 行：Stage 13 检测到 NaN 后调用 LLM 做 `iterative_repair`，但修复质量不稳定
 
@@ -192,7 +192,7 @@ Windows 用户即使没有 Docker，Pipeline 也能通过 subprocess sandbox 完
    - Add learning rate warmup for the first 5-10% of training steps
    - Use self.check_value(loss, "loss") from experiment harness for NaN tracking
    ```
-2. 在 `harness_template.py` 中，将 `check_value()` 改为 **自动 hook** 而非 opt-in——在 `finalize()` 中自动检查 metrics 是否为 finite
+2. 在 `harness_template.py` 中，将 `check_value()` 改为 **自动 hook** 而非 opt-in--在 `finalize()` 中自动检查 metrics 是否为 finite
 3. 在 Multi-Agent Review 阶段（`code_agent.py` Phase 4）增加数值稳定性作为必审项
 
 **修复后预期行为：**
@@ -216,9 +216,9 @@ FAIL: Too many NaN/Inf values detected. Stopping experiment early.
 
 ---
 
-## 架构改进 — 强烈建议
+## 架构改进 - 强烈建议
 
-### 🟠 `ARCH-001` — Stage 17 (PAPER_DRAFT) 过于严格的 hard block 策略
+### 🟠 `ARCH-001` - Stage 17 (PAPER_DRAFT) 过于严格的 hard block 策略
 
 | 字段 | 内容 |
 |------|------|
@@ -248,7 +248,7 @@ FAIL: Too many NaN/Inf values detected. Stopping experiment early.
 
 ---
 
-### 🟠 `ARCH-002` — Idea 被降级到弱版本时不询问用户
+### 🟠 `ARCH-002` - Idea 被降级到弱版本时不询问用户
 
 | 字段 | 内容 |
 |------|------|
@@ -290,7 +290,7 @@ Pipeline 在降级研究方案前通知用户，用户可以选择：接受降�
 
 ## 功能需求
 
-### 🔵 `FEAT-001` — 论文生成后增加一致性反馈循环
+### 🔵 `FEAT-001` - 论文生成后增加一致性反馈循环
 
 - **报告者：** user1
 - **描述：** 在论文生成之后，增加专门的 consistency check，检查 paper 中的声明与实际实验结果是否一致
@@ -302,7 +302,7 @@ Pipeline 在降级研究方案前通知用户，用户可以选择：接受降�
 > 感觉这个可以在paper生成之后，加一些相关的consistence feedback之类的？
 </details>
 
-### 🔵 `FEAT-002` — 从 Related Works 的 GitHub 学习 Common Practice
+### 🔵 `FEAT-002` - 从 Related Works 的 GitHub 学习 Common Practice
 
 - **报告者：** user1
 - **描述：** 当前 Pipeline 的 literature 阶段只读论文，不看对应的开源代码。用户建议访问 related works 的 GitHub repo，学习 paper 中不会写的实现细节（tricks、common practice），缓解论文内容过于古老的问题
@@ -314,11 +314,11 @@ Pipeline 在降级研究方案前通知用户，用户可以选择：接受降�
 > 对就是我觉得即使不拿来用，visit related works的github也是有必要的，这样可以看到其他工作的common practice（一些不会在paper中出现的细节），应该会挺有用的。感觉可以缓解一下paper内容过于古老的问题
 </details>
 
-### 🔵 `FEAT-003` — 代码应该复用 Related Works 的框架
+### 🔵 `FEAT-003` - 代码应该复用 Related Works 的框架
 
 - **报告者：** user1
 - **描述：** 当前代码都是 LLM 从零写的简单文件，用户建议从 most related works 中选一个合适的框架来用，就像真实研究中的做法
-- **建议：** 可以在 BenchmarkAgent 或 CODE_GENERATION 阶段增加框架选择逻辑——从相关论文的开源实现中挑选合适的 codebase 作为起点，而不是从零生成。这是一个较大的改动，可以作为长期目标
+- **建议：** 可以在 BenchmarkAgent 或 CODE_GENERATION 阶段增加框架选择逻辑--从相关论文的开源实现中挑选合适的 codebase 作为起点，而不是从零生成。这是一个较大的改动，可以作为长期目标
 
 <details>
 <summary>原始反馈</summary>
@@ -344,9 +344,9 @@ Pipeline 在降级研究方案前通知用户，用户可以选择：接受降�
 | BUG-003 | 论文内容自相矛盾 | confirmed | HIGH |
 | BUG-004 | 代码缺少数值稳定性防护 | confirmed | HIGH |
 | ARCH-002 | Idea 降级不询问用户 | confirmed | HIGH |
-| FEAT-001 | 一致性反馈循环 | feature_request | — |
-| FEAT-002 | 从 GitHub 学习 common practice | feature_request | — |
-| FEAT-003 | 复用 related works 框架 | feature_request | — |
+| FEAT-001 | 一致性反馈循环 | feature_request | - |
+| FEAT-002 | 从 GitHub 学习 common practice | feature_request | - |
+| FEAT-003 | 复用 related works 框架 | feature_request | - |
 
 ### 测试者：`user2`
 - **学科/领域：** 未知（topic 与纳米药物递送相关）
