@@ -1,4 +1,4 @@
-# Anthropic Messages API Adapter — 改动说明
+# Anthropic Messages API Adapter - 改动说明
 
 > 本文档详细描述了为 ResearchClaw LLM 模块引入 Anthropic Messages API 原生支持的改动内容，
 > 并通过架构图说明本次改动 **不影响现有 OpenAI / OpenRouter / DeepSeek 等 provider 的任何行为**。
@@ -8,7 +8,7 @@
 ## 目录
 
 1. [改动背景](#1-改动背景)
-2. [架构总览 — 改动前后对比](#2-架构总览--改动前后对比)
+2. [架构总览 - 改动前后对比](#2-架构总览--改动前后对比)
 3. [核心设计：适配器模式](#3-核心设计适配器模式)
 4. [调用流程详解](#4-调用流程详解)
 5. [对现有 Provider 零影响的保证](#5-对现有-provider-零影响的保证)
@@ -36,7 +36,7 @@ Anthropic 的 Claude 系列模型使用独立的 **Messages API**，其请求/�
 
 ---
 
-## 2. 架构总览 — 改动前后对比
+## 2. 架构总览 - 改动前后对比
 
 ### 改动前
 
@@ -243,7 +243,7 @@ graph TD
 |---|---|---|
 | `researchclaw/llm/__init__.py` | 修改 | 添加 `"anthropic"` preset；简化工厂函数委托给 `from_rc_config()` |
 | `researchclaw/llm/client.py` | 修改 | `from_rc_config()` 恢复 PRESETS 逻辑 + 条件挂载适配器；`_raw_call()` 添加 if/else 分支 |
-| `researchclaw/llm/anthropic_adapter.py` | **新增** | `AnthropicAdapter` 类 — Anthropic Messages API → OpenAI 兼容格式转换 |
+| `researchclaw/llm/anthropic_adapter.py` | **新增** | `AnthropicAdapter` 类 - Anthropic Messages API → OpenAI 兼容格式转换 |
 | `tests/test_anthropic.py` | **新增** | Anthropic API 连通性测试脚本 |
 | `pyproject.toml` | 修改 | 添加 `httpx` 为 optional dependency (`[anthropic]` extra) |
 | `.gitignore` | 修改 | 添加 `run.log` |
