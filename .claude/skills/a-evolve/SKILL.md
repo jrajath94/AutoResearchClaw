@@ -13,7 +13,7 @@ description: >
 
 Apply the **Solve → Observe → Evolve → Gate → Reload** methodology from
 [A-Evolve](https://github.com/A-EVO-Lab/a-evolve) to iteratively improve
-agent performance. This skill is prompt-based — no external dependencies,
+agent performance. This skill is prompt-based - no external dependencies,
 no harness changes. You analyze failures, propose workspace mutations, and
 generate durable artifacts (skills, prompt patches, knowledge entries) that
 the agent can load in future runs.
@@ -31,9 +31,9 @@ Gather the agent's execution artifacts. Ask the user for or locate:
 - Any existing session files from previous runs
 
 If inside AutoResearchClaw, look at:
-- `artifacts/rc-*/` — experiment outputs, charts, reviews
+- `artifacts/rc-*/` - experiment outputs, charts, reviews
 - `evolve.log` or stage-specific logs
-- `reviews.md` — peer review feedback
+- `reviews.md` - peer review feedback
 - Sentinel watchdog reports
 
 ### 2. Observe (Diagnose)
@@ -75,7 +75,7 @@ pattern. A good evolved skill:
 - Includes a "when to apply" trigger condition
 - Is short (under 100 lines) and self-contained
 
-Example — if the agent keeps failing at API pagination:
+Example - if the agent keeps failing at API pagination:
 
 ```markdown
 ---
@@ -98,7 +98,7 @@ When calling any API that supports pagination:
 **B. Patch the System Prompt** (for prompt ambiguity or missing guidance)
 
 Write a short addendum to the system prompt that addresses the gap.
-Keep patches minimal — one paragraph per issue. Format:
+Keep patches minimal - one paragraph per issue. Format:
 
 ```
 ## Prompt Patch: [Issue]
@@ -170,7 +170,7 @@ This skill maps to ARC's pipeline stages:
 |-----------|---------------|
 | 12 EXPERIMENT_RUN | Source of Solve artifacts |
 | 13 ITERATIVE_REFINE | Main Observe + Evolve trigger point |
-| 15 RESEARCH_DECISION | Natural Gate — PROCEED = accept, REFINE = retry |
+| 15 RESEARCH_DECISION | Natural Gate - PROCEED = accept, REFINE = retry |
 | 18 PEER_REVIEW | Additional Observe signal for writing quality |
 
 When the user says "evolve my research pipeline" or similar:
@@ -185,7 +185,7 @@ When the user says "evolve my research pipeline" or similar:
 Do NOT:
 - Generate vague, generic skills ("always be careful", "check your work")
 - Propose mutations for one-off errors that won't recur
-- Rewrite the entire system prompt — patch it surgically
+- Rewrite the entire system prompt - patch it surgically
 - Generate more than 3 skills per evolution cycle (quality over quantity)
 - Mutate tool code unless the user explicitly asks for it
 
