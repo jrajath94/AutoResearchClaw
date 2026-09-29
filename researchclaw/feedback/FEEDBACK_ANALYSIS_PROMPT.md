@@ -1,4 +1,4 @@
-# Tester Feedback Analysis — Claude Code Prompt
+# Tester Feedback Analysis - Claude Code Prompt
 
 > **用途：** 在 Claude Code agent 窗口中读取本文件，agent 将自动完成「测试反馈分析 → Bug 修复文档生成」的全流程。
 >
@@ -26,9 +26,9 @@ AutoResearchClaw 是一个 23 阶段的全自动学术研究 Pipeline（从选�
 测试者运行 Pipeline 的时间点各不相同，他们使用的代码版本很可能**不是当前主分支的最新版本**。我们的代码在快速迭代中，很多问题在他们测试之后可能已经被修复、部分修复或因架构调整而不再适用。
 
 因此你必须：
-- **不要无条件信任反馈中描述的 Bug** —— 它可能已经不存在了
-- **对每个问题都要在当前代码中实际验证** —— 读代码确认，而不是仅凭反馈文字就下结论
-- **保持批判性思维** —— 测试者的问题描述可能基于旧的代码行为、旧的配置格式、旧的依赖版本
+- **不要无条件信任反馈中描述的 Bug** -- 它可能已经不存在了
+- **对每个问题都要在当前代码中实际验证** -- 读代码确认，而不是仅凭反馈文字就下结论
+- **保持批判性思维** -- 测试者的问题描述可能基于旧的代码行为、旧的配置格式、旧的依赖版本
 - **如果反馈中提到的函数/类/文件已被重构或删除，直接标记为「已修复/架构已变更」**
 - **如果能从压缩包中识别出测试者使用的版本（如 git hash、版本号、时间戳），请记录下来，有助于判断问题时效性**
 
@@ -81,16 +81,16 @@ feedback_inbox/
 
 在分析之前，你需要了解当前代码的最新状态。请阅读以下关键文件：
 
-- `researchclaw/pipeline/stages.py` — 23 阶段定义和状态机
-- `researchclaw/pipeline/executor.py` — 核心执行逻辑（重点关注各阶段的 execute 函数）
-- `researchclaw/pipeline/runner.py` — Pipeline 运行入口
-- `researchclaw/config.py` — 配置结构
-- `researchclaw/llm/client.py` — LLM 调用逻辑
-- `researchclaw/literature/search.py` — 文献搜索
-- `researchclaw/experiment/docker_sandbox.py` — Docker 沙箱执行
-- `researchclaw/pipeline/code_agent.py` — 代码生成 Agent
-- `researchclaw/templates/converter.py` — LaTeX 转换
-- `researchclaw/prompts.py` — Prompt 模板
+- `researchclaw/pipeline/stages.py` - 23 阶段定义和状态机
+- `researchclaw/pipeline/executor.py` - 核心执行逻辑（重点关注各阶段的 execute 函数）
+- `researchclaw/pipeline/runner.py` - Pipeline 运行入口
+- `researchclaw/config.py` - 配置结构
+- `researchclaw/llm/client.py` - LLM 调用逻辑
+- `researchclaw/literature/search.py` - 文献搜索
+- `researchclaw/experiment/docker_sandbox.py` - Docker 沙箱执行
+- `researchclaw/pipeline/code_agent.py` - 代码生成 Agent
+- `researchclaw/templates/converter.py` - LaTeX 转换
+- `researchclaw/prompts.py` - Prompt 模板
 
 **不需要逐行阅读，但要对整体架构和各模块职责有清晰认识。**
 
@@ -111,10 +111,10 @@ feedback_inbox/
 
 对每个提取的问题：
 
-1. **定位相关代码** — 根据问题描述和涉及的 Pipeline 阶段，找到对应的源代码文件和函数
-2. **判断是否仍然存在** — 阅读当前代码，判断这个 Bug 是否已被修复（主分支在快速迭代，部分问题可能已解决）
-3. **分析根因** — 如果 Bug 仍存在，分析具体的根本原因（不是表面现象）
-4. **评估价值** — 判断这个问题是否值得修复：
+1. **定位相关代码** - 根据问题描述和涉及的 Pipeline 阶段，找到对应的源代码文件和函数
+2. **判断是否仍然存在** - 阅读当前代码，判断这个 Bug 是否已被修复（主分支在快速迭代，部分问题可能已解决）
+3. **分析根因** - 如果 Bug 仍存在，分析具体的根本原因（不是表面现象）
+4. **评估价值** - 判断这个问题是否值得修复：
    - **值得修复：** 影响 Pipeline 正常运行、影响论文质量、多人反馈的共性问题
    - **暂缓处理：** 边缘场景、个别配置问题、已有 workaround
    - **不处理：** 设计如此、超出范围的需求、无法复现
@@ -122,10 +122,10 @@ feedback_inbox/
 #### 3c. 生成修复方案
 
 对每个确认的 Bug，给出：
-- **具体是什么 Bug** — 一句话描述
-- **根因在哪里** — 哪个文件、哪个函数、什么逻辑有问题
-- **怎么修复** — 具体的代码修改方案（不需要写完整代码，但要足够具体，比如"在 executor.py 的 `_run_experiment` 函数中，第 XX 行的异常处理需要增加 TimeoutError 的 catch"）
-- **修复后的预期行为** — 修好后应该是什么样的
+- **具体是什么 Bug** - 一句话描述
+- **根因在哪里** - 哪个文件、哪个函数、什么逻辑有问题
+- **怎么修复** - 具体的代码修改方案（不需要写完整代码，但要足够具体，比如"在 executor.py 的 `_run_experiment` 函数中，第 XX 行的异常处理需要增加 TimeoutError 的 catch"）
+- **修复后的预期行为** - 修好后应该是什么样的
 
 ### 第四步：生成 Bug 修复文档
 
@@ -236,7 +236,7 @@ xxx
 2. **具体到位：** 修复方案要具体到文件、函数、逻辑，让另一个 agent 能直接执行。不要只说"需要优化"这种模糊描述。
 3. **合并去重：** 多个测试者报告同一个问题时，合并为一条，注明所有报告者。
 4. **区分表里：** 测试者描述的可能是表面现象，你需要找到深层根因。
-5. **务实判断：** 不是所有反馈都值得处理。有些是配置问题、有些是预期行为、有些修复代价远大于收益 —— 这些需要你做出判断。
+5. **务实判断：** 不是所有反馈都值得处理。有些是配置问题、有些是预期行为、有些修复代价远大于收益 -- 这些需要你做出判断。
 6. **保留证据：** 每个问题都保留测试者的原始描述作为证据。
 7. **中文输出：** 文档用中文书写（技术术语、代码、文件名保持英文）。
 
