@@ -1,8 +1,8 @@
-# arXiv / 文献检索限流问题 — 调研报告与修复方案
+# arXiv / 文献检索限流问题 - 调研报告与修复方案
 
 > Created: 2026-03-15
-> Status: **DONE** — All 7 tasks completed, 1117/1117 tests passing
-> Severity: High — 直接影响用户体验和 Pipeline 稳定性
+> Status: **DONE** - All 7 tasks completed, 1117/1117 tests passing
+> Severity: High - 直接影响用户体验和 Pipeline 稳定性
 
 ---
 
@@ -14,9 +14,9 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 
 | 阶段 | 功能 | API 调用量 | 严重程度 |
 |------|------|-----------|---------|
-| Stage 4 | 文献收集 | ~12 次 (6 query × 2 source) | **高** — 直接影响论文质量 |
-| Stage 8 | 假设新颖性检查 | ~8-12 次 | 中 — 非阻塞 |
-| Stage 23 | 引用验证 | ~40-50 次 | **高** — 最密集的 API 调用 |
+| Stage 4 | 文献收集 | ~12 次 (6 query × 2 source) | **高** - 直接影响论文质量 |
+| Stage 8 | 假设新颖性检查 | ~8-12 次 | 中 - 非阻塞 |
+| Stage 23 | 引用验证 | ~40-50 次 | **高** - 最密集的 API 调用 |
 
 ---
 
@@ -26,8 +26,8 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 
 | 文件 | 问题 | 影响 |
 |------|------|------|
-| `researchclaw/literature/arxiv_client.py` | 无显式 HTTP 429 检测 — URLError/OSError 统一捕获，无法区分限流和真正的网络错误 | 限流时无法做针对性处理 |
-| `researchclaw/literature/arxiv_client.py` | 无熔断器 (Circuit Breaker) — S2 有但 arXiv 没有 | 连续 429 时仍不停重试 |
+| `researchclaw/literature/arxiv_client.py` | 无显式 HTTP 429 检测 - URLError/OSError 统一捕获，无法区分限流和真正的网络错误 | 限流时无法做针对性处理 |
+| `researchclaw/literature/arxiv_client.py` | 无熔断器 (Circuit Breaker) - S2 有但 arXiv 没有 | 连续 429 时仍不停重试 |
 | `researchclaw/literature/arxiv_client.py` | 未解析 `Retry-After` 响应头 | 服务器建议的等待时间被忽略 |
 | `researchclaw/literature/semantic_scholar.py` | 虽有熔断器，但 Stage 23 的密集调用仍可能触发 | 一旦熔断，所有后续 S2 请求被跳过 |
 | `researchclaw/literature/verify.py` | Stage 23 逐条顺序验证 40+ 引用，每条间隔 1.5s | 总耗时 60-80s，集中 burst 可触发限流 |
@@ -60,7 +60,7 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 | arXiv 搜索 | `urllib.request` + 3s 固定延迟，**无重试，无 429 处理** |
 | S2 搜索 | `requests` + `_request_with_retry()`: 指数退避 (2^attempt)，3 次重试 |
 | S2 缓存 | 文件 JSON 缓存，按类型 TTL（论文 7 天，作者 30 天，引用 1 天） |
-| arXiv 缓存 | **无** — 每次直接调 API |
+| arXiv 缓存 | **无** - 每次直接调 API |
 
 **可借鉴**：S2 缓存按类型差异化 TTL 的思路。
 
@@ -69,7 +69,7 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 | 方面 | 实现 |
 |------|------|
 | arXiv 搜索 | 通过 `arxiv-mcp-server` MCP 工具，依赖 `arxiv` Python 库的 3s delay |
-| 429 处理 | **代码层面无** — 依赖 CLAUDE.md 指令让 LLM agent 行为级重试 |
+| 429 处理 | **代码层面无** - 依赖 CLAUDE.md 指令让 LLM agent 行为级重试 |
 | 体量控制 | 刻意限制在 15-30 篇论文，"速度优先" |
 | S2 | **未使用** |
 
@@ -79,7 +79,7 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 
 | 方面 | 实现 |
 |------|------|
-| 文献来源 | **完全离线** — 预构建 ICLR Knowledge Graph，运行时不调任何论文 API |
+| 文献来源 | **完全离线** - 预构建 ICLR Knowledge Graph，运行时不调任何论文 API |
 | 重试策略 | `urllib3.util.retry.Retry(total=3, backoff_factor=2, status_forcelist=[429,500,502,503,504])` |
 | 降级策略 | Embedding 失败后降级为 Jaccard 相似度 |
 
@@ -133,7 +133,7 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 
 ## 5. 实施任务列表
 
-### Task 1: arXiv 客户端增强 — 显式 429 处理 + 熔断器
+### Task 1: arXiv 客户端增强 - 显式 429 处理 + 熔断器
 
 **文件**: `researchclaw/literature/arxiv_client.py`
 
@@ -262,7 +262,7 @@ Pipeline 中多个阶段需要通过 API 调用外部论文数据库（arXiv、S
 | Semantic Scholar | `api.semanticscholar.org/graph/v1` | 共享池 5K/5min | 1 req/s (API key) | ~30 req/run |
 | OpenAlex | `api.openalex.org/works` | 10K list/day, 1K search/day | 同左 (polite pool) | 待启用 |
 | CrossRef | `api.crossref.org/works` | 50 req/s (polite) | 同左 | ~15 req/run |
-| DataCite | `api.datacite.org/dois` | 无明确限制 | — | ~5 req/run |
+| DataCite | `api.datacite.org/dois` | 无明确限制 | - | ~5 req/run |
 
 ## 附录 B: 参考实现
 
