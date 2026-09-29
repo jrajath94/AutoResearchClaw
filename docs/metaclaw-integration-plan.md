@@ -137,7 +137,7 @@ curl -X POST http://localhost:30000/v1/chat/completions \
 
 ---
 
-### Phase 1: L1 — Proxy 透传接入（最小改动）
+### Phase 1: L1 - Proxy 透传接入（最小改动）
 
 **目标**: 零代码改动，仅通过配置让 AutoResearchClaw 经由 MetaClaw 代理调用 LLM。
 
@@ -187,7 +187,7 @@ researchclaw run --topic "test topic" --config config.yaml
 
 ---
 
-### Phase 2: L2 — 研究专属技能库 + 阶段映射
+### Phase 2: L2 - 研究专属技能库 + 阶段映射
 
 **目标**: 为 AutoResearchClaw 的 23 个阶段创建专属技能，并实现精准注入。
 
@@ -382,7 +382,7 @@ headers["X-Turn-Type"] = "main"           # 确保触发技能注入
 
 ---
 
-### Phase 3: L3 — Evolution ↔ Skill 双向桥接
+### Phase 3: L3 - Evolution ↔ Skill 双向桥接
 
 **目标**: 让 AutoResearchClaw 的失败教训自动转化为 MetaClaw 技能，形成学习闭环。
 
@@ -471,7 +471,7 @@ async def _post_pipeline_hook(self, run_results: list[StageResult]):
 
 ---
 
-### Phase 4: L4 — PRM 质量门控
+### Phase 4: L4 - PRM 质量门控
 
 **目标**: 在关键质量门控阶段使用 MetaClaw 的 PRM 评分器提供客观质量评估。
 
@@ -561,7 +561,7 @@ metaclaw_bridge:
 
 ---
 
-### Phase 5: L5 — RL 持续训练（可选）
+### Phase 5: L5 - RL 持续训练（可选）
 
 > **注意**: 此阶段需要 GPU 和 Tinker/MinT 后端，如当前环境不具备可跳过。
 
@@ -620,7 +620,7 @@ headers["X-Session-Done"] = "true"  # 通知 MetaClaw 一次研究会话结束
 | 8 | HYPOTHESIS_GEN | research | hypothesis-formulation | 6 |
 | 9 | EXPERIMENT_DESIGN | research | experiment-design-rigor | 6 |
 | 10 | CODE_GENERATION | coding | hardware-aware-coding | 6 |
-| 11 | RESOURCE_PLANNING | productivity | — | 3 |
+| 11 | RESOURCE_PLANNING | productivity | - | 3 |
 | 12 | EXPERIMENT_RUN | automation | experiment-debugging | 4 |
 | 13 | ITERATIVE_REFINE | coding | experiment-debugging | 6 |
 | 14 | RESULT_ANALYSIS | data_analysis | statistical-analysis | 6 |
@@ -630,8 +630,8 @@ headers["X-Session-Done"] = "true"  # 通知 MetaClaw 一次研究会话结束
 | 18 | PEER_REVIEW | communication | peer-review-methodology | 6 |
 | 19 | PAPER_REVISION | communication | academic-writing-structure, peer-review-methodology | 6 |
 | 20 | QUALITY_GATE | research | peer-review-methodology | 4 |
-| 21 | KNOWLEDGE_ARCHIVE | automation | — | 2 |
-| 22 | EXPORT_PUBLISH | automation | — | 2 |
+| 21 | KNOWLEDGE_ARCHIVE | automation | - | 2 |
+| 22 | EXPORT_PUBLISH | automation | - | 2 |
 | 23 | CITATION_VERIFY | research | citation-integrity | 4 |
 
 ---
@@ -733,7 +733,7 @@ async def _request(self, ...):
 |------|---------------------|----------------|----------|
 | Pipeline 完成率 | 现有水平 | +15% | 统计 Stage 15 PROCEED 率 |
 | 实验代码首次运行成功率 | 现有水平 | +20% | 统计 Stage 12 无需 Stage 13 的比例 |
-| 论文 PRM 评分 | — | ≥ 0.6 平均分 | Stage 20 PRM 评分统计 |
+| 论文 PRM 评分 | - | ≥ 0.6 平均分 | Stage 20 PRM 评分统计 |
 | 引用验证通过率 | 现有水平 | +10% | Stage 23 验证通过率 |
 | 技能库增长 | 40 (MetaClaw 原有) | +13 (研究专属) + 自动进化 | 技能目录文件数 |
 
