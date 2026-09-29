@@ -22,5 +22,5 @@ metadata:
    - Remove one component at a time
    - Each ablation must be meaningfully different from baseline
 5. Control variables: change only ONE thing per comparison
-6. Use standard splits (train/val/test) — never test on training data
+6. Use standard splits (train/val/test) - never test on training data
 7. Report wall-clock time and memory usage alongside accuracy
