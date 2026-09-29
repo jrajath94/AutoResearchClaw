@@ -1,4 +1,4 @@
-# Pipeline Test Log — Round 5 (main branch)
+# Pipeline Test Log - Round 5 (main branch)
 
 > **分支**: `main` @ `e95527f`
 > **日期**: 2026-03-18
@@ -21,13 +21,13 @@
 - 所有实验纯计算/模拟，无需外部数据集或 GPU
 - 核心依赖仅 numpy/scipy/sklearn，sandbox 即可执行
 - 覆盖 4 个不同领域：物理、经济学、流行病学、数值分析
-- 避免 R4 中被 topic refinement 强行引向 ML 的问题——本轮 topic 描述更具体
+- 避免 R4 中被 topic refinement 强行引向 ML 的问题--本轮 topic 描述更具体
 
 ### 备选 Topic（未选用）
-1. **Agent/RL**: 网格世界中多智能体 emergent communication 的涌现 — 需要 gymnasium，sandbox 兼容性不确定
-2. **信号处理**: 压缩感知中 RIP 条件的经验验证 — 可行但领域覆盖与 Q 重叠
-3. **统计学**: Bayesian 变点检测的 MCMC 采样效率对比 — 可行，备用
-4. **图论**: 随机图上 Erdos-Renyi 相变阈值的数值验证 — 可行，备用
+1. **Agent/RL**: 网格世界中多智能体 emergent communication 的涌现 - 需要 gymnasium，sandbox 兼容性不确定
+2. **信号处理**: 压缩感知中 RIP 条件的经验验证 - 可行但领域覆盖与 Q 重叠
+3. **统计学**: Bayesian 变点检测的 MCMC 采样效率对比 - 可行，备用
+4. **图论**: 随机图上 Erdos-Renyi 相变阈值的数值验证 - 可行，备用
 
 ---
 
@@ -63,40 +63,40 @@
 ### OBS-R5-03: 初始进度检查 (~17:55 UTC)
 - N: Stage 7/SYNTHESIS ✅ 快速推进
 - O: Stage 6/KNOWLEDGE_EXTRACT ✅ 正常
-- P: Stage 4/LITERATURE_COLLECT — 稍慢（429 影响）
+- P: Stage 4/LITERATURE_COLLECT - 稍慢（429 影响）
 - Q: Stage 5/LITERATURE_SCREEN ✅ 正常
 
 ### OBS-R5-04: CodeSearcher query_gen.py TypeError (18:20 UTC)
-- **严重度**: 🟡 中 — 不阻塞但影响代码质量
+- **严重度**: 🟡 中 - 不阻塞但影响代码质量
 - **描述**: `researchclaw/agents/code_searcher/query_gen.py:149` 调用 `llm.chat()` 时传入不支持的 `user` 关键字参数
   ```
   TypeError: LLMClient.chat() got an unexpected keyword argument 'user'
   ```
 - **影响**: CodeSearcher 无法使用 LLM 生成 GitHub 搜索 query，退化到基于规则的 query
-- **关联**: R4-BUG-02 (GitHub 401) — 401 问题仍在（无 GITHUB_TOKEN），加上此 TypeError 意味着 CodeSearcher 基本失效
-- **需要修复**: ✅ 是 — query_gen.py 中 `llm.chat()` 调用签名与 LLMClient 接口不匹配
+- **关联**: R4-BUG-02 (GitHub 401) - 401 问题仍在（无 GITHUB_TOKEN），加上此 TypeError 意味着 CodeSearcher 基本失效
+- **需要修复**: ✅ 是 - query_gen.py 中 `llm.chat()` 调用签名与 LLMClient 接口不匹配
 
 ### OBS-R5-05: gpt-5.4 Read Timeout 导致 fallback (18:30 UTC)
-- **严重度**: 🟡 中 — 自动 fallback 工作正常
+- **严重度**: 🟡 中 - 自动 fallback 工作正常
 - **描述**: Pipeline N 在代码生成阶段遭遇多次 gpt-5.4 read timeout
   - 触发 fallback 到 gpt-5.1 或 gpt-4o
   - 代码生成请求因 token 量大，更容易超时
 - **影响**: 代码生成速度下降，但不阻塞
 
 ### OBS-R5-06: Sandbox execution timeout 60s (18:35 UTC)
-- **严重度**: 🟡 中 — 影响代码验证
+- **严重度**: 🟡 中 - 影响代码验证
 - **描述**: Pipeline O 代码生成阶段的 sandbox 验证执行超时（60s）
   - 可能是验证生成的实验代码能否运行
   - 代码生成后的 AST 验证 + 试运行超时
 - **影响**: 代码可能未经充分验证就进入下一阶段
 
-### OBS-R5-07: Stage 10 Deep Quality — Copy-paste Detection (18:35 UTC)
-- **严重度**: 🟡 中 — 代码质量问题
+### OBS-R5-07: Stage 10 Deep Quality - Copy-paste Detection (18:35 UTC)
+- **严重度**: 🟡 中 - 代码质量问题
 - **描述**: Pipeline O 的 models.py 中检测到多组 copy-paste 类：
   1. `FixedFullerOneBiasReducedBaseline` vs `FixedFullerFourAggressiveShrinkageBaseline` (16 vs 16 lines)
   2. `FirstStageStrengthOnlyRiskSurfaceBaseline` vs `NoLeverageGeometryRiskSurfaceAblation` (9 vs 9 lines)
   3. 多个 ablation 类仅 0-1 个非 dunder 方法
-- **评估**: 这是 R4-BUG-13 的同类问题 — ablation 类之间差异不足
+- **评估**: 这是 R4-BUG-13 的同类问题 - ablation 类之间差异不足
 - **关联**: BUG-13 (copy-paste ablation)
 
 ### OBS-R5-08: 所有 Pipeline 在 Stage 10 停留超 25 分钟 (18:41 UTC)
@@ -106,7 +106,7 @@
 - **耗时**: N=2441s (~41min), O=2485s (~41min), P=2796s (~47min), Q=2976s (~50min)
 
 ### OBS-R5-09: 所有已执行实验在 Stage 12 首次运行均失败 (18:55 UTC)
-- **严重度**: 🔴 高 — 系统性 numpy 2.x API 不兼容
+- **严重度**: 🔴 高 - 系统性 numpy 2.x API 不兼容
 - **描述**: 3个已完成 Stage 12 的 Pipeline 均在首次实验运行失败：
   - **N**: `AttributeError: module 'numpy' has no attribute 'trapz'`
     - numpy 2.0 移除了 `np.trapz`，应使用 `np.trapezoid`
@@ -126,7 +126,7 @@
 - **评估**: 自我修复机制在 numpy API 变更场景中工作良好
 
 ### OBS-R5-11: Pipeline Q Stage 09 YAML 解析警告 (18:40 UTC)
-- **严重度**: 🟢 低 — 自动恢复
+- **严重度**: 🟢 低 - 自动恢复
 - **描述**: Pipeline Q 的 Stage 09 LLM 返回内容无法直接解析为 YAML
   - 返回了 38089 字符的响应，远超预期
   - content extraction fallback 正常工作
@@ -169,20 +169,20 @@
   - R5: Pipeline P 通过了 Stage 20（degraded 但非 rejected）
 
 ### OBS-R5-16: N 和 Q 在 Stage 23 (Citation Verify) 失败 (20:14-20:21 UTC)
-- **严重度**: 🟡 中 — 不影响论文本身
+- **严重度**: 🟡 中 - 不影响论文本身
 - **描述**: N 和 Q 的 Stage 23 因 `references_verified.bib` 缺失而失败
   - 错误信息: `Missing or empty output: references_verified.bib`
-  - Stage 23 耗时 0s — 意味着在验证前就失败了
+  - Stage 23 耗时 0s - 意味着在验证前就失败了
   - Pipeline P 的 Stage 23 成功（11s），说明这不是系统性问题
 - **关联**: R5-BUG-04 (见下方)
 
 ### OBS-R5-17: Pipeline O 大量 ablation failure (20:20 UTC)
-- **严重度**: 🟡 中 — 代码质量问题
+- **严重度**: 🟡 中 - 代码质量问题
 - **描述**: Pipeline O (IV estimators) 的 Stage 13 v2 检测到大量 copy-paste ablation 问题
   - 8+ 对 conditions 产生完全相同的输出
   - 例: `mean_bias_only_jive_evaluation_ablation` ≡ `two_stage_least_squares_wald_baseline`
   - 例: `no_instrument_density_geometry_risk_surface_ablation` ≡ `no_leverage_geometry_risk_surface_ablation`
-- **关联**: R5-BUG-03, R4-BUG-13 — copy-paste ablation 问题持续存在
+- **关联**: R5-BUG-03, R4-BUG-13 - copy-paste ablation 问题持续存在
 
 ### OBS-R5-18: 纸面写作阶段高效 (Stage 16-22)
 - **严重度**: 🟢 正面
@@ -197,7 +197,7 @@
 - **总计**: 纸面写作 + 导出约 15 分钟
 
 ### OBS-R5-19: Pipeline N 论文承认实验失败 (20:14 UTC)
-- **严重度**: 🟡 中 — 影响论文质量
+- **严重度**: 🟡 中 - 影响论文质量
 - **描述**: Pipeline N 的 paper_draft.md 中写道：
   > "the current execution failed before producing any analyzable spectral metrics"
 - **分析**: 虽然 Stage 13 成功修复了 numpy 2.x 错误并重新运行了实验，但论文写作阶段可能
@@ -208,8 +208,8 @@
 
 ## 新发现 Bug
 
-### R5-BUG-01: CodeSearcher query_gen.py — LLMClient.chat() 签名不匹配 ✅ 已修复
-- **严重度**: 🟡 中 — 不阻塞 pipeline 但降低代码质量
+### R5-BUG-01: CodeSearcher query_gen.py - LLMClient.chat() 签名不匹配 ✅ 已修复
+- **严重度**: 🟡 中 - 不阻塞 pipeline 但降低代码质量
 - **文件**: `researchclaw/agents/code_searcher/query_gen.py:149`
 - **描述**:
   - `llm.chat()` 被调用为 `llm.chat(system=..., user=..., max_tokens=...)`
@@ -222,7 +222,7 @@
 - **影响**: 修复后 CodeSearcher 可正常使用 LLM 生成搜索查询（仍需 GITHUB_TOKEN）
 
 ### R5-BUG-02: 代码生成使用已弃用/不存在的 numpy 2.x API（系统性）
-- **严重度**: 🔴 高 — 导致所有实验首次运行失败
+- **严重度**: 🔴 高 - 导致所有实验首次运行失败
 - **描述**: gpt-5.4 生成的代码使用了已在 numpy 2.0 中移除的 API：
   - `np.trapz` → 应使用 `np.trapezoid` (numpy 2.0 breaking change)
   - `np.erfinv` → 从未存在于 numpy，应使用 `scipy.special.erfinv`
@@ -236,11 +236,11 @@
 - **描述**: Stage 10 deep quality check 检测到多组近似相同的 ablation 类
   - Fuller1 vs Fuller4: 仅超参数不同，方法体相同
   - Risk surface baseline vs ablation: 方法签名和体积完全相同
-- **关联**: R4-BUG-13 (BUG-13 copy-paste ablation) — 该问题跨轮次持续存在
+- **关联**: R4-BUG-13 (BUG-13 copy-paste ablation) - 该问题跨轮次持续存在
 - **建议**: 需要在代码生成阶段强化 ablation 差异性检查
 
-### R5-BUG-04: Stage 23 Citation Verify — references_verified.bib 缺失 ✅ FIXED
-- **严重度**: 🔴 高 — 3/4 Pipeline 受影响
+### R5-BUG-04: Stage 23 Citation Verify - references_verified.bib 缺失 ✅ FIXED
+- **严重度**: 🔴 高 - 3/4 Pipeline 受影响
 - **描述**: N、O 和 Q 在 Stage 23 因 `references_verified.bib` 未生成而失败
   - 错误: `Missing or empty output: references_verified.bib`
   - Stage 23 耗时 0s，说明在输出验证前就失败了
@@ -254,13 +254,13 @@
   - 文件非空，通过 contract validation，同时语义上表示"无引用"
 
 ### R5-BUG-05: 论文未使用修复后的实验结果 ✅ FIXED
-- **严重度**: 🔴 高 — 影响论文科学价值
+- **严重度**: 🔴 高 - 影响论文科学价值
 - **描述**: Pipeline N/Q 的论文包含 "quality 2/10" 警告，声称实验失败
   但 Stage 13 成功修复了 numpy 错误并产生了完整的实验结果（论文表格中实际包含真实数据）
 - **根因分析**: Stage 14 LLM analysis 在所有三次 refine 迭代中均给出 2/10（包括最新的非版本化 stage-14），
   而 BUG-23 guard（executor.py L7184）在 `_analysis_rating <= 2` 时强制 `has_real_metrics = False`，
   即使 `_collect_raw_experiment_metrics()` 已成功从 Stage 13 stdout 解析出真实指标
-  - **注**: `_read_prior_artifact` 排序是正确的 — 非版本化目录确实是最新的（rollback 时旧目录会被重命名为 `_vN`）
+  - **注**: `_read_prior_artifact` 排序是正确的 - 非版本化目录确实是最新的（rollback 时旧目录会被重命名为 `_vN`）
 - **修复**: 在 BUG-23 guard 中增加 `not _has_parsed_metrics` 条件（executor.py L7187）
   - 当 Stage 13 refinement 产生了可解析的真实指标时，不再被 analysis rating 覆盖
   - 同时保留了原始 BUG-23 防护：在确实没有真实指标时仍会触发
@@ -292,11 +292,11 @@ R5 是目前最成功的测试轮次：
 1. ✅ **R5-BUG-05**: BUG-23 guard 过度激进 → 论文声称实验失败
 2. ✅ **R5-BUG-04**: Stage 23 写入空 bib 文件被 contract validation 拒绝 → 3/4 失败
 3. ✅ **R5-BUG-01**: CodeSearcher query_gen.py 签名不匹配
-4. ✅ **R5-BUG-02**: 代码生成使用已弃用 numpy 2.x API — 已在 7 个 prompt 中添加兼容性警告
-5. ✅ **R5-BUG-03**: copy-paste ablation — 新增 <1% 近似检测 + prompt 强化
-6. ✅ **R5-BUG-06**: LaTeX microtype 字体错误 — 已添加 `\usepackage{lmodern}`
+4. ✅ **R5-BUG-02**: 代码生成使用已弃用 numpy 2.x API - 已在 7 个 prompt 中添加兼容性警告
+5. ✅ **R5-BUG-03**: copy-paste ablation - 新增 <1% 近似检测 + prompt 强化
+6. ✅ **R5-BUG-06**: LaTeX microtype 字体错误 - 已添加 `\usepackage{lmodern}`
 
-### R5-BUG-06: LaTeX 编译失败 — pdfTeX font expansion 错误 ✅ FIXED
+### R5-BUG-06: LaTeX 编译失败 - pdfTeX font expansion 错误 ✅ FIXED
 - **严重度**: 🟡 中
 - **描述**: Pipeline Q 的 paper.tex 编译失败
   ```
@@ -317,7 +317,7 @@ R5 是目前最成功的测试轮次：
 - **注**: prompt 中已有 Rule 9 (ABLATION DIFFERENTIATION) 和 Rule 8 (METHOD RICHNESS) 的引导
 
 ### 后续排查结论
-- **`_read_prior_artifact` 排序**: ✅ 确认正确 — 非版本化目录确实是最新的（rollback 重命名旧目录为 `_vN`）
+- **`_read_prior_artifact` 排序**: ✅ 确认正确 - 非版本化目录确实是最新的（rollback 重命名旧目录为 `_vN`）
 - **Stage 14 quality rating 问题**: 所有 3 次 refine 迭代的 Stage 14 均给出 2/10 → 这是 LLM 分析偏保守的问题，
   但 BUG-05 的修复已绕过该问题（信任实际解析出的指标）
 
