@@ -1,11 +1,11 @@
-# TRL (Transformer Reinforcement Learning) — API Quick Reference
+# TRL (Transformer Reinforcement Learning) - API Quick Reference
 
 ## Installation
 ```bash
 pip install trl
 ```
 
-## SFTTrainer — Supervised Fine-Tuning
+## SFTTrainer - Supervised Fine-Tuning
 ```python
 from trl import SFTTrainer, SFTConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -60,7 +60,7 @@ trainer = SFTTrainer(
 )
 ```
 
-## DPOTrainer — Direct Preference Optimization
+## DPOTrainer - Direct Preference Optimization
 ```python
 from trl import DPOTrainer, DPOConfig
 
@@ -90,7 +90,7 @@ trainer = DPOTrainer(
 trainer.train()
 ```
 
-## GRPOTrainer — Group Relative Policy Optimization
+## GRPOTrainer - Group Relative Policy Optimization
 ```python
 from trl import GRPOTrainer, GRPOConfig
 
@@ -119,7 +119,7 @@ trainer = GRPOTrainer(
 trainer.train()
 ```
 
-## PPOTrainer — Proximal Policy Optimization for RLHF
+## PPOTrainer - Proximal Policy Optimization for RLHF
 ```python
 from trl import PPOTrainer, PPOConfig, AutoModelForCausalLMWithValueHead
 
